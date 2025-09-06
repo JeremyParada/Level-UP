@@ -1,0 +1,25 @@
+/* Roboto Variable - Normal */
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-VariableFont_wdth,wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-stretch: 75% 100%;
+    font-style: normal;
+}
+
+/* Roboto Variable - Italic */
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Italic-VariableFont_wdth,wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-stretch: 75% 100%;
+    font-style: italic;
+}
+
+/* Orbitron Variable */
+@font-face {
+    font-family: 'Orbitron';
+    src: url('../fonts/Orbitron-VariableFont_wght.ttf') format('truetype');
+    font-weight: 400 900;
+    font-style: normal;
+}
