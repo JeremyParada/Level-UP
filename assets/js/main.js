@@ -20,4 +20,4 @@ fetch('partials/footer.html')
     .then(data => {
         document.getElementById('footer-container').innerHTML = data;
     })
-    .catch(err => console.error('Error cargando el navbar:', err));
+    .catch(err => console.error('Error cargando el footer:', err));

@@ -37,6 +37,26 @@
 }
 
 body {
-    background-color: black;
+    background-color: #020710;
     font-family: 'Roboto';
+    color: #D3D3D3;
+}
+
+.fondo-catalogo {
+    background-image: url("../img/fondo-productos-gamers.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+}
+
+.fondo-texto-catalogo {
+    background-color: rgba(0, 0, 0, 0.677);
+}
+
+/*Ojo que estoy sobreescribiendo una clase de bootstrap*/
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+  object-position: center;
 }
