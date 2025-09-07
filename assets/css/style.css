@@ -140,7 +140,7 @@ body {
     color: #fff;
 }
 
-/* Tooltips visibles sobre fondo oscuro */
+/* Tooltips de formulario */
 .invalid-tooltip {
     background-color: #ffffffcc; /* semi-transparente */
     color: #000;
@@ -150,4 +150,30 @@ body {
     background-color: #39FF14cc;
     color: #000;
     font-weight: 600;
+}
+
+/* Seccion de invitacion a registrarse en index */
+.registro-seccion {
+    background: linear-gradient(135deg, #1a1a1a, #222);
+    padding: 5rem 2rem;
+    border-radius: 1rem;
+    margin-bottom: 3rem;
+}
+
+.registro-seccion h2 {
+    font-family: 'Orbitron', sans-serif;
+    color: #1E90FF;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+}
+
+.registro-seccion p {
+    color: #D3D3D3;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.registro-seccion a.btn {
+    font-size: 1.2rem;
+    padding: 1rem 3rem;
 }

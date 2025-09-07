@@ -1,20 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tienda gamer</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
+
 <body>
 
     <header id="header-container" class="texto-principal"></header>
     <nav id="navbar-container" class="texto-principal"></nav>
-    
+
+    <main class="container my-5">
+
+        <!-- Invitacion a registrarse -->
+        <section class="registro-seccion text-center">
+            <h2>Únete a nuestra comunidad Gamer</h2>
+            <p>
+                Regístrate y disfruta de <span class="color-acento-verde">descuentos exclusivos</span>, noticias,
+                torneos y mucho más.
+            </p>
+            <a href="registro.html" class="btn btn-registrarse btn-lg">Registrarse</a>
+        </section>
+
+
+        <!-- Noticias -->
+        <section id="noticias-gamer" class="my-5 px-3">
+            <div class="container">
+                <h2 class="texto-principal color-acento-azul mb-4">Noticias Gamer</h2>
+
+                <!-- Noticia 1 -->
+                <article class="card card-producto p-3 mb-3">
+                    <h5 class="card-title">Lanzamiento sorpresa de un nuevo DLC de Cyberpunk 2077</h5>
+                    <p class="card-text"><strong>Fecha:</strong> 7 de septiembre de 2025</p>
+                    <p class="card-text">
+                        CD Projekt Red ha lanzado un DLC sorpresa para Cyberpunk 2077 que incluye nuevas misiones, armas
+                        y vehículos. Los fanáticos han reaccionado con entusiasmo en redes sociales y se esperan eventos
+                        especiales en línea durante el mes de lanzamiento.
+                    </p>
+                </article>
+
+                <!-- Noticia 2 -->
+                <article class="card card-producto p-3 mb-3">
+                    <h5 class="card-title">Rumores sobre GTA VI: pistas desde Rockstar Games</h5>
+                    <p class="card-text"><strong>Fecha:</strong> 7 de septiembre de 2025</p>
+                    <p class="card-text">
+                        Varios insiders aseguran que Rockstar Games está preparando el lanzamiento del tráiler oficial
+                        de GTA VI. Los rumores indican que habrá novedades en la narrativa y mapas expansivos,
+                        aumentando la expectación de los jugadores a nivel mundial.
+                    </p>
+                </article>
+
+                <!-- Noticia 3 -->
+                <article class="card card-producto p-3 mb-3">
+                    <h5 class="card-title">Torneos de eSports en Sudamérica baten récords de asistencia</h5>
+                    <p class="card-text"><strong>Fecha:</strong> 7 de septiembre de 2025</p>
+                    <p class="card-text">
+                        Este año, los torneos de eSports en Sudamérica han registrado una asistencia sin precedentes,
+                        con más de 50,000 espectadores entre presenciales y transmisiones en línea. Juegos como League
+                        of Legends, Valorant y FIFA lideran la competencia, y los equipos locales están ganando
+                        reconocimiento internacional. Los organizadores destacan el crecimiento de la industria y la
+                        pasión de la comunidad gamer en toda la región.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <!-- trailer -->
+        <section class="mb-5 text-center">
+            <h2 class="mb-3">Ya viste el último trailer de GTA VI ?!</h2>
+            <div class="d-flex justify-content-center">
+                <iframe width="80%" height="400"
+                    src="https://www.youtube-nocookie.com/embed/QdBZY2fkU-0?si=SCvfg5vAlPymbuSN"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                </iframe>
+            </div>
+        </section>
+
+        <!-- Productos destacados -->
+        <section class="mb-5">
+            <h2 class="mb-4">Productos Destacados</h2>
+            <div class="row" id="productosContainer">
+                <!-- Productos se cargan con JS -->
+            </div>
+        </section>
+
+    </main>
+
     <footer id="footer-container"></footer>
-    
+
     <script src="assets/js/main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="assets/js/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
 </body>
+
 </html>
