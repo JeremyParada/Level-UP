@@ -54,11 +54,67 @@ body {
     background-color: rgba(0, 0, 0, 0.677);
 }
 
-/*Ojo que estoy sobreescribiendo una clase de bootstrap*/
-.card-img-top {
-    border: 1px solid #dee2e6;
-    border-radius: 5px;
+/* fondo y estilo general de las cards de productos */
+.card-producto {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    transition: transform 0.2s, box-shadow 0.2s; /*esto hace que el hover sea suave*/
+}
+
+/* efecto hover en la card de producto */
+.card-producto:hover {
+    transform: translateY(-4px);
+}
+
+/* imagen mantiene borde y tamaño */
+.card-producto img {
+    border: 1px solid #555;
     height: 200px;
     object-fit: contain;
     object-position: center;
+}
+
+/* titulo del producto */
+.card-producto .card-title {
+    color: #1e90ff;
+}
+
+/* descripcion del producto */
+.card-producto .card-text {
+    color: #D3D3D3;
+}
+
+/* precio card */
+.card-producto .precio {
+    color: #39FF14;
+    font-weight: 700;
+}
+
+/* codigo card */
+.card-producto .codigo {
+    color: #686868;
+    font-weight: 700;
+}
+
+/* boton agregar de las card de producto*/
+.btn-agregar-producto {
+    background-color: #1e90ff;
+    border-color: #1e90ff;
+    color: #fff;
+}
+
+.btn-agregar-producto:hover {
+    background-color: #00bfff;
+    border-color: #00bfff;
+    color: #fff;
+}
+
+#btnBuscarProducto {
+    background-color: #1E90FF;
+    color: #ffffff;
+}
+
+#btnBuscarProducto:hover {
+    background-color: #39FF14;
+    color: #323232;
 }
