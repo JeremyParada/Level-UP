@@ -25,15 +25,28 @@
             </div>
         </section>
 
-        <!-- Buscador -->
+        <!--Categorias y buscador. logica en productos.js  -->
         <section class="container my-4">
-            <div class="input-group">
-                <input type="text" id="buscador" class="form-control" placeholder="¿Qué producto quieres?">
-                <button id="btnBuscarProducto" class="btn">Buscar producto</button>
+            <div class="row g-2 justify-content-center"> <!-- row con gap y centrado -->
+
+                <div class="col-12 col-md-3"> <!-- col-12 para moviles, col-md-3 de mediana hacia arriba -->
+                    <select id="filtroCategoriaProducto" class="form-select">
+                        <option value="">Selecciona una categoría</option>
+                    </select>
+                </div>
+
+
+                <div class="col-12 col-md-6"> <!-- col-12 para moviles, col-md-6 de mediana hacia arriba -->
+                    <div class="input-group">
+                        <input type="text" id="buscador" class="form-control" placeholder="¿Qué producto quieres?">
+                        <button id="btnBuscarProducto" class="btn">Buscar producto</button>
+                    </div>
+                </div>
+
             </div>
         </section>
 
-        <!-- Catalogo -->
+        <!-- Catalogo. logica en productos.js -->
         <section>
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 px-5 pb-5" id="catalogo"></div>
         </section>
