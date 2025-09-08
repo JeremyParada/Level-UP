@@ -28,9 +28,9 @@ function renderizarProductos(productos) {
         catalogo.innerHTML += `
         <div class="col">
             <div class="card card-producto h-100 shadow-sm rounded-4">
-                <img src="${p.imagen}" class="card-img-top mb-3 rounded-top" alt="${p.nombre}">
+                <img src="${p.imagen}" class="card-img-top mb-3 rounded-top" alt="${p.nombre}" style="cursor: pointer;" onclick="verDetalle('${p.codigo}')">
                 <div class="card-body d-flex flex-column">
-                    <h5 class="card-title mb-2">${p.nombre}</h5>
+                    <h5 class="card-title mb-2" style="cursor: pointer;" onclick="verDetalle('${p.codigo}')">${p.nombre}</h5>
                     <p class="card-text mb-3">${p.descripcion}</p>
         
                     <div class="mt-auto">
@@ -38,13 +38,40 @@ function renderizarProductos(productos) {
                             <span class="precio fw-bold">${formatearPrecio(p.precio)}</span>
                             <span class="codigo">${p.codigo}</span>
                         </div>
-                        <button class="btn btn-agregar-producto w-100">Agregar al carrito</button>
+                        <div class="row g-2">
+                            <div class="col-12">
+                                <button class="btn btn-outline-secondary w-100 btn-sm" onclick="verDetalle('${p.codigo}')">Ver Detalles</button>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-agregar-producto w-100" onclick="agregarAlCarrito('${p.codigo}')">Agregar al carrito</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         `;
     });
+}
+
+// Función para ver detalle del producto
+function verDetalle(codigo) {
+    window.location.href = `producto-detalle.html?codigo=${codigo}`;
+}
+
+// Función global para agregar productos al carrito
+function agregarAlCarrito(codigo) {
+    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    const itemExistente = carrito.find(item => item.codigo === codigo);
+    
+    if (itemExistente) {
+        itemExistente.cantidad += 1;
+    } else {
+        carrito.push({ codigo: codigo, cantidad: 1 });
+    }
+    
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+    alert('Producto agregado al carrito');
 }
 
 // Leer archivo JSON usando fetch
