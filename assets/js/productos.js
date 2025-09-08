@@ -59,8 +59,11 @@ function verDetalle(codigo) {
     window.location.href = `producto-detalle.html?codigo=${codigo}`;
 }
 
-// Función global para agregar productos al carrito
+// Función global para agregar productos al carrito (SIN ALERTS)
 function agregarAlCarrito(codigo) {
+    const producto = productosGlobal.find(p => p.codigo === codigo);
+    if (!producto) return;
+    
     let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
     const itemExistente = carrito.find(item => item.codigo === codigo);
     
@@ -71,7 +74,12 @@ function agregarAlCarrito(codigo) {
     }
     
     localStorage.setItem('carrito', JSON.stringify(carrito));
-    alert('Producto agregado al carrito');
+    CarritoContador.actualizar();
+    
+    // Usar el sistema de notificaciones
+    NotificacionManager.exito(
+        `<strong>${producto.nombre}</strong> agregado al carrito<br>Cantidad: ${itemExistente ? itemExistente.cantidad : 1}`
+    );
 }
 
 // Leer archivo JSON usando fetch

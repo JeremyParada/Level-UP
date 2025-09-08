@@ -51,11 +51,14 @@ form.addEventListener('submit', (event) => {
     form.classList.remove('was-validated'); // quita la clase para resetear el estilo de validacion
 
     // mensaje de registro exitoso
-    let mensaje = 'Registro exitoso';
-    if (correo.endsWith('@duoc.cl') || correo.endsWith('@duocuc.cl')) {     // verificar si el correo es Duoc
-        mensaje += '\n¡Felicidades! Por ser de DuocUC Tienes un descuento de por vida del 20%';
+    if (correo.endsWith('@duoc.cl') || correo.endsWith('@duocuc.cl')) {
+        NotificacionManager.exito(
+            '🎉 <strong>¡Registro exitoso!</strong><br>🎓 Como estudiante DuocUC tienes <strong>20% de descuento de por vida</strong>',
+            6000
+        );
+    } else {
+        NotificacionManager.exito(
+            '✅ <strong>¡Registro completado!</strong><br>Bienvenido a Level-UP Gamer'
+        );
     }
-
-    alert(mensaje);
-
 });

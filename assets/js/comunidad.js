@@ -229,14 +229,19 @@ function cargarDesafios() {
 function inscribirseEvento(eventoId) {
     const evento = eventos.find(e => e.id === eventoId);
     if (evento.estado === 'Inscripciones Abiertas') {
-        alert(`Te has inscrito al evento: ${evento.titulo}\n¡Has ganado ${evento.puntos} puntos LevelUp!`);
-        // Aquí podrías agregar lógica para sumar puntos al perfil
+        NotificacionManager.exito(
+            `🎉 <strong>¡Inscrito exitosamente!</strong><br>${evento.titulo}<br>+${evento.puntos} puntos LevelUp ganados`
+        );
     } else {
-        alert(`Más información sobre: ${evento.titulo}\nPronto abriremos las inscripciones.`);
+        NotificacionManager.info(
+            `ℹ️ <strong>${evento.titulo}</strong><br>Pronto abriremos las inscripciones`
+        );
     }
 }
 
 function leerArticulo(articuloId) {
     const articulo = articulosBlog.find(a => a.id === articuloId);
-    alert(`Abriendo artículo: ${articulo.titulo}\n\n${articulo.resumen}\n\nPróximamente tendremos el artículo completo disponible.`);
+    NotificacionManager.info(
+        `📖 <strong>${articulo.titulo}</strong><br>${articulo.resumen}<br><br>Próximamente artículo completo disponible`
+    );
 }

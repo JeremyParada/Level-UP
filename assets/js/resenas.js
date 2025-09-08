@@ -52,7 +52,8 @@ document.getElementById('formResena').addEventListener('submit', (e) => {
     // Renderizar reseñas
     renderizarResenas();
     
-    alert('¡Reseña publicada exitosamente!');
+    // Usar el sistema de notificaciones
+    NotificacionManager.exito('🎉 ¡Reseña publicada exitosamente!');
 });
 
 function renderizarResenas() {

@@ -117,6 +117,7 @@ function renderizarCarrito() {
 
 function cambiarCantidad(index, cambio) {
     const productoDiv = document.querySelectorAll('.producto-carrito')[index];
+    const producto = obtenerProducto(carrito[index].codigo);
     
     carrito[index].cantidad += cambio;
     
@@ -126,6 +127,14 @@ function cambiarCantidad(index, cambio) {
     }
     
     localStorage.setItem('carrito', JSON.stringify(carrito));
+    CarritoContador.actualizar();
+    
+    // Notificación de cambio de cantidad
+    NotificacionManager.info(
+        `<strong>${producto.nombre}</strong><br>Cantidad actualizada: ${carrito[index].cantidad}`, 
+        2000
+    );
+    
     renderizarCarrito();
     
     // Feedback visual
@@ -137,23 +146,41 @@ function cambiarCantidad(index, cambio) {
 
 function eliminarProducto(index) {
     const productoDiv = document.querySelectorAll('.producto-carrito')[index];
+    const producto = obtenerProducto(carrito[index].codigo);
     
     if (productoDiv) {
         productoDiv.classList.add('eliminando');
         setTimeout(() => {
             carrito.splice(index, 1);
             localStorage.setItem('carrito', JSON.stringify(carrito));
+            CarritoContador.actualizar();
+            
+            NotificacionManager.info(
+                `<strong>${producto.nombre}</strong> eliminado del carrito`, 
+                2500
+            );
+            
             renderizarCarrito();
         }, 300);
     }
 }
 
 function vaciarCarrito() {
-    if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
-        carrito = [];
-        localStorage.setItem('carrito', JSON.stringify(carrito));
-        renderizarCarrito();
-    }
+    ConfirmacionManager.confirmar(
+        '¿Estás seguro de que quieres vaciar el carrito? Esta acción no se puede deshacer.',
+        () => {
+            carrito = [];
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+            CarritoContador.actualizar();
+            NotificacionManager.exito('Carrito vaciado correctamente');
+            renderizarCarrito();
+        },
+        {
+            titulo: 'Vaciar carrito',
+            confirmar: 'Sí, vaciar',
+            cancelar: 'Cancelar'
+        }
+    );
 }
 
 function actualizarTotales() {
@@ -213,55 +240,56 @@ document.getElementById('aplicarDescuento').addEventListener('click', () => {
         btnAplicar.classList.add('btn-success');
         actualizarTotales();
         
-        // Mostrar mensaje de éxito
-        const mensaje = document.createElement('div');
-        mensaje.className = 'alert alert-success mt-2';
-        mensaje.innerHTML = '🎉 ¡Descuento DuocUC del 20% aplicado correctamente!';
-        document.getElementById('codigoDescuento').parentNode.parentNode.appendChild(mensaje);
-        setTimeout(() => mensaje.remove(), 5000);
+        NotificacionManager.exito(
+            '🎉 <strong>Descuento DuocUC aplicado!</strong><br>20% de descuento en tu compra'
+        );
     } else {
-        // Mostrar mensaje de error
-        const mensaje = document.createElement('div');
-        mensaje.className = 'alert alert-danger mt-2';
-        mensaje.innerHTML = '❌ Código de descuento inválido. Prueba con: DUOC20';
-        document.getElementById('codigoDescuento').parentNode.parentNode.appendChild(mensaje);
-        setTimeout(() => mensaje.remove(), 3000);
+        NotificacionManager.error(
+            '❌ <strong>Código inválido</strong><br>Prueba con: <code>DUOC20</code>'
+        );
     }
 });
 
 // Finalizar compra
 document.getElementById('btnFinalizarCompra').addEventListener('click', () => {
     if (carrito.length === 0) {
-        alert('Tu carrito está vacío');
+        NotificacionManager.advertencia('Tu carrito está vacío. Agrega productos antes de finalizar la compra.');
         return;
     }
     
     const total = document.getElementById('total').textContent;
-    const confirmacion = confirm(`¿Confirmas tu compra por ${total}?\n\nRecibirás un email de confirmación con los detalles del pedido.`);
     
-    if (confirmacion) {
-        // Simular proceso de compra
-        const procesando = document.createElement('div');
-        procesando.className = 'alert alert-info text-center';
-        procesando.innerHTML = `
-            <div class="spinner-border spinner-border-sm me-2" role="status"></div>
-            Procesando tu compra...
-        `;
-        document.getElementById('btnFinalizarCompra').parentNode.appendChild(procesando);
-        
-        setTimeout(() => {
-            procesando.remove();
-            alert('🎉 ¡Compra realizada exitosamente!\n\n✅ Recibirás un email de confirmación\n📦 Tu pedido llegará en 3-5 días hábiles\n🎮 ¡Gracias por elegir Level-UP Gamer!');
+    ConfirmacionManager.confirmar(
+        `¿Confirmas tu compra por <strong>${total}</strong>?<br><br>Recibirás un email de confirmación con los detalles del pedido.`,
+        () => {
+            // Mostrar proceso de compra
+            NotificacionManager.info(
+                '⏳ <strong>Procesando tu compra...</strong><br>Por favor espera un momento',
+                2000
+            );
             
-            // Limpiar carrito
-            carrito = [];
-            localStorage.setItem('carrito', JSON.stringify(carrito));
-            renderizarCarrito();
-        }, 2000);
-    }
+            setTimeout(() => {
+                NotificacionManager.exito(
+                    '🎉 <strong>¡Compra realizada exitosamente!</strong><br>📧 Recibirás confirmación por email<br>📦 Entrega en 3-5 días hábiles',
+                    5000
+                );
+                
+                // Limpiar carrito
+                carrito = [];
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+                CarritoContador.actualizar();
+                renderizarCarrito();
+            }, 2000);
+        },
+        {
+            titulo: 'Finalizar compra',
+            confirmar: 'Confirmar compra',
+            cancelar: 'Seguir editando'
+        }
+    );
 });
 
-// Función global para agregar productos al carrito (con mejores notificaciones)
+// Función global para agregar productos al carrito (sin alerts)
 function agregarAlCarrito(codigo) {
     const itemExistente = carrito.find(item => item.codigo === codigo);
     const producto = obtenerProducto(codigo);
@@ -275,16 +303,10 @@ function agregarAlCarrito(codigo) {
     }
     
     localStorage.setItem('carrito', JSON.stringify(carrito));
+    CarritoContador.actualizar();
     
-    // Notificación mejorada
-    const mensaje = document.createElement('div');
-    mensaje.className = 'alert alert-success position-fixed top-0 end-0 m-3';
-    mensaje.style.zIndex = '9999';
-    mensaje.innerHTML = `
-        ✅ <strong>${producto.nombre}</strong> agregado al carrito<br>
-        <small>Cantidad: ${itemExistente ? itemExistente.cantidad : 1}</small>
-    `;
-    document.body.appendChild(mensaje);
-    
-    setTimeout(() => mensaje.remove(), 3000);
+    // Notificación elegante
+    NotificacionManager.exito(
+        `<strong>${producto.nombre}</strong> agregado al carrito<br>Cantidad: ${itemExistente ? itemExistente.cantidad : 1}`
+    );
 }

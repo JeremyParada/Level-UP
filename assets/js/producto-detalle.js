@@ -30,8 +30,8 @@ fetch('assets/data/productos.json')
         productoActual = productos.find(p => p.codigo === codigo);
         
         if (!productoActual) {
-            alert('Producto no encontrado');
-            window.location.href = 'productos.html';
+            NotificacionManager.error('Producto no encontrado');
+            setTimeout(() => window.location.href = 'productos.html', 2000);
             return;
         }
         
@@ -40,8 +40,13 @@ fetch('assets/data/productos.json')
     })
     .catch(error => {
         console.error('Error cargando productos:', error);
-        window.location.href = 'productos.html';
+        NotificacionManager.error('Error cargando el producto');
+        setTimeout(() => window.location.href = 'productos.html', 2000);
     });
+
+function obtenerProducto(codigo) {
+    return productos.find(p => p.codigo === codigo);
+}
 
 function cargarProducto() {
     document.title = `${productoActual.nombre} - Level-Up Gamer`;
@@ -61,7 +66,7 @@ function cargarResenasProducto() {
     if (resenasProducto.length === 0) {
         contenedor.innerHTML = `
             <div class="text-center py-4">
-                <p class="mb-0">Este producto aún no tiene reseñas. ¡Sé el primero en opinar!</p>
+                <p class="mb-0 text-light">Este producto aún no tiene reseñas. ¡Sé el primero en opinar!</p>
             </div>
         `;
         return;
@@ -81,7 +86,7 @@ function cargarResenasProducto() {
                 </div>
                 <small class="text-muted">${resena.fecha}</small>
             </div>
-            <p class="mb-0">"${resena.comentario}"</p>
+            <p class="mb-0 text-light">"${resena.comentario}"</p>
         `;
         contenedor.appendChild(div);
     });
@@ -101,7 +106,12 @@ document.getElementById('btnAgregarCarrito').addEventListener('click', () => {
     }
     
     localStorage.setItem('carrito', JSON.stringify(carrito));
-    alert(`${cantidad} ${productoActual.nombre} agregado(s) al carrito`);
+    CarritoContador.actualizar();
+    
+    // Usar el sistema de notificaciones
+    NotificacionManager.exito(
+        `<strong>${productoActual.nombre}</strong> agregado al carrito<br>Cantidad: ${cantidad}`
+    );
 });
 
 // Formulario de reseña
@@ -132,5 +142,31 @@ document.getElementById('formResenaProducto').addEventListener('submit', (e) => 
     // Recargar reseñas
     cargarResenasProducto();
     
-    alert('¡Reseña publicada exitosamente!');
+    // Usar el sistema de notificaciones
+    NotificacionManager.exito('🎉 ¡Reseña publicada exitosamente!');
 });
+
+// Función global para agregar productos al carrito (sin alerts)
+function agregarAlCarrito(codigo) {
+    const itemExistente = JSON.parse(localStorage.getItem('carrito'))?.find(item => item.codigo === codigo);
+    const producto = obtenerProducto(codigo);
+    
+    if (!producto) return;
+    
+    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    const existente = carrito.find(item => item.codigo === codigo);
+    
+    if (existente) {
+        existente.cantidad += 1;
+    } else {
+        carrito.push({ codigo: codigo, cantidad: 1 });
+    }
+    
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+    CarritoContador.actualizar();
+    
+    // Notificación elegante
+    NotificacionManager.exito(
+        `<strong>${producto.nombre}</strong> agregado al carrito<br>Cantidad: ${existente ? existente.cantidad : 1}`
+    );
+}

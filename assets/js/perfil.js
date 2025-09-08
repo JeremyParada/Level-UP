@@ -50,7 +50,9 @@ document.getElementById('formPerfil').addEventListener('submit', (e) => {
     perfilUsuario.juegoFavorito = document.getElementById('perfilJuegoFavorito').value.trim();
     
     localStorage.setItem('perfilUsuario', JSON.stringify(perfilUsuario));
-    alert('¡Perfil actualizado exitosamente!');
+    
+    // Usar el sistema de notificaciones
+    NotificacionManager.exito('✅ ¡Perfil actualizado exitosamente!');
 });
 
 function actualizarNivel() {
@@ -160,9 +162,9 @@ function cargarHistorialCompras() {
 function copiarCodigo() {
     const codigo = document.getElementById('codigoReferido').textContent;
     navigator.clipboard.writeText(codigo).then(() => {
-        alert('¡Código copiado al portapapeles!');
+        NotificacionManager.exito('📋 ¡Código copiado al portapapeles!');
     }).catch(() => {
-        alert('No se pudo copiar el código');
+        NotificacionManager.error('❌ No se pudo copiar el código');
     });
 }
 
