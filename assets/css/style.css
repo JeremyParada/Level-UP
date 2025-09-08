@@ -633,22 +633,169 @@ code {
     padding: 0.75rem;
 }
 
-/* Responsive mejoras */
-@media (max-width: 768px) {
-    .producto-carrito {
-        padding: 0.75rem;
+/* SISTEMA DE NOTIFICACIONES MEJORADO */
+.notificacion {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    min-width: 300px;
+    max-width: 400px;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    opacity: 0;
+}
+
+.notificacion.mostrar {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.notificacion-exito {
+    background: linear-gradient(135deg, #39FF14, #28a745);
+    color: #000;
+    border-left: 4px solid #1e7e34;
+}
+
+.notificacion-error {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: #fff;
+    border-left: 4px solid #721c24;
+}
+
+.notificacion-info {
+    background: linear-gradient(135deg, #1E90FF, #0056b3);
+    color: #fff;
+    border-left: 4px solid #003d82;
+}
+
+.notificacion-advertencia {
+    background: linear-gradient(135deg, #ffc107, #e0a800);
+    color: #000;
+    border-left: 4px solid #b08800;
+}
+
+.notificacion .btn-cerrar {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.notificacion .btn-cerrar:hover {
+    opacity: 1;
+}
+
+/* Contador del carrito en navbar */
+.carrito-contador {
+    position: relative;
+}
+
+.carrito-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #39FF14;
+    color: #000;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* Animación para notificaciones tipo toast */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
     }
-    
-    .producto-carrito img {
-        width: 60px !important;
-        height: 60px !important;
+    to {
+        transform: translateX(0);
+        opacity: 1;
     }
-    
-    .cantidad-control {
-        margin: 0.5rem 0;
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
     }
-    
-    .resumen-pedido {
-        margin-top: 2rem;
+    to {
+        transform: translateX(100%);
+        opacity: 0;
     }
+}
+
+/* CORRECCIÓN ESPECÍFICA PARA TEXTO DE REGISTRO */
+
+/* Texto específico de la página de registro */
+.registro-pagina p {
+    color: #D3D3D3 !important;
+}
+
+/* Enlaces en la página de registro */
+.registro-pagina a {
+    color: #1E90FF !important;
+    text-decoration: none;
+}
+
+.registro-pagina a:hover {
+    color: #39FF14 !important;
+    text-decoration: underline;
+}
+
+/* Asegurar que todos los párrafos en cards de formulario sean visibles */
+.card-formulario p {
+    color: #D3D3D3 !important;
+}
+
+/* Texto específico para páginas de formularios */
+.registro-pagina .text-center p,
+.perfil-pagina .text-center p,
+.carrito-pagina .text-center p,
+.resenas-pagina .text-center p {
+    color: #D3D3D3 !important;
+}
+
+/* Enlaces en cards de formulario */
+.card-formulario a {
+    color: #1E90FF !important;
+    text-decoration: none;
+}
+
+.card-formulario a:hover {
+    color: #39FF14 !important;
+    text-decoration: underline;
+}
+
+/* Corrección global para asegurar que todo el texto sea visible */
+.fondo-catalogo .card-formulario p,
+.fondo-catalogo .card-formulario a {
+    color: #D3D3D3 !important;
+}
+
+.fondo-catalogo .card-formulario a {
+    color: #1E90FF !important;
+}
+
+.fondo-catalogo .card-formulario a:hover {
+    color: #39FF14 !important;
 }
