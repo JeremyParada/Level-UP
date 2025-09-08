@@ -254,7 +254,7 @@ Este proyecto es desarrollado con fines académicos para DuocUC. Todos los derec
 
 - **Proyecto Académico**: DuocUC 2025
 - **Repositorio**: [GitHub Repository](https://github.com/JeremyParada/Level-UP)
-- **Documentación**: Ver archivos en `/docs` para detalles técnicos adicionales
+- **Correos**: Jeremy Parada: jer.parada@duocuc.cl, Felipe Duarte: fe.duarte@duocuc.cl
 
 ## Changelog
 
