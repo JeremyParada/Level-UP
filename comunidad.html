@@ -12,9 +12,125 @@
     <header id="header-container" class="texto-principal"></header>
     <nav id="navbar-container" class="texto-principal"></nav>
     
+    <main>
+        <!-- Titulo de la pagina -->
+        <section class="text-center fondo-catalogo">
+            <div class="row py-lg-5 fondo-texto-catalogo">
+                <div class="col-lg-6 col-md-8 mx-auto">
+                    <h1 class="texto-principal">Comunidad Gamer</h1>
+                    <p class="color-acento-verde">Conecta con otros gamers y participa en eventos</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="container my-5">
+            <!-- Eventos y torneos -->
+            <section class="mb-5">
+                <h2 class="texto-principal color-acento-azul mb-4">Eventos y Torneos</h2>
+                <div class="row" id="eventosContainer">
+                    <!-- Los eventos se cargan aquí -->
+                </div>
+            </section>
+
+            <!-- Mapa de eventos -->
+            <section class="mb-5">
+                <h2 class="texto-principal color-acento-azul mb-4">Mapa de Eventos en Chile</h2>
+                <div class="card card-formulario rounded-4 p-4">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div id="mapaEventos" class="bg-dark rounded p-4 text-center" style="height: 400px;">
+                                <h5 class="color-acento-verde mb-3">🗺️ Mapa Interactivo de Eventos</h5>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="border rounded p-3">
+                                            <h6 class="color-acento-azul">📍 Santiago</h6>
+                                            <p class="small mb-2">Torneo League of Legends</p>
+                                            <span class="badge bg-success">15 Ene</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="border rounded p-3">
+                                            <h6 class="color-acento-azul">📍 Valparaíso</h6>
+                                            <p class="small mb-2">Gaming Expo 2025</p>
+                                            <span class="badge bg-primary">22 Ene</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="border rounded p-3">
+                                            <h6 class="color-acento-azul">📍 Concepción</h6>
+                                            <p class="small mb-2">Torneo FIFA 25</p>
+                                            <span class="badge bg-warning">5 Feb</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="small text-muted mt-3">Participa en eventos y gana puntos LevelUp</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <h5 class="color-acento-verde mb-3">Próximos Eventos</h5>
+                            <div id="proximosEventos">
+                                <!-- Lista de próximos eventos -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Blog y guías -->
+            <section class="mb-5">
+                <h2 class="texto-principal color-acento-azul mb-4">Blog y Guías Gamer</h2>
+                <div class="row" id="blogContainer">
+                    <!-- Los artículos del blog se cargan aquí -->
+                </div>
+            </section>
+
+            <!-- Soporte técnico -->
+            <section class="mb-5">
+                <h2 class="texto-principal color-acento-azul mb-4">Soporte Técnico</h2>
+                <div class="card card-formulario rounded-4 p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h5 class="color-acento-verde mb-2">¿Necesitas ayuda técnica?</h5>
+                            <p class="mb-0">Nuestro equipo de soporte está listo para ayudarte con cualquier problema técnico, instalación de hardware o configuración de software.</p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <a href="https://wa.me/56912345678?text=Hola, necesito soporte técnico desde Level-UP Gamer" 
+                               target="_blank" class="btn btn-success btn-lg">
+                                📱 Chat WhatsApp
+                            </a>
+                            <p class="small mt-2 text-muted">Atención de 9:00 a 18:00 hrs</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ranking de la comunidad -->
+            <section>
+                <h2 class="texto-principal color-acento-azul mb-4">Ranking de Gamers</h2>
+                <div class="card card-formulario rounded-4 p-4">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h5 class="color-acento-verde mb-3">🏆 Top Gamers del Mes</h5>
+                            <div id="rankingGamers">
+                                <!-- El ranking se carga aquí -->
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <h5 class="color-acento-verde mb-3">🎯 Desafíos de la Comunidad</h5>
+                            <div id="desafiosComunidad">
+                                <!-- Los desafíos se cargan aquí -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
     <footer id="footer-container"></footer>
     
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/comunidad.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 </html>

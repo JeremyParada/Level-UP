@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda gamer</title>
+    <title>Level-Up Gamer Store</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/css/style.css">
@@ -17,25 +17,88 @@
 
     <main class="container my-5">
 
-        <!-- Invitacion a registrarse -->
-        <section class="registro-seccion text-center">
-            <h2>Únete a nuestra comunidad Gamer</h2>
-            <p>
-                Regístrate y disfruta de <span class="color-acento-verde">descuentos exclusivos</span>, noticias,
-                torneos y mucho más.
+        <!-- Banner de bienvenida -->
+        <section class="registro-seccion text-center mb-5">
+            <h1 class="display-4 texto-principal color-acento-azul mb-3">¡Bienvenido a Level-Up Gamer!</h1>
+            <p class="lead">
+                Tu tienda online de confianza para productos gaming en Chile.
+                <span class="color-acento-verde">Descuentos exclusivos</span> y los mejores precios.
             </p>
-            <a href="registro.html" class="btn btn-registrarse btn-lg">Registrarse</a>
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <a href="productos.html" class="btn btn-agregar-producto btn-lg mb-2">Ver Catálogo Completo</a>
+                </div>
+                <div class="col-md-6">
+                    <a href="registro.html" class="btn btn-registrarse btn-lg mb-2">Únete a la Comunidad</a>
+                </div>
+            </div>
         </section>
 
+        <!-- Productos destacados - MOVIDO ARRIBA -->
+        <section class="mb-5">
+            <h2 class="texto-principal color-acento-azul mb-4 text-center">🔥 Productos Destacados</h2>
+            <div class="row" id="productosContainer">
+                <!-- Productos se cargan con JS -->
+            </div>
+            <div class="text-center mt-4">
+                <a href="productos.html" class="btn btn-outline-secondary btn-lg">Ver Todos los Productos</a>
+            </div>
+        </section>
 
-        <!-- Noticias -->
+        <!-- Beneficios de registrarse -->
+        <section class="mb-5">
+            <div class="card card-formulario rounded-4 p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h3 class="color-acento-azul mb-3">¿Por qué registrarte en Level-Up Gamer?</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">✅ <span class="color-acento-verde">20% descuento</span> si eres de
+                                        DuocUC
+                                    </li>
+                                    <li class="mb-2">🎮 Sistema de puntos LevelUp</li>
+                                    <li class="mb-2">🏆 Acceso a torneos exclusivos</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">📦 Envío gratis sobre $50.000</li>
+                                    <li class="mb-2">⚡ Ofertas flash para miembros</li>
+                                    <li class="mb-2">🎁 Regalos por referidos</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <a href="registro.html" class="btn btn-registrarse btn-lg">Registrarse Gratis</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trailer GTA VI -->
+        <section class="mb-5 text-center">
+            <h2 class="texto-principal color-acento-azul mb-3">🎬 ¡Ya viste el último trailer de GTA VI?!</h2>
+            <div class="d-flex justify-content-center">
+                <iframe width="80%" height="400"
+                    src="https://www.youtube-nocookie.com/embed/QdBZY2fkU-0?si=SCvfg5vAlPymbuSN"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                </iframe>
+            </div>
+        </section>
+
+        <!-- Noticias Gamer - MOVIDO ABAJO -->
         <section id="noticias-gamer" class="my-5 px-3">
             <div class="container">
-                <h2 class="texto-principal color-acento-azul mb-4">Noticias Gamer</h2>
+                <h2 class="texto-principal color-acento-azul mb-4 text-center">📰 Noticias Gamer</h2>
 
                 <!-- Noticia 1 -->
                 <article class="card card-producto p-3 mb-3">
-                    <h5 class="card-title">Lanzamiento sorpresa de un nuevo DLC de Cyberpunk 2077</h5>
+                    <h5 class="card-title color-acento-verde">Lanzamiento sorpresa de un nuevo DLC de Cyberpunk 2077
+                    </h5>
                     <p class="card-text"><strong>Fecha:</strong> 7 de septiembre de 2025</p>
                     <p class="card-text">
                         CD Projekt Red ha lanzado un DLC sorpresa para Cyberpunk 2077 que incluye nuevas misiones, armas
@@ -46,7 +109,7 @@
 
                 <!-- Noticia 2 -->
                 <article class="card card-producto p-3 mb-3">
-                    <h5 class="card-title">Rumores sobre GTA VI: pistas desde Rockstar Games</h5>
+                    <h5 class="card-title color-acento-verde">Rumores sobre GTA VI: pistas desde Rockstar Games</h5>
                     <p class="card-text"><strong>Fecha:</strong> 7 de septiembre de 2025</p>
                     <p class="card-text">
                         Varios insiders aseguran que Rockstar Games está preparando el lanzamiento del tráiler oficial
@@ -57,7 +120,8 @@
 
                 <!-- Noticia 3 -->
                 <article class="card card-producto p-3 mb-3">
-                    <h5 class="card-title">Torneos de eSports en Sudamérica baten récords de asistencia</h5>
+                    <h5 class="card-title color-acento-verde">Torneos de eSports en Sudamérica baten récords de asistencia
+                    </h5>
                     <p class="card-text"><strong>Fecha:</strong> 7 de septiembre de 2025</p>
                     <p class="card-text">
                         Este año, los torneos de eSports en Sudamérica han registrado una asistencia sin precedentes,
@@ -70,24 +134,25 @@
             </div>
         </section>
 
-        <!-- trailer -->
-        <section class="mb-5 text-center">
-            <h2 class="mb-3">Ya viste el último trailer de GTA VI ?!</h2>
-            <div class="d-flex justify-content-center">
-                <iframe width="80%" height="400"
-                    src="https://www.youtube-nocookie.com/embed/QdBZY2fkU-0?si=SCvfg5vAlPymbuSN"
-                    title="YouTube video player" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-                </iframe>
-            </div>
-        </section>
-
-        <!-- Productos destacados -->
-        <section class="mb-5">
-            <h2 class="mb-4">Productos Destacados</h2>
-            <div class="row" id="productosContainer">
-                <!-- Productos se cargan con JS -->
+        <!-- Llamada a la acción final -->
+        <section class="text-center py-5">
+            <div class="card card-formulario rounded-4 p-4">
+                <h3 class="color-acento-azul mb-3">¿Listo para subir de nivel?</h3>
+                <p class="mb-4">Explora nuestro catálogo completo y descubre los mejores productos gaming</p>
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <a href="productos.html" class="btn btn-agregar-producto w-100">Productos</a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="comunidad.html" class="btn btn-outline-secondary w-100">Comunidad</a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="resenas.html" class="btn btn-outline-secondary w-100">Reseñas</a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="registro.html" class="btn btn-registrarse w-100">Únete Ya</a>
+                    </div>
+                </div>
             </div>
         </section>
 
