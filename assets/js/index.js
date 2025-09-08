@@ -78,17 +78,34 @@ function verDetalle(codigo) {
     window.location.href = `producto-detalle.html?codigo=${codigo}`;
 }
 
-// Función para agregar al carrito (reutilizable)
+// Función para agregar al carrito (SIN ALERTS)
 function agregarAlCarrito(codigo) {
-    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-    const itemExistente = carrito.find(item => item.codigo === codigo);
-    
-    if (itemExistente) {
-        itemExistente.cantidad += 1;
-    } else {
-        carrito.push({ codigo: codigo, cantidad: 1 });
-    }
-    
-    localStorage.setItem('carrito', JSON.stringify(carrito));
-    alert('Producto agregado al carrito');
+    // Cargar productos para obtener información
+    fetch('assets/data/productos.json')
+        .then(response => response.json())
+        .then(productos => {
+            const producto = productos.find(p => p.codigo === codigo);
+            if (!producto) return;
+            
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            const itemExistente = carrito.find(item => item.codigo === codigo);
+            
+            if (itemExistente) {
+                itemExistente.cantidad += 1;
+            } else {
+                carrito.push({ codigo: codigo, cantidad: 1 });
+            }
+            
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+            CarritoContador.actualizar();
+            
+            // Usar el sistema de notificaciones
+            NotificacionManager.exito(
+                `<strong>${producto.nombre}</strong> agregado al carrito<br>Cantidad: ${itemExistente ? itemExistente.cantidad : 1}`
+            );
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            NotificacionManager.error('Error al agregar producto al carrito');
+        });
 }
