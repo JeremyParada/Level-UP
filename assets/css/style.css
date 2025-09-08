@@ -51,7 +51,7 @@ body {
 }
 
 .fondo-texto-catalogo {
-    background-color: rgba(0, 0, 0, 0.677);
+    background-color: rgba(255, 255, 255, 0.677);
 }
 
 /* fondo y estilo general de las cards de productos */
@@ -81,7 +81,7 @@ body {
 
 /* descripcion del producto */
 .card-producto .card-text {
-    color: #D3D3D3;
+    color: #ffffff;
 }
 
 /* precio card */
@@ -92,7 +92,7 @@ body {
 
 /* codigo card */
 .card-producto .codigo {
-    color: #686868;
+    color: #ffffff;
     font-weight: 700;
 }
 
@@ -140,40 +140,310 @@ body {
     color: #fff;
 }
 
-/* Tooltips de formulario */
-.invalid-tooltip {
-    background-color: #ffffffcc; /* semi-transparente */
-    color: #000;
-    font-weight: 600;
-}
-.valid-tooltip {
-    background-color: #39FF14cc;
-    color: #000;
-    font-weight: 600;
-}
+/* CORRECCIONES GLOBALES DE TEXTO */
 
-/* Seccion de invitacion a registrarse en index */
-.registro-seccion {
-    background: linear-gradient(135deg, #1a1a1a, #222);
-    padding: 5rem 2rem;
-    border-radius: 1rem;
-    margin-bottom: 3rem;
-}
-
-.registro-seccion h2 {
-    font-family: 'Orbitron', sans-serif;
-    color: #1E90FF;
-    margin-bottom: 1.5rem;
-    font-size: 2rem;
-}
-
-.registro-seccion p {
+/* Asegurar que todo el texto sea visible */
+body, body * {
     color: #D3D3D3;
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
 }
 
-.registro-seccion a.btn {
-    font-size: 1.2rem;
-    padding: 1rem 3rem;
+/* Elementos de Bootstrap que necesitan corrección */
+.text-muted {
+    color: #888 !important;
+}
+
+.text-dark {
+    color: #D3D3D3 !important;
+}
+
+/* Labels y texto de formularios */
+.form-label {
+    color: #D3D3D3 !important;
+    font-weight: 600;
+}
+
+/* Placeholders */
+::placeholder {
+    color: #888 !important;
+}
+
+/* Inputs y selects globales */
+.form-control, .form-select {
+    background-color: #2a2a2a !important;
+    border: 1px solid #555 !important;
+    color: #ffffff !important;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #2a2a2a !important;
+    border-color: #1E90FF !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 0.2rem rgba(30, 144, 255, 0.25) !important;
+}
+
+/* Option elements */
+.form-select option {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+/* Progress bars */
+.progress {
+    background-color: #333 !important;
+}
+
+.progress-bar {
+    background-color: #39FF14 !important;
+}
+
+/* Badges mejorados */
+.badge {
+    color: #ffffff !important;
+}
+
+.badge.bg-secondary {
+    background-color: #555 !important;
+}
+
+.badge.bg-primary {
+    background-color: #1E90FF !important;
+}
+
+.badge.bg-success {
+    background-color: #39FF14 !important;
+    color: #000000 !important;
+}
+
+.badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #000000 !important;
+}
+
+.badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+/* Alerts */
+.alert {
+    background-color: #2a2a2a !important;
+    border: 1px solid #555 !important;
+    color: #ffffff !important;
+}
+
+.alert-warning {
+    background-color: #664d03 !important;
+    border-color: #b08800 !important;
+    color: #ffecb5 !important;
+}
+
+/* Botones outline mejorados */
+.btn-outline-secondary {
+    color: #D3D3D3 !important;
+    border-color: #555 !important;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #555 !important;
+    border-color: #555 !important;
+    color: #ffffff !important;
+}
+
+/* Texto en cards específicas */
+.card-producto .small,
+.card-formulario .small {
+    color: #D3D3D3 !important;
+}
+
+/* Enlaces mejorados */
+a {
+    color: #1E90FF;
+}
+
+a:hover {
+    color: #39FF14;
+}
+
+/* Elementos específicos por página */
+.fondo-texto-catalogo h1,
+.fondo-texto-catalogo p {
+    color: #000000 !important; /* Solo en este elemento mantener negro */
+}
+
+/* Títulos y headers */
+h1, h2, h3, h4, h5, h6 {
+    color: #1E90FF !important;
+}
+
+/* Párrafos y texto general */
+p, span, div, td, th {
+    color: #D3D3D3;
+}
+
+/* Input groups */
+.input-group-text {
+    background-color: #2a2a2a !important;
+    border: 1px solid #555 !important;
+    color: #D3D3D3 !important;
+}
+
+/* List items */
+li {
+    color: #D3D3D3 !important;
+}
+
+/* Tables si las usas */
+.table {
+    color: #D3D3D3 !important;
+}
+
+.table-dark {
+    --bs-table-bg: #1a1a1a !important;
+    --bs-table-color: #D3D3D3 !important;
+}
+
+/* Breadcrumbs si los usas */
+.breadcrumb-item {
+    color: #D3D3D3 !important;
+}
+
+.breadcrumb-item.active {
+    color: #1E90FF !important;
+}
+
+/* Modal si los usas */
+.modal-content {
+    background-color: #1a1a1a !important;
+    color: #D3D3D3 !important;
+}
+
+.modal-header {
+    border-bottom: 1px solid #333 !important;
+}
+
+.modal-footer {
+    border-top: 1px solid #333 !important;
+}
+
+/* Tabs si los usas */
+.nav-tabs .nav-link {
+    color: #D3D3D3 !important;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #2a2a2a !important;
+    border-color: #555 !important;
+    color: #1E90FF !important;
+}
+
+/* Tooltips personalizados mejorados */
+.invalid-tooltip {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+.valid-tooltip {
+    background-color: #39FF14 !important;
+    color: #000000 !important;
+    font-weight: 600;
+}
+
+/* Texto específico para elementos de fecha */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+/* Mejorar contraste en listas */
+ul, ol {
+    color: #D3D3D3 !important;
+}
+
+/* Asegurar que los íconos de emoji mantengan su color */
+.color-acento-verde,
+.color-acento-azul {
+    /* Mantener colores específicos para estos elementos */
+}
+
+/* Cards específicas de comunidad */
+.card-producto h5,
+.card-producto h6 {
+    color: #1E90FF !important;
+}
+
+.card-producto p,
+.card-producto .card-text {
+    color: #D3D3D3 !important;
+}
+
+/* Elementos específicos de perfil */
+.perfil-pagina .text-center p {
+    color: #D3D3D3 !important;
+}
+
+/* Elementos específicos de carrito */
+.carrito-pagina .d-flex span {
+    color: #D3D3D3 !important;
+}
+
+/* CORRECCIONES ESPECÍFICAS POR CONTEXTO */
+
+/* Asegurar que los selects tengan buen contraste */
+select.form-control,
+select.form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
+}
+
+/* Mejorar el contraste de los botones de cantidad */
+.input-group .btn {
+    background-color: #2a2a2a !important;
+    border-color: #555 !important;
+    color: #D3D3D3 !important;
+}
+
+.input-group .btn:hover {
+    background-color: #1E90FF !important;
+    border-color: #1E90FF !important;
+    color: #ffffff !important;
+}
+
+/* Elementos de navegación */
+.navbar-nav .nav-link {
+    color: #39FF14 !important;
+}
+
+/* Texto en iframes (si es posible) */
+iframe {
+    border: 2px solid #555 !important;
+    border-radius: 8px;
+}
+
+/* Asegurar que todos los elementos small sean visibles */
+.small, small {
+    color: #888 !important;
+}
+
+/* Mejorar legibilidad en el footer */
+footer, .bg-dark {
+    color: #D3D3D3 !important;
+}
+
+/* Corrección específica para elementos del mapa */
+#mapaEventos h5,
+#mapaEventos h6,
+#mapaEventos p {
+    color: #D3D3D3 !important;
+}
+
+/* Elementos de ranking y estadísticas */
+.ranking-item,
+.stats-item {
+    color: #D3D3D3 !important;
+}
+
+/* Asegurar que los códigos sean legibles */
+code {
+    background-color: #2a2a2a !important;
+    color: #39FF14 !important;
+    padding: 2px 4px;
+    border-radius: 3px;
 }
