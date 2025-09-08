@@ -13,6 +13,10 @@ function cargarPartial(archivo, contenedorId, nombrePartial) {
             const contenedor = document.getElementById(contenedorId);
             if (contenedor) {
                 contenedor.innerHTML = data;
+                // Actualizar contador después de cargar navbar
+                if (contenedorId === 'navbar-container') {
+                    setTimeout(() => CarritoContador.actualizar(), 100);
+                }
             } else {
                 console.error(`No se encontró el contenedor: ${contenedorId}`);
             }
