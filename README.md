@@ -253,12 +253,12 @@ Este proyecto es desarrollado con fines académicos para DuocUC. Todos los derec
 ## Contacto y Soporte
 
 - **Proyecto Académico**: DuocUC 2025
-- **Repositorio**: [GitHub Repository](https://github.com/tu-usuario/level-up-gamer)
-- **Documentación**: Ver archivos en `/docs` para detalles técnicos adicionales
+- **Repositorio**: [GitHub Repository](https://github.com/JeremyParada/Level-UP)
+- **Correos**: Jeremy Parada: jer.parada@duocuc.cl, Felipe Duarte: fe.duarte@duocuc.cl
 
 ## Changelog
 
-### Versión 1.0.0 (Enero 2025)
+### Versión 1.0.0 (Septiembre 2025)
 - Implementación completa del ecommerce
 - Sistema de notificaciones sin popups
 - Contador dinámico del carrito
