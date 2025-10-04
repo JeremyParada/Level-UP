@@ -6,8 +6,10 @@
 export const formatearPrecio = (precio) => {
   return new Intl.NumberFormat('es-CL', {
     style: 'currency',
-    currency: 'CLP'
-  }).format(precio);
+    currency: 'CLP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(Math.round(precio));
 };
 
 /**
@@ -17,9 +19,9 @@ export const formatearPrecio = (precio) => {
  */
 export const normalizarTexto = (texto) => {
   return texto
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase();
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
 };
 
 /**
@@ -39,11 +41,11 @@ export const validarEmail = (email) => {
  */
 export const calcularEdad = (fechaNacimiento) => {
   const hoy = new Date();
-  const fechaNac = new Date(fechaNacimiento);
-  let edad = hoy.getFullYear() - fechaNac.getFullYear();
-  const mes = hoy.getMonth() - fechaNac.getMonth();
+  const nacimiento = new Date(fechaNacimiento);
+  let edad = hoy.getFullYear() - nacimiento.getFullYear();
+  const mes = hoy.getMonth() - nacimiento.getMonth();
   
-  if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+  if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
     edad--;
   }
   
