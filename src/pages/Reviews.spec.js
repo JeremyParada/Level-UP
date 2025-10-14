@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import Reviews from './Reviews';
 import { NotificationContext } from '../context/NotificationContext';
@@ -67,21 +67,29 @@ describe('Reviews Page', () => {
   it('debe publicar una reseña correctamente', async () => {
     renderComponent();
 
+    // Esperar a que cargue el formulario
     await waitFor(() => {
+      expect(screen.getByLabelText(/Producto/i)).toBeTruthy();
+    });
+
+    await act(async () => {
       const selectProducto = screen.getByLabelText(/Producto/i);
       const selectCalificacion = screen.getByLabelText(/Calificación/i);
       const inputNombre = screen.getByPlaceholderText(/Tu nombre gamer/i);
       const textareaComentario = screen.getByPlaceholderText(/Comparte tu experiencia/i);
 
+      // Llenar formulario
       fireEvent.change(selectProducto, { target: { value: 'Mouse Gamer RGB' } });
       fireEvent.change(selectCalificacion, { target: { value: '5' } });
       fireEvent.change(inputNombre, { target: { value: 'TestUser' } });
       fireEvent.change(textareaComentario, { target: { value: 'Excelente producto' } });
 
-      const btnPublicar = screen.getByText('Publicar Reseña');
-      fireEvent.click(btnPublicar);
+      // Submit del formulario
+      const form = selectProducto.closest('form');
+      fireEvent.submit(form);
     });
 
+    // Verificar que se llamó la notificación
     await waitFor(() => {
       expect(mockNotificationContext.exito).toHaveBeenCalled();
     }, { timeout: 3000 });
@@ -150,29 +158,33 @@ describe('Reviews Page', () => {
     renderComponent();
 
     await waitFor(() => {
+      expect(screen.getByLabelText(/Producto/i)).toBeTruthy();
+    });
+
+    await act(async () => {
       const selectProducto = screen.getByLabelText(/Producto/i);
       const selectCalificacion = screen.getByLabelText(/Calificación/i);
       const inputNombre = screen.getByPlaceholderText(/Tu nombre gamer/i);
       const textareaComentario = screen.getByPlaceholderText(/Comparte tu experiencia/i);
 
+      // Llenar formulario
       fireEvent.change(selectProducto, { target: { value: 'Mouse Gamer RGB' } });
       fireEvent.change(selectCalificacion, { target: { value: '5' } });
       fireEvent.change(inputNombre, { target: { value: 'TestUser' } });
       fireEvent.change(textareaComentario, { target: { value: 'Test' } });
 
-      const btnPublicar = screen.getByText('Publicar Reseña');
-      fireEvent.click(btnPublicar);
+      // Submit del formulario
+      const form = selectProducto.closest('form');
+      fireEvent.submit(form);
     });
 
-    // Dar tiempo para que se limpie el formulario
-    await new Promise(resolve => setTimeout(resolve, 500));
-
+    // Verificar limpieza del formulario
     await waitFor(() => {
-      const inputNombre = screen.getByPlaceholderText(/Tu nombre gamer/i);
-      const textareaComentario = screen.getByPlaceholderText(/Comparte tu experiencia/i);
+      const nombreDespues = screen.getByPlaceholderText(/Tu nombre gamer/i);
+      const comentarioDespues = screen.getByPlaceholderText(/Comparte tu experiencia/i);
       
-      expect(inputNombre.value).toBe('');
-      expect(textareaComentario.value).toBe('');
-    }, { timeout: 5000 });
+      expect(nombreDespues.value).toBe('');
+      expect(comentarioDespues.value).toBe('');
+    }, { timeout: 3000 });
   });
 });

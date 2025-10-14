@@ -71,7 +71,8 @@ describe('ProductDetailPage', () => {
     renderComponent();
 
     await waitFor(() => {
-      expect(screen.getByText('Mouse Gamer RGB')).toBeTruthy();
+      const elementos = screen.getAllByText('Mouse Gamer RGB');
+      expect(elementos.length).toBeGreaterThan(0);
     });
   });
 

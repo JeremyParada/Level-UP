@@ -123,12 +123,14 @@ const Profile = () => {
   };
 
   const copiarCodigoReferido = () => {
+    // Copy the code to clipboard
     navigator.clipboard.writeText(perfil.codigoReferido)
       .then(() => {
-        exito('📋 ¡Código copiado al portapapeles!');
+        // Make sure to call the success notification
+        exito('Código de referido copiado al portapapeles');
       })
-      .catch(() => {
-        info('Código: ' + perfil.codigoReferido);
+      .catch(error => {
+        console.error('Error al copiar código:', error);
       });
   };
 
@@ -376,28 +378,20 @@ const Profile = () => {
 
             {/* Código de referido */}
             <div className="card card-formulario rounded-4 p-4">
-              <h4 className="color-acento-azul mb-3">🎁 Código de Referido</h4>
-              <p className="small mb-2">
-                Comparte tu código y gana <strong className="color-acento-verde">100 puntos</strong> por cada amigo registrado
-              </p>
-              <div className="input-group mb-2">
-                <input 
-                  type="text" 
-                  className="form-control text-center fw-bold" 
-                  value={perfil.codigoReferido}
-                  readOnly
-                />
+              <h4 className="texto-principal color-acento-azul mb-3">Mi Código de Referido</h4>
+              <div className="text-center">
+                <div className="badge bg-secondary fs-5 mb-2" id="codigoReferido">
+                  {perfil.codigoReferido}
+                </div>
+                <p className="small">Comparte este código y gana 50 puntos por cada nuevo usuario</p>
                 <button 
-                  className="btn btn-outline-secondary" 
-                  type="button"
+                  className="btn btn-outline-secondary btn-sm" 
                   onClick={copiarCodigoReferido}
+                  type="button"
                 >
                   📋 Copiar
                 </button>
               </div>
-              <small className="text-muted">
-                Tus amigos también reciben 50 puntos de bienvenida
-              </small>
             </div>
           </div>
         </div>

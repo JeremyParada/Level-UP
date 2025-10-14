@@ -72,9 +72,12 @@ describe('Cart Page', () => {
     );
   };
 
-  it('debe renderizar el título del carrito', () => {
+  it('debe renderizar el título del carrito', async () => {
     renderComponent();
-    expect(screen.getByText(/Carrito de Compras/i)).toBeTruthy();
+    
+    await waitFor(() => {
+      expect(screen.getByText(/Carrito de Compras/i)).toBeTruthy();
+    }, { timeout: 3000 });
   });
 
   it('debe mostrar los productos del carrito', async () => {
@@ -170,13 +173,15 @@ describe('Cart Page', () => {
     expect(mockCartContext.vaciarCarrito).toHaveBeenCalled();
   });
 
-  it('debe mostrar mensaje cuando el carrito está vacío', () => {
+  it('debe mostrar mensaje cuando el carrito está vacío', async () => {
     mockCartContext.carrito = [];
     mockCartContext.totalItems = 0;
 
     renderComponent();
 
-    expect(screen.getByText(/Tu carrito está vacío/i)).toBeTruthy();
+    await waitFor(() => {
+      expect(screen.getByText(/Tu carrito está vacío/i)).toBeTruthy();
+    }, { timeout: 3000 });
   });
 
   it('debe finalizar compra correctamente', async () => {
