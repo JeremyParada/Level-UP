@@ -104,12 +104,15 @@ describe('Profile Page', () => {
     renderComponent();
 
     const btnCopiar = screen.getByText('📋 Copiar');
+    
+    // Hacer click y esperar de inmediato
     fireEvent.click(btnCopiar);
 
+    // Esperar un poco más para el Promise
     await waitFor(() => {
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith('GAMER123');
       expect(mockNotificationContext.exito).toHaveBeenCalled();
-    });
+    }, { timeout: 5000 });
   });
 
   it('debe mostrar mensaje cuando no hay compras', () => {

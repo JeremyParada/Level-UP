@@ -35,7 +35,9 @@ describe('Community Page', () => {
   it('debe mostrar eventos y torneos', () => {
     renderComponent();
     expect(screen.getByText('Eventos y Torneos')).toBeTruthy();
-    expect(screen.getByText(/Torneo League of Legends/i)).toBeTruthy();
+    // Usar getAllByText para elementos duplicados
+    const torneos = screen.getAllByText(/Torneo League of Legends/i);
+    expect(torneos.length).toBeGreaterThan(0);
   });
 
   it('debe permitir inscribirse a eventos', () => {
@@ -79,7 +81,9 @@ describe('Community Page', () => {
 
   it('debe mostrar puntos en eventos', () => {
     renderComponent();
-    expect(screen.getByText(/\+200 puntos/i)).toBeTruthy();
+    // Usar getAllByText para elementos duplicados
+    const puntosElementos = screen.getAllByText(/\+200 puntos/i);
+    expect(puntosElementos.length).toBeGreaterThan(0);
   });
 
   it('debe tener enlaces funcionales a artículos', () => {

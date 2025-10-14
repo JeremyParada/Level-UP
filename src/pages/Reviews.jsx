@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useNotification } from '../hooks/useNotification';
 
@@ -15,6 +15,8 @@ const Reviews = () => {
     nombreUsuario: '',
     comentario: ''
   });
+
+  const formRef = useRef(null);
 
   useEffect(() => {
     cargarProductos();
@@ -36,9 +38,23 @@ const Reviews = () => {
     setResenas(resenasGuardadas);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const limpiarFormulario = () => {
+    setFormResena({
+      nombreProducto: '',
+      calificacion: '',
+      nombreUsuario: '',
+      comentario: ''
+    });
 
+    if (formRef.current) {
+      formRef.current.reset();
+    }
+  };
+
+  const publicarResena = (e) => {
+    e.preventDefault();
+    
+    // Validación básica
     if (!formResena.nombreProducto || !formResena.calificacion || 
         !formResena.nombreUsuario.trim() || !formResena.comentario.trim()) {
       error('Por favor completa todos los campos');
@@ -46,12 +62,12 @@ const Reviews = () => {
     }
 
     const productoSeleccionado = productos.find(p => p.nombre === formResena.nombreProducto);
-    
+
     const nuevaResena = {
       id: Date.now(),
-      codigoProducto: productoSeleccionado?.codigo || 'GENERAL',
+      codigoProducto: productoSeleccionado?.codigo || 'UNKNOWN',
       nombreProducto: formResena.nombreProducto,
-      imagenProducto: productoSeleccionado?.imagen || '/assets/img/default-product.jpg',
+      imagenProducto: productoSeleccionado?.imagen || '/assets/img/default.jpg',
       calificacion: parseInt(formResena.calificacion),
       nombreUsuario: formResena.nombreUsuario.trim(),
       comentario: formResena.comentario.trim(),
@@ -62,14 +78,7 @@ const Reviews = () => {
     setResenas(resenasActualizadas);
     localStorage.setItem('resenas', JSON.stringify(resenasActualizadas));
 
-    // Limpiar formulario
-    setFormResena({
-      nombreProducto: '',
-      calificacion: '',
-      nombreUsuario: '',
-      comentario: ''
-    });
-
+    limpiarFormulario();
     exito('🎉 ¡Reseña publicada exitosamente!');
   };
 
@@ -116,7 +125,7 @@ const Reviews = () => {
               <h3 className="texto-principal color-acento-azul mb-4">
                 Deja tu reseña
               </h3>
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={publicarResena} className="mb-4" ref={formRef}>
                 <div className="row">
                   <div className="col-md-6 mb-3">
                     <label htmlFor="nombreProducto" className="form-label">
@@ -185,7 +194,7 @@ const Reviews = () => {
                     required
                   />
                 </div>
-                <button type="submit" className="btn btn-registrarse">
+                <button type="submit" className="btn btn-primary">
                   Publicar Reseña
                 </button>
               </form>

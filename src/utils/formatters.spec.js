@@ -58,18 +58,16 @@ describe('Formatters Utils', () => {
     });
 
     it('debe considerar mes y día de cumpleaños', () => {
-      // Crear fecha 18 años atrás pero un día en el futuro
+      // Crear una fecha de hace 18 años + 2 días
       const hoy = new Date();
-      const hace18Anos = new Date(hoy);
-      hace18Anos.setFullYear(hace18Anos.getFullYear() - 18);
+      const fechaNacimiento = new Date(hoy);
+      fechaNacimiento.setFullYear(fechaNacimiento.getFullYear() - 18);
+      fechaNacimiento.setDate(fechaNacimiento.getDate() + 2);
       
-      // Sumar un día para que el cumpleaños sea mañana
-      hace18Anos.setDate(hace18Anos.getDate() + 1);
-      
-      const fecha = hace18Anos.toISOString().split('T')[0];
+      const fecha = fechaNacimiento.toISOString().split('T')[0];
       const edad = formatters.calcularEdad(fecha);
       
-      // Debería ser 17 porque el cumpleaños aún no ha llegado
+      // Si el cumpleaños es dentro de 2 días, aún tiene 17
       expect(edad).toBe(17);
     });
   });
