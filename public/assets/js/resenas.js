@@ -1,43 +1,15 @@
-'use strict';
+const express = require('express');
+const router = express.Router();
+const usuariosController = require('../controllers/usuariosController');
 
-let productos = [];
-let resenas = JSON.parse(localStorage.getItem('resenas')) || [];
+// Rutas de usuarios
+router.post('/registro', usuariosController.registrarUsuario);
+router.post('/login', usuariosController.login);
+router.get('/:idUsuario', usuariosController.getPerfil);
+router.put('/:idUsuario', usuariosController.actualizarPerfil);
+router.post('/:idUsuario/puntos', usuariosController.actualizarPuntos);
 
-// Cargar productos para el select
-fetch('assets/data/productos.json')
-    .then(response => response.json())
-    .then(data => {
-        productos = data;
-        const selectProducto = document.getElementById('nombreProducto');
-        
-        productos.forEach(producto => {
-            const option = document.createElement('option');
-            option.value = producto.codigo;
-            option.textContent = producto.nombre;
-            selectProducto.appendChild(option);
-        });
-        
-        renderizarResenas();
-    })
-    .catch(error => console.error('Error cargando productos:', error));
-
-// Manejar envío de formulario
-document.getElementById('formResena').addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    const codigoProducto = document.getElementById('nombreProducto').value;
-    const calificacion = parseInt(document.getElementById('calificacion').value);
-    const nombreUsuario = document.getElementById('nombreUsuario').value.trim();
-    const comentario = document.getElementById('comentario').value.trim();
-    
-    const producto = productos.find(p => p.codigo === codigoProducto);
-    
-    const nuevaResena = {
-        id: Date.now(),
-        codigoProducto: codigoProducto,
-        nombreProducto: producto.nombre,
-        imagenProducto: producto.imagen,
-        calificacion: calificacion,
+module.exports = router;        calificacion: calificacion,
         nombreUsuario: nombreUsuario,
         comentario: comentario,
         fecha: new Date().toLocaleDateString('es-CL')

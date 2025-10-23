@@ -1,24 +1,45 @@
 import React, { useState, useEffect } from 'react';
+import { useNotification } from '../hooks/useNotification';
+import axios from 'axios';
 import ProductCard from '../components/productos/ProductCard';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
+
 const Products = () => {
+  const { exito, error } = useNotification();
   const [productos, setProductos] = useState([]);
   const [productosFiltrados, setProductosFiltrados] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
   const [busqueda, setBusqueda] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/assets/data/productos.json')
-      .then(res => res.json())
-      .then(data => {
-        setProductos(data);
-        setProductosFiltrados(data);
-        const categoriasUnicas = [...new Set(data.map(p => p.categoria))];
-        setCategorias(categoriasUnicas);
-      })
-      .catch(err => console.error('Error cargando productos:', err));
+    cargarProductos();
+    cargarCategorias();
   }, []);
+
+  const cargarProductos = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/productos`);
+      setProductos(response.data);
+      setProductosFiltrados(response.data);
+    } catch (err) {
+      console.error('Error cargando productos:', err);
+      error('Error al cargar productos de la base de datos');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const cargarCategorias = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/productos/categorias`);
+      setCategorias(response.data);
+    } catch (err) {
+      console.error('Error cargando categorías:', err);
+    }
+  };
 
   useEffect(() => {
     filtrarProductos();
@@ -47,6 +68,10 @@ const Products = () => {
     e.preventDefault();
     filtrarProductos();
   };
+
+  if (loading) {
+    return <div>Cargando productos...</div>;
+  }
 
   return (
     <main>
