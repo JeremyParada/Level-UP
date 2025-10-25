@@ -4,18 +4,31 @@ const oracledb = require('oracledb');
 // Crear pedido
 exports.crearPedido = async (req, res) => {
   try {
-    const { idUsuario, productos, metodoPago, idDireccion } = req.body;
-    
-    if (!idUsuario || !productos || productos.length === 0) {
-      return res.status(400).json({ error: 'Datos de pedido incompletos' });
+    const { idUsuario, productos, metodoPago } = req.body;
+
+    // Validar que el usuario tenga una dirección registrada
+    const sqlDireccion = `
+      SELECT id_direccion
+      FROM direcciones
+      WHERE id_usuario = :id_usuario
+        AND es_principal = 1
+    `;
+    const resultDireccion = await db.execute(sqlDireccion, { id_usuario: idUsuario });
+
+    if (resultDireccion.rows.length === 0) {
+      return res.status(400).json({
+        error: 'No tienes una dirección de despacho registrada. Por favor, agrega una antes de finalizar la compra.'
+      });
     }
-    
+
+    const idDireccion = resultDireccion.rows[0].ID_DIRECCION;
+
     // Calcular totales
     let totalBruto = 0;
     for (const prod of productos) {
       totalBruto += prod.precio * prod.cantidad;
     }
-    
+
     // Calcular descuento usando la función del paquete
     let descuentoAplicado = 0;
     try {
@@ -31,9 +44,9 @@ exports.crearPedido = async (req, res) => {
     } catch (err) {
       console.log('No se pudo calcular descuento, continuando sin descuento:', err.message);
     }
-    
+
     const totalNeto = totalBruto - descuentoAplicado;
-    
+
     // Insertar pedido
     const sqlPedido = `
       INSERT INTO pedidos (
@@ -42,7 +55,7 @@ exports.crearPedido = async (req, res) => {
         :id_usuario, :id_direccion, :total_bruto, :descuento, :total_neto, :metodo_pago
       ) RETURNING id_pedido INTO :id_pedido
     `;
-    
+
     const resultPedido = await db.execute(sqlPedido, {
       id_usuario: idUsuario,
       id_direccion: idDireccion || null,
@@ -52,9 +65,9 @@ exports.crearPedido = async (req, res) => {
       metodo_pago: metodoPago || 'WEBPAY',
       id_pedido: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT }
     });
-    
+
     const idPedido = resultPedido.outBinds.id_pedido[0];
-    
+
     // Insertar detalle de pedido
     for (const prod of productos) {
       const sqlDetalle = `
@@ -64,27 +77,27 @@ exports.crearPedido = async (req, res) => {
           :id_pedido, :id_producto, :cantidad, :precio_unitario
         )
       `;
-      
+
       await db.execute(sqlDetalle, {
         id_pedido: idPedido,
         id_producto: prod.id_producto,
         cantidad: prod.cantidad,
         precio_unitario: prod.precio
       });
-      
+
       // Actualizar stock
       const sqlStock = `
         UPDATE productos 
         SET stock = stock - :cantidad
         WHERE id_producto = :id_producto
       `;
-      
+
       await db.execute(sqlStock, {
         cantidad: prod.cantidad,
         id_producto: prod.id_producto
       });
     }
-    
+
     res.status(201).json({ 
       message: 'Pedido creado exitosamente',
       id_pedido: idPedido,

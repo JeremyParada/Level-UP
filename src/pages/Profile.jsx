@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useNotification } from '../hooks/useNotification';
 
 const Profile = () => {
   const { exito, info } = useNotification();
+  const navigate = useNavigate();
 
   const [perfil, setPerfil] = useState({
     nombre: '',
@@ -21,6 +22,14 @@ const Profile = () => {
 
   const [historialCompras, setHistorialCompras] = useState([]);
   const [descuentosActivos, setDescuentosActivos] = useState([]);
+
+  useEffect(() => {
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    if (!usuario) {
+      alert('Debes registrarte o iniciar sesión para acceder a tu perfil.');
+      navigate('/registro');
+    }
+  }, []);
 
   useEffect(() => {
     cargarDatosPerfil();
