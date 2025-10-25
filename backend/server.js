@@ -9,6 +9,7 @@ const usuariosRouter = require('./routes/usuarios');
 const pedidosRouter = require('./routes/pedidos');
 const resenasRouter = require('./routes/resenas');
 const carritoRouter = require('./routes/carrito');  // ← NUEVO
+const referidosRoutes = require('./routes/referidosRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -24,6 +25,7 @@ app.use('/api/usuarios', usuariosRouter);
 app.use('/api/pedidos', pedidosRouter);
 app.use('/api/resenas', resenasRouter);
 app.use('/api/carrito', carritoRouter);  // ← NUEVO
+app.use('/api', referidosRoutes);
 
 // Ruta de prueba
 app.get('/api/health', (req, res) => {
