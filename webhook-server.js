@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const { exec } = require('child_process');
 
 const PORT = 3000;
-const SECRET = 'mi_secreto_webhook'; // Usa el mismo secreto que configuraste en GitHub
+const SECRET = 'Level-Up'; // Usa el mismo secreto que configuraste en GitHub
 
 // Verificar la firma del webhook
 function verifySignature(req, body) {
