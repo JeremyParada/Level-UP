@@ -1,0 +1,801 @@
+/* Roboto Variable - Normal */
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-VariableFont_wdth,wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-stretch: 75% 100%;
+    font-style: normal;
+}
+
+/* Roboto Variable - Italic */
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Italic-VariableFont_wdth,wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-stretch: 75% 100%;
+    font-style: italic;
+}
+
+/* Orbitron Variable */
+@font-face {
+    font-family: 'Orbitron';
+    src: url('../fonts/Orbitron-VariableFont_wght.ttf') format('truetype');
+    font-weight: 400 900;
+    font-style: normal;
+}
+
+.texto-principal {
+    font-family: 'Orbitron', sans-serif;
+}
+
+.color-acento-azul {
+    color: #1E90FF;
+}
+
+.color-acento-verde {
+    color: #39FF14;
+}
+
+body {
+    background-color: #020710;
+    font-family: 'Roboto';
+    color: #D3D3D3;
+}
+
+.fondo-catalogo {
+    background-image: url("../img/fondo-productos-gamers.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+}
+
+.fondo-texto-catalogo {
+    background-color: rgba(255, 255, 255, 0.677);
+}
+
+/* fondo y estilo general de las cards de productos */
+.card-producto {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    transition: transform 0.2s, box-shadow 0.2s; /*esto hace que el hover sea suave*/
+}
+
+/* efecto hover en la card de producto */
+.card-producto:hover {
+    transform: translateY(-4px);
+}
+
+/* fit imagen de card */
+.card-producto img {
+    border: 1px solid #555;
+    height: 200px;
+    object-fit: contain;
+    object-position: center;
+}
+
+/* titulo del producto */
+.card-producto .card-title {
+    color: #1e90ff;
+}
+
+/* descripcion del producto */
+.card-producto .card-text {
+    color: #ffffff;
+}
+
+/* precio card */
+.card-producto .precio {
+    color: #39FF14;
+    font-weight: 700;
+}
+
+/* codigo card */
+.card-producto .codigo {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+/* boton agregar de las card de producto*/
+.btn-agregar-producto {
+    background-color: #1e90ff;
+    border-color: #1e90ff;
+    color: #fff;
+}
+
+.btn-agregar-producto:hover {
+    background-color: #00bfff;
+    border-color: #00bfff;
+    color: #fff;
+}
+
+#btnBuscarProducto {
+    background-color: #1E90FF;
+    color: #ffffff;
+}
+
+#btnBuscarProducto:hover {
+    background-color: #39FF14;
+    color: #323232;
+}
+
+#formRegistro .form-label {
+    color: #D3D3D3;
+}
+
+.card-formulario {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+}
+
+.btn-registrarse {
+    background-color: #1e90ff;
+    border-color: #1e90ff;
+    color: #fff;
+}
+
+.btn-registrarse:hover {
+    background-color: #00bfff;
+    border-color: #00bfff;
+    color: #fff;
+}
+
+/* CORRECCIONES GLOBALES DE TEXTO */
+
+/* Asegurar que todo el texto sea visible */
+body, body * {
+    color: #D3D3D3;
+}
+
+/* Elementos de Bootstrap que necesitan corrección */
+.text-muted {
+    color: #888 !important;
+}
+
+.text-dark {
+    color: #D3D3D3 !important;
+}
+
+/* Labels y texto de formularios */
+.form-label {
+    color: #D3D3D3 !important;
+    font-weight: 600;
+}
+
+/* Placeholders */
+::placeholder {
+    color: #888 !important;
+}
+
+/* Inputs y selects globales */
+.form-control, .form-select {
+    background-color: #2a2a2a !important;
+    border: 1px solid #555 !important;
+    color: #ffffff !important;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #2a2a2a !important;
+    border-color: #1E90FF !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 0.2rem rgba(30, 144, 255, 0.25) !important;
+}
+
+/* Option elements */
+.form-select option {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+/* Progress bars */
+.progress {
+    background-color: #333 !important;
+}
+
+.progress-bar {
+    background-color: #39FF14 !important;
+}
+
+/* Badges mejorados */
+.badge {
+    color: #ffffff !important;
+}
+
+.badge.bg-secondary {
+    background-color: #555 !important;
+}
+
+.badge.bg-primary {
+    background-color: #1E90FF !important;
+}
+
+.badge.bg-success {
+    background-color: #39FF14 !important;
+    color: #000000 !important;
+}
+
+.badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #000000 !important;
+}
+
+.badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+/* Alerts */
+.alert {
+    background-color: #2a2a2a !important;
+    border: 1px solid #555 !important;
+    color: #ffffff !important;
+}
+
+.alert-warning {
+    background-color: #664d03 !important;
+    border-color: #b08800 !important;
+    color: #ffecb5 !important;
+}
+
+/* Botones outline mejorados */
+.btn-outline-secondary {
+    color: #D3D3D3 !important;
+    border-color: #555 !important;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #555 !important;
+    border-color: #555 !important;
+    color: #ffffff !important;
+}
+
+/* Texto en cards específicas */
+.card-producto .small,
+.card-formulario .small {
+    color: #D3D3D3 !important;
+}
+
+/* Enlaces mejorados */
+a {
+    color: #1E90FF;
+}
+
+a:hover {
+    color: #39FF14;
+}
+
+/* Elementos específicos por página */
+.fondo-texto-catalogo h1,
+.fondo-texto-catalogo p {
+    color: #000000 !important; /* Solo en este elemento mantener negro */
+}
+
+/* Títulos y headers */
+h1, h2, h3, h4, h5, h6 {
+    color: #1E90FF !important;
+}
+
+/* Párrafos y texto general */
+p, span, div, td, th {
+    color: #D3D3D3;
+}
+
+/* Input groups */
+.input-group-text {
+    background-color: #2a2a2a !important;
+    border: 1px solid #555 !important;
+    color: #D3D3D3 !important;
+}
+
+/* List items */
+li {
+    color: #D3D3D3 !important;
+}
+
+/* Tables si las usas */
+.table {
+    color: #D3D3D3 !important;
+}
+
+.table-dark {
+    --bs-table-bg: #1a1a1a !important;
+    --bs-table-color: #D3D3D3 !important;
+}
+
+/* Breadcrumbs si los usas */
+.breadcrumb-item {
+    color: #D3D3D3 !important;
+}
+
+.breadcrumb-item.active {
+    color: #1E90FF !important;
+}
+
+/* Modal si los usas */
+.modal-content {
+    background-color: #1a1a1a !important;
+    color: #D3D3D3 !important;
+}
+
+.modal-header {
+    border-bottom: 1px solid #333 !important;
+}
+
+.modal-footer {
+    border-top: 1px solid #333 !important;
+}
+
+/* Tabs si los usas */
+.nav-tabs .nav-link {
+    color: #D3D3D3 !important;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #2a2a2a !important;
+    border-color: #555 !important;
+    color: #1E90FF !important;
+}
+
+/* Tooltips personalizados mejorados */
+.invalid-tooltip {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+.valid-tooltip {
+    background-color: #39FF14 !important;
+    color: #000000 !important;
+    font-weight: 600;
+}
+
+/* Texto específico para elementos de fecha */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+/* Mejorar contraste en listas */
+ul, ol {
+    color: #D3D3D3 !important;
+}
+
+/* Asegurar que los íconos de emoji mantengan su color */
+.color-acento-verde,
+.color-acento-azul {
+    /* Mantener colores específicos para estos elementos */
+}
+
+/* Cards específicas de comunidad */
+.card-producto h5,
+.card-producto h6 {
+    color: #1E90FF !important;
+}
+
+.card-producto p,
+.card-producto .card-text {
+    color: #D3D3D3 !important;
+}
+
+/* Elementos específicos de perfil */
+.perfil-pagina .text-center p {
+    color: #D3D3D3 !important;
+}
+
+/* Elementos específicos de carrito */
+.carrito-pagina .d-flex span {
+    color: #D3D3D3 !important;
+}
+
+/* CORRECCIONES ESPECÍFICAS POR CONTEXTO */
+
+/* Asegurar que los selects tengan buen contraste */
+select.form-control,
+select.form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
+}
+
+/* Mejorar el contraste de los botones de cantidad */
+.input-group .btn {
+    background-color: #2a2a2a !important;
+    border-color: #555 !important;
+    color: #D3D3D3 !important;
+}
+
+.input-group .btn:hover {
+    background-color: #1E90FF !important;
+    border-color: #1E90FF !important;
+    color: #ffffff !important;
+}
+
+/* Elementos de navegación */
+.navbar-nav .nav-link {
+    color: #39FF14 !important;
+}
+
+/* Texto en iframes (si es posible) */
+iframe {
+    border: 2px solid #555 !important;
+    border-radius: 8px;
+}
+
+/* Asegurar que todos los elementos small sean visibles */
+.small, small {
+    color: #888 !important;
+}
+
+/* Mejorar legibilidad en el footer */
+footer, .bg-dark {
+    color: #D3D3D3 !important;
+}
+
+/* Corrección específica para elementos del mapa */
+#mapaEventos h5,
+#mapaEventos h6,
+#mapaEventos p {
+    color: #D3D3D3 !important;
+}
+
+/* Elementos de ranking y estadísticas */
+.ranking-item,
+.stats-item {
+    color: #D3D3D3 !important;
+}
+
+/* Asegurar que los códigos sean legibles */
+code {
+    background-color: #2a2a2a !important;
+    color: #39FF14 !important;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+/* ESTILOS ESPECÍFICOS PARA EL CARRITO */
+
+/* Productos en el carrito */
+.producto-carrito {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.producto-carrito:hover {
+    background-color: #333;
+    border-color: #1E90FF;
+    transform: translateY(-2px);
+}
+
+.producto-carrito img {
+    border-radius: 8px;
+    border: 2px solid #555;
+}
+
+.producto-carrito .producto-info h6 {
+    color: #1E90FF;
+    margin-bottom: 0.25rem;
+}
+
+.producto-carrito .producto-codigo {
+    color: #888;
+    font-size: 0.85rem;
+}
+
+.producto-carrito .precio-unitario {
+    color: #39FF14;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.producto-carrito .precio-subtotal {
+    color: #39FF14;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* Controles de cantidad mejorados */
+.cantidad-control {
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    padding: 0.25rem;
+}
+
+.cantidad-control .btn {
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.cantidad-control .form-control {
+    background-color: transparent;
+    border: none;
+    text-align: center;
+    color: #ffffff;
+    font-weight: bold;
+    width: 60px;
+}
+
+.cantidad-control .form-control:focus {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+/* Botón eliminar mejorado */
+.btn-eliminar {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.btn-eliminar:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+    transform: scale(1.1);
+}
+
+/* Resumen del pedido mejorado */
+.resumen-pedido {
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+    border: 2px solid #333;
+}
+
+.resumen-linea {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #333;
+}
+
+.resumen-linea:last-child {
+    border-bottom: none;
+}
+
+.resumen-total {
+    background-color: #333;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+/* Animaciones para agregar/quitar productos */
+@keyframes fadeInProduct {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.producto-carrito.nuevo {
+    animation: fadeInProduct 0.5s ease-out;
+}
+
+@keyframes fadeOutProduct {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+.producto-carrito.eliminando {
+    animation: fadeOutProduct 0.3s ease-out;
+}
+
+/* Carrito vacío */
+.carrito-vacio {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+    border-radius: 12px;
+    border: 2px dashed #555;
+}
+
+.carrito-vacio .icono-carrito {
+    font-size: 4rem;
+    color: #555;
+    margin-bottom: 1rem;
+}
+
+/* Badge contador */
+.badge-contador {
+    background-color: #39FF14;
+    color: #000;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+/* Información de envío */
+.info-envio {
+    background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 0.75rem;
+}
+
+/* SISTEMA DE NOTIFICACIONES MEJORADO */
+.notificacion {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    min-width: 300px;
+    max-width: 400px;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    opacity: 0;
+}
+
+.notificacion.mostrar {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.notificacion-exito {
+    background: linear-gradient(135deg, #39FF14, #28a745);
+    color: #000;
+    border-left: 4px solid #1e7e34;
+}
+
+.notificacion-error {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: #fff;
+    border-left: 4px solid #721c24;
+}
+
+.notificacion-info {
+    background: linear-gradient(135deg, #1E90FF, #0056b3);
+    color: #fff;
+    border-left: 4px solid #003d82;
+}
+
+.notificacion-advertencia {
+    background: linear-gradient(135deg, #ffc107, #e0a800);
+    color: #000;
+    border-left: 4px solid #b08800;
+}
+
+.notificacion .btn-cerrar {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.notificacion .btn-cerrar:hover {
+    opacity: 1;
+}
+
+/* Contador del carrito en navbar */
+.carrito-contador {
+    position: relative;
+}
+
+.carrito-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #39FF14;
+    color: #000;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* Animación para notificaciones tipo toast */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* CORRECCIÓN ESPECÍFICA PARA TEXTO DE REGISTRO */
+
+/* Texto específico de la página de registro */
+.registro-pagina p {
+    color: #D3D3D3 !important;
+}
+
+/* Enlaces en la página de registro */
+.registro-pagina a {
+    color: #1E90FF !important;
+    text-decoration: none;
+}
+
+.registro-pagina a:hover {
+    color: #39FF14 !important;
+    text-decoration: underline;
+}
+
+/* Asegurar que todos los párrafos en cards de formulario sean visibles */
+.card-formulario p {
+    color: #D3D3D3 !important;
+}
+
+/* Texto específico para páginas de formularios */
+.registro-pagina .text-center p,
+.perfil-pagina .text-center p,
+.carrito-pagina .text-center p,
+.resenas-pagina .text-center p {
+    color: #D3D3D3 !important;
+}
+
+/* Enlaces en cards de formulario */
+.card-formulario a {
+    color: #1E90FF !important;
+    text-decoration: none;
+}
+
+.card-formulario a:hover {
+    color: #39FF14 !important;
+    text-decoration: underline;
+}
+
+/* Corrección global para asegurar que todo el texto sea visible */
+.fondo-catalogo .card-formulario p,
+.fondo-catalogo .card-formulario a {
+    color: #D3D3D3 !important;
+}
+
+.fondo-catalogo .card-formulario a {
+    color: #1E90FF !important;
+}
+
+.fondo-catalogo .card-formulario a:hover {
+    color: #39FF14 !important;
+}

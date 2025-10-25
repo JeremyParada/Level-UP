@@ -1,0 +1,255 @@
+/* Importar Bootstrap */
+@import url('~bootstrap/dist/css/bootstrap.min.css');
+
+/* Importar tu CSS personalizado desde public */
+body {
+  margin: 0;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #020710;
+  color: #D3D3D3;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Copiar estilos críticos de style.css */
+
+/* Roboto Variable - Normal */
+@font-face {
+    font-family: 'Roboto';
+    src: url('../public/assets/fonts/Roboto-VariableFont_wdth,wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-stretch: 75% 100%;
+    font-style: normal;
+}
+
+/* Roboto Variable - Italic */
+@font-face {
+    font-family: 'Roboto';
+    src: url('../public/assets/fonts/Roboto-Italic-VariableFont_wdth,wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-stretch: 75% 100%;
+    font-style: italic;
+}
+
+/* Orbitron Variable */
+@font-face {
+    font-family: 'Orbitron';
+    src: url('../public/assets/fonts/Orbitron-VariableFont_wght.ttf') format('truetype');
+    font-weight: 400 900;
+    font-style: normal;
+}
+
+.texto-principal {
+    font-family: 'Orbitron', sans-serif;
+}
+
+.color-acento-azul {
+    color: #1E90FF;
+}
+
+.color-acento-verde {
+    color: #39FF14;
+}
+
+.fondo-catalogo {
+    background-image: url("../public/assets/img/fondo-productos-gamers.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+}
+
+.fondo-texto-catalogo {
+    background-color: rgba(255, 255, 255, 0.677);
+}
+
+/* fondo y estilo general de las cards de productos */
+.card-producto {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-producto:hover {
+    transform: translateY(-4px);
+}
+
+.card-producto img {
+    border: 1px solid #555;
+    height: 200px;
+    object-fit: contain;
+    object-position: center;
+}
+
+.card-producto .card-title {
+    color: #1e90ff;
+}
+
+.card-producto .card-text {
+    color: #ffffff;
+}
+
+.card-producto .precio {
+    color: #39FF14;
+    font-weight: 700;
+}
+
+.card-producto .codigo {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.btn-agregar-producto {
+    background-color: #1e90ff;
+    border-color: #1e90ff;
+    color: #fff;
+}
+
+.btn-agregar-producto:hover {
+    background-color: #00bfff;
+    border-color: #00bfff;
+    color: #fff;
+}
+
+#btnBuscarProducto {
+    background-color: #1E90FF;
+    color: #ffffff;
+}
+
+#btnBuscarProducto:hover {
+    background-color: #39FF14;
+    color: #323232;
+}
+
+.card-formulario {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+}
+
+.btn-registrarse {
+    background-color: #1e90ff;
+    border-color: #1e90ff;
+    color: #fff;
+}
+
+.btn-registrarse:hover {
+    background-color: #00bfff;
+    border-color: #00bfff;
+    color: #fff;
+}
+
+/* Forms */
+.form-label {
+    color: #D3D3D3 !important;
+    font-weight: 600;
+}
+
+.form-control, .form-select {
+    background-color: #2a2a2a !important;
+    border: 1px solid #555 !important;
+    color: #ffffff !important;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #2a2a2a !important;
+    border-color: #1E90FF !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 0.2rem rgba(30, 144, 255, 0.25) !important;
+}
+
+/* Badges */
+.badge {
+    color: #ffffff !important;
+}
+
+.badge.bg-secondary {
+    background-color: #555 !important;
+}
+
+/* Notificaciones */
+.notificaciones-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.notificacion {
+    min-width: 300px;
+    max-width: 400px;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    margin-bottom: 10px;
+    animation: slideInRight 0.3s ease-out;
+}
+
+.notificacion.mostrar {
+    display: block;
+}
+
+.notificacion-exito {
+    background: linear-gradient(135deg, #39FF14, #28a745);
+    color: #000;
+    border-left: 4px solid #1e7e34;
+}
+
+.notificacion-error {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: #fff;
+    border-left: 4px solid #721c24;
+}
+
+.notificacion-info {
+    background: linear-gradient(135deg, #1E90FF, #0056b3);
+    color: #fff;
+    border-left: 4px solid #003d82;
+}
+
+.notificacion-advertencia {
+    background: linear-gradient(135deg, #ffc107, #e0a800);
+    color: #000;
+    border-left: 4px solid #b08800;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Contador del carrito */
+.carrito-contador {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #39FF14;
+    color: #000;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
