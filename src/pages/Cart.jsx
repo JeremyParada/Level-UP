@@ -5,6 +5,7 @@ import { useNotification } from '../hooks/useNotification';
 
 const Cart = () => {
   const navigate = useNavigate();
+  const usuario = JSON.parse(localStorage.getItem('usuario'));
   const { 
     carrito, 
     totalItems, 
@@ -108,9 +109,16 @@ const Cart = () => {
   };
 
   const handleFinalizarCompra = () => {
-    if (productos.length === 0) {
-      advertencia('Tu carrito está vacío');
-      return;
+    if (!usuario) {
+      const puntosPerdidos = calcularSubtotal() / 100; // Ejemplo: 10 puntos por cada $1.000
+      const confirmarRegistro = window.confirm(
+        `¡Te estás perdiendo ${Math.floor(puntosPerdidos)} puntos por no estar registrado! ¿Deseas registrarte antes de finalizar la compra?`
+      );
+
+      if (confirmarRegistro) {
+        navigate('/registro');
+        return;
+      }
     }
 
     // Simulación de procesamiento

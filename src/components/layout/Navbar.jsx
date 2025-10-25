@@ -4,6 +4,7 @@ import { CartContext } from '../../context/CartContext';
 
 const Navbar = () => {
   const { totalItems } = useContext(CartContext);
+  const usuario = JSON.parse(localStorage.getItem('usuario'));
 
   return (
     <div className="navbar navbar-expand-lg bg-body-tertiary bg-dark border-bottom border-body" data-bs-theme="dark">
@@ -21,8 +22,8 @@ const Navbar = () => {
           </div>
 
           <div className="navbar-nav ms-auto">
-            <Link className="nav-link color-acento-verde" to="/registro">Registrarse</Link>
-            <Link className="nav-link color-acento-verde" to="/perfil">Mi Perfil</Link>
+            {!usuario && <Link className="nav-link color-acento-verde" to="/registro">Registrarse</Link>}
+            {usuario && <Link className="nav-link color-acento-verde" to="/perfil">Mi Perfil</Link>}
             <Link className="nav-link color-acento-verde position-relative" to="/carrito">
               Carrito
               {totalItems > 0 && (
