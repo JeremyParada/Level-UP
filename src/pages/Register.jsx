@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { NotificationContext } from '../context/NotificationContext';
 import { AuthContext } from '../context/AuthContext';
+import { Form, Button, Card, Container, Row, Col } from 'react-bootstrap';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -125,147 +126,117 @@ const Register = () => {
   };
 
   return (
-    <main>
-      <section className="text-center fondo-catalogo">
-        <div className="row justify-content-center py-5 fondo-texto-catalogo">
-          <div className="col-lg-6 col-md-8">
-            <div className="card card-formulario rounded-4 p-4">
-              <h2 className="texto-principal mb-4 color-acento-azul">Crear cuenta</h2>
+    <main className="py-5">
+      <Container>
+        <Row className="justify-content-center">
+          <Col md={8} lg={6}>
+            <Card className="shadow rounded-4 border-0 bg-dark">
+              <Card.Body className="p-4 ">
+                <h2 className="text-center mb-4 text-primary fw-bold">Crear cuenta</h2>
 
-              <form 
-                id="formRegistro" 
-                className={`needs-validation ${validated ? 'was-validated' : ''}`} 
-                noValidate
-                onSubmit={handleSubmit}
-              >
-                {/* Correo */}
-                <div className="mb-3 position-relative text-start">
-                  <label htmlFor="email" className="form-label">Correo electrónico</label>
-                  <input 
-                    type="email" 
-                    className="form-control" 
-                    id="email" 
-                    placeholder="nombre@correo.com"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                  />
-                  <div className="invalid-feedback">
-                    Debes ingresar un correo válido
-                  </div>
-                </div>
+                <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                  <Form.Group className="mb-3" controlId="email">
+                    <Form.Label>Correo electrónico</Form.Label>
+                    <Form.Control
+                      required
+                      type="email"
+                      placeholder="nombre@correo.com"
+                      value={formData.email}
+                      onChange={handleChange}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Debes ingresar un correo válido
+                    </Form.Control.Feedback>
+                  </Form.Group>
 
-                {/* Contraseña */}
-                <div className="mb-3 position-relative text-start">
-                  <label htmlFor="password" className="form-label">Contraseña</label>
-                  <input 
-                    type="password" 
-                    className="form-control" 
-                    id="password" 
-                    placeholder="Contraseña"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                  />
-                  <div className="invalid-feedback">
-                    Debes ingresar una contraseña
-                  </div>
-                </div>
+                  <Form.Group className="mb-3" controlId="password">
+                    <Form.Label>Contraseña</Form.Label>
+                    <Form.Control
+                      required
+                      type="password"
+                      placeholder="Contraseña"
+                      value={formData.password}
+                      onChange={handleChange}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Debes ingresar una contraseña
+                    </Form.Control.Feedback>
+                  </Form.Group>
 
-                {/* Confirmar contraseña */}
-                <div className="mb-3 position-relative text-start">
-                  <label htmlFor="password2" className="form-label">Confirmar contraseña</label>
-                  <input 
-                    type="password" 
-                    className="form-control" 
-                    id="password2"
-                    placeholder="Repite tu contraseña"
-                    value={formData.password2}
-                    onChange={handleChange}
-                    required
-                  />
-                  <div className="invalid-feedback">
-                    Las contraseñas no coinciden
-                  </div>
-                </div>
+                  <Form.Group className="mb-3" controlId="password2">
+                    <Form.Label>Confirmar contraseña</Form.Label>
+                    <Form.Control
+                      required
+                      type="password"
+                      placeholder="Repite tu contraseña"
+                      value={formData.password2}
+                      onChange={handleChange}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Las contraseñas no coinciden
+                    </Form.Control.Feedback>
+                  </Form.Group>
 
-                {/* Nombre */}
-                <div className="mb-3 position-relative text-start">
-                  <label htmlFor="nombre" className="form-label">Nombre</label>
-                  <input 
-                    type="text" 
-                    className="form-control" 
-                    id="nombre" 
-                    placeholder="Tu nombre"
-                    value={formData.nombre}
-                    onChange={handleChange}
-                    required
-                  />
-                  <div className="invalid-feedback">
-                    Debes ingresar tu nombre
-                  </div>
-                </div>
+                  <Form.Group className="mb-3" controlId="nombre">
+                    <Form.Label>Nombre</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      placeholder="Tu nombre"
+                      value={formData.nombre}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
 
-                {/* Apellido */}
-                <div className="mb-3 position-relative text-start">
-                  <label htmlFor="apellido" className="form-label">Apellido</label>
-                  <input 
-                    type="text" 
-                    className="form-control" 
-                    id="apellido" 
-                    placeholder="Tu apellido"
-                    value={formData.apellido}
-                    onChange={handleChange}
-                    required
-                  />
-                  <div className="invalid-feedback">
-                    Debes ingresar tu apellido
-                  </div>
-                </div>
+                  <Form.Group className="mb-3" controlId="apellido">
+                    <Form.Label>Apellido</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      placeholder="Tu apellido"
+                      value={formData.apellido}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
 
-                {/* Fecha nacimiento */}
-                <div className="mb-3 position-relative text-start">
-                  <label htmlFor="fechaNacimiento" className="form-label">Fecha de nacimiento</label>
-                  <input 
-                    type="date" 
-                    className="form-control" 
-                    id="fechaNacimiento"
-                    value={formData.fechaNacimiento}
-                    onChange={handleChange}
-                    required
-                  />
-                  <div className="invalid-feedback">
-                    Debes ser mayor de 18 años
-                  </div>
-                </div>
+                  <Form.Group className="mb-3" controlId="fechaNacimiento">
+                    <Form.Label>Fecha de nacimiento</Form.Label>
+                    <Form.Control
+                      required
+                      type="date"
+                      value={formData.fechaNacimiento}
+                      onChange={handleChange}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Debes ser mayor de 18 años
+                    </Form.Control.Feedback>
+                  </Form.Group>
 
-                {/* Codigo de referido */}
-                <div className="mb-3 position-relative text-start">
-                  <label htmlFor="codigoReferido" className="form-label">
-                    Código de referido (opcional)
-                  </label>
-                  <input 
-                    type="text" 
-                    className="form-control" 
-                    id="codigoReferido" 
-                    placeholder="Si tienes uno"
-                    value={formData.codigoReferido}
-                    onChange={handleChange}
-                  />
-                </div>
+                  <Form.Group className="mb-3" controlId="codigoReferido">
+                    <Form.Label>Código de referido (opcional)</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Si tienes uno"
+                      value={formData.codigoReferido}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
 
-                <button type="submit" className="btn btn-registrarse w-100 mt-3">
-                  Registrarse
-                </button>
-              </form>
-
-              <p className="mt-3 text-center">
-                ¿Ya tienes cuenta? <Link to="/login" className="text-decoration-none">Iniciar sesión</Link>
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+                  <Button variant="primary" type="submit" className="w-100 mt-3">
+                    Registrarse
+                  </Button>
+                </Form>
+                <p className="mt-3 text-center text-white">
+                  ¿Ya tienes cuenta?{' '}
+                  <Link to="/login" className="text-decoration-none text-primary fw-semibold">
+                    Iniciar sesión
+                  </Link>
+                </p>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
     </main>
   );
 };

@@ -358,10 +358,12 @@ ul, ol {
     color: #D3D3D3 !important;
 }
 
-/* Asegurar que los íconos de emoji mantengan su color */
-.color-acento-verde,
 .color-acento-azul {
-    /* Mantener colores específicos para estos elementos */
+    color: #1E90FF;
+}
+
+.color-acento-verde {
+    color: #39FF14;
 }
 
 /* Cards específicas de comunidad */
