@@ -126,17 +126,45 @@ const Register = () => {
   };
 
   return (
+    // Contenedor principal del contenido de la pagina, con padding vertical (py-5 = padding en eje Y)
     <main className="py-5">
+      {/* Container de Bootstrap para centrar y aplicar margenes horizontales automáticos */}
       <Container>
+        {/* Row crea una fila y "justify-content-center" centra el contenido horizontalmente */}
         <Row className="justify-content-center">
+          {/* Col define una columna responsiva: ocupa 8 columnas en pantallas medianas y 6 en grandes */}
           <Col md={8} lg={6}>
-            <Card className="shadow rounded-4 border-0 bg-dark">
-              <Card.Body className="p-4 ">
-                <h2 className="text-center mb-4 text-primary fw-bold">Crear cuenta</h2>
+            {/* Card es el contenedor visual principal del formulario */}
+            {/* rounded-4: bordes redondeados / border-0: sin borde / bg-dark: fondo oscuro */}
+            <Card className="rounded-4 bg-dark">
+              {/* Card.Body contiene el contenido principal de la tarjeta */}
+              {/* p-4 = padding interno de 1.5rem en todos los lados */}
+              <Card.Body className="p-4">
+                {/* Título centrado con clases de Bootstrap */}
+                {/* texto-principal: clase personalizada / text-primary: color azul / fw-bold: texto en negrita */}
+                <h2 className="texto-principal text-center mb-4 text-primary fw-bold">
+                  Crear cuenta
+                </h2>
 
+                {/* Componente Form de Bootstrap */}
+                {/* noValidate: desactiva validación HTML nativa (para usar la validación personalizada) */}
+                {/* validated: controla visualmente la validación con estado React */}
+                {/* onSubmit: llama a handleSubmit al enviar el formulario */}
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
+
+                  {/* Grupo de formulario para el campo de correo */}
+                  {/* mb-3: margen inferior */}
+                  {/* controlId asigna un id único al input para relacionar Label y Control */}
                   <Form.Group className="mb-3" controlId="email">
+                    {/* Etiqueta del campo */}
                     <Form.Label>Correo electrónico</Form.Label>
+
+                    {/* Input controlado */}
+                    {/* required: campo obligatorio */}
+                    {/* type="email": valida formato de correo */}
+                    {/* placeholder: texto de ayuda dentro del campo */}
+                    {/* value: valor actual del estado formData.email */}
+                    {/* onChange: actualiza el estado cuando el usuario escribe */}
                     <Form.Control
                       required
                       type="email"
@@ -144,10 +172,13 @@ const Register = () => {
                       value={formData.email}
                       onChange={handleChange}
                     />
+
+                    {/* Mensaje que se muestra si la validación falla */}
                     <Form.Control.Feedback type="invalid">
                       Debes ingresar un correo válido
                     </Form.Control.Feedback>
                   </Form.Group>
+
 
                   <Form.Group className="mb-3" controlId="password">
                     <Form.Label>Contraseña</Form.Label>

@@ -801,3 +801,8 @@ code {
 .fondo-catalogo .card-formulario a:hover {
     color: #39FF14 !important;
 }
+
+main {
+    height: 100%;
+    margin: 0;
+}
