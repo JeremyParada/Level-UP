@@ -29,12 +29,6 @@ yarn-error.log*
 .env
 /backend/.env
 
-# Wallet Oracle (IMPORTANTE - no subir credenciales)
-wallet/*.sso
-wallet/*.p12
-wallet/*.pem
-wallet/keystore.jks
-
 # Sistema operativo
 .DS_Store
 Thumbs.db
