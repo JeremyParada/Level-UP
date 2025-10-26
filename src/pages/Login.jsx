@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { Form, Button, Card, Container, Row, Col } from 'react-bootstrap';
 
 const Login = () => {
   const { login } = useContext(AuthContext);
@@ -29,54 +30,66 @@ const Login = () => {
   };
 
   return (
-    <main className="container my-5">
-      <div className="row justify-content-center">
-        <div className="col-lg-6">
-          <div className="card card-formulario p-4 rounded-4">
-            <h2 className="texto-principal mb-4 text-center">Iniciar Sesión</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="mb-3">
-                <label htmlFor="email" className="form-label">Correo electrónico</label>
-                <input
-                  type="email"
-                  className="form-control"
-                  id="email"
-                  placeholder="correo@ejemplo.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+    // Contenedor principal de la página
+    <main className="py-5">
+      <Container>
+        <Row className="justify-content-center py-5">
+          <Col md={8} lg={6}>
+            {/* Card oscura para formulario */}
+            <Card className="shadow rounded-4 border-0 bg-dark">
+              <Card.Body className="p-4">
+                {/* Título centrado */}
+                <h2 className="texto-principal text-center mb-4 text-primary fw-bold">
+                  Iniciar Sesión
+                </h2>
 
-              <div className="mb-3">
-                <label htmlFor="password" className="form-label">Contraseña</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  id="password"
-                  placeholder="********"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+                {/* Formulario de login */}
+                <Form onSubmit={handleSubmit}>
+                  {/* Campo de email */}
+                  <Form.Group className="mb-3" controlId="email">
+                    <Form.Label>Correo electrónico</Form.Label>
+                    <Form.Control
+                      required
+                      type="email"
+                      placeholder="correo@ejemplo.com"
+                      value={formData.email}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
 
-              {error && <p className="text-danger text-center">{error}</p>}
+                  {/* Campo de contraseña */}
+                  <Form.Group className="mb-3" controlId="password">
+                    <Form.Label>Contraseña</Form.Label>
+                    <Form.Control
+                      required
+                      type="password"
+                      placeholder="********"
+                      value={formData.password}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
 
-              <button type="submit" className="btn btn-registrarse w-100">
-                Iniciar Sesión
-              </button>
-            </form>
+                  {/* Mensaje de error */}
+                  {error && <p className="text-danger text-center">{error}</p>}
 
-            <p className="text-center mt-3">
-              ¿No tienes cuenta?{' '}
-              <Link to="/registro" className="text-decoration-none">
-                Regístrate aquí
-              </Link>
-            </p>
-          </div>
-        </div>
-      </div>
+                  {/* Botón de login */}
+                  <Button variant="primary" type="submit" className="w-100 mt-3">
+                    Iniciar Sesión
+                  </Button>
+                </Form>
+
+                {/* Enlace para registro */}
+                <p className="text-center mt-3 text-white">
+                  ¿No tienes cuenta?{' '}
+                  <Link to="/registro" className="text-decoration-none text-primary fw-semibold">
+                    Regístrate aquí
+                  </Link>
+                </p>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
     </main>
   );
 };
