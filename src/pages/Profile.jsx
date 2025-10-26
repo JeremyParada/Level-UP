@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useNotification } from '../hooks/useNotification';
+import { AuthContext } from '../context/AuthContext';
 
 const Profile = () => {
-  const { exito, info } = useNotification();
+  const { exito } = useNotification();
   const navigate = useNavigate();
 
   const [perfil, setPerfil] = useState({
@@ -29,7 +30,7 @@ const Profile = () => {
       alert('Debes registrarte o iniciar sesión para acceder a tu perfil.');
       navigate('/registro');
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     cargarDatosPerfil();
@@ -150,6 +151,16 @@ const Profile = () => {
     }).format(precio);
   };
 
+  const { logout } = useContext(AuthContext);
+  const handleLogout = () => {
+    logout();
+    exito("👋 Sesión cerrada correctamente");
+    navigate("/login");
+  };
+
+
+
+  // aqui empieza el html
   return (
     <main>
       {/* Header */}
@@ -160,6 +171,9 @@ const Profile = () => {
             <p className="color-acento-verde">
               Gestiona tu información y puntos LevelUp
             </p>
+            <button className="btn btn-outline-danger mt-3" onClick={handleLogout}>
+              Cerrar sesión
+            </button>
           </div>
         </div>
       </section>

@@ -1,11 +1,13 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { NotificationContext } from '../context/NotificationContext';
+import { AuthContext } from '../context/AuthContext';
 
 const Register = () => {
   const navigate = useNavigate();
   const { exito, error } = useContext(NotificationContext);
-  
+  const { setUsuario } = useContext(AuthContext);
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -41,18 +43,24 @@ const Register = () => {
     e.preventDefault();
     const form = e.currentTarget;
 
+    let usuariosExistentes = JSON.parse(localStorage.getItem('usuarios')) || [];
+
+    // Validación: email ya registrado
+    if (usuariosExistentes.some(u => u.email === formData.email)) {
+      error('Este correo ya está registrado');
+      return;
+    }
+
     // Validaciones personalizadas
     let esValido = true;
     let mensajesError = [];
 
-    // Validar email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       esValido = false;
       mensajesError.push('Email inválido');
     }
 
-    // Validar contraseñas
     if (formData.password.length < 6) {
       esValido = false;
       mensajesError.push('La contraseña debe tener al menos 6 caracteres');
@@ -63,7 +71,6 @@ const Register = () => {
       mensajesError.push('Las contraseñas no coinciden');
     }
 
-    // Validar edad
     if (formData.fechaNacimiento) {
       const edad = validarEdad(formData.fechaNacimiento);
       if (edad < 18) {
@@ -75,16 +82,16 @@ const Register = () => {
     if (!esValido || form.checkValidity() === false) {
       e.stopPropagation();
       setValidated(true);
-      
       if (mensajesError.length > 0) {
         error(mensajesError.join('<br>'));
       }
       return;
     }
 
-    // Guardar usuario en localStorage
+    // Crear usuario
     const usuario = {
       email: formData.email,
+      password: formData.password,
       nombre: formData.nombre,
       apellido: formData.apellido,
       fechaNacimiento: formData.fechaNacimiento,
@@ -94,9 +101,16 @@ const Register = () => {
       fechaRegistro: new Date().toISOString()
     };
 
-    localStorage.setItem('usuario', JSON.stringify(usuario));
+    // Guardar lista completa de usuarios
+    let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+    usuarios.push(usuario);
+    localStorage.setItem('usuarios', JSON.stringify(usuarios));
 
-    // Aplicar descuento DuocUC si corresponde
+    // Guardar sesión actual
+    localStorage.setItem('usuario', JSON.stringify(usuario));
+    setUsuario(usuario); // <-- actualiza el contexto global inmediatamente
+
+    // Mensaje de bienvenida
     if (formData.email.includes('@duoc.cl') || formData.email.includes('@duocuc.cl')) {
       localStorage.setItem('descuentoDuoc', 'true');
       exito(`¡Bienvenido ${formData.nombre}!<br>¡Tienes 20% de descuento DuocUC activado! 🎓`);
@@ -246,7 +260,7 @@ const Register = () => {
               </form>
 
               <p className="mt-3 text-center">
-                ¿Ya tienes cuenta? <a href="#" className="color-acento-azul">Inicia sesión</a>
+                ¿Ya tienes cuenta? <Link to="/login" className="text-decoration-none">Iniciar sesión</Link>
               </p>
             </div>
           </div>

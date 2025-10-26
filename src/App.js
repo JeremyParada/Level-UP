@@ -11,6 +11,7 @@ import Profile from './pages/Profile';
 import Reviews from './pages/Reviews';
 import Community from './pages/Community';
 import Register from './pages/Register';
+import Login from './pages/Login';
 import { CartProvider } from './context/CartContext';
 import { NotificationProvider } from './context/NotificationContext';
 import './App.css';
@@ -32,6 +33,7 @@ function App() {
               <Route path="/resenas" element={<Reviews />} />
               <Route path="/comunidad" element={<Community />} />
               <Route path="/registro" element={<Register />} />
+              <Route path="/login" element={<Login />} />
             </Routes>
             <Footer />
           </div>
