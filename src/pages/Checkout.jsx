@@ -28,6 +28,10 @@ const Checkout = () => {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/direcciones/usuario/${usuario.id_usuario}`);
         const direcciones = await response.json();
 
+        if (!Array.isArray(direcciones)) {
+          throw new Error('La respuesta del servidor no es válida.');
+        }
+
         const direccionPrincipal = direcciones.find(d => d.es_principal === 1);
         if (direccionPrincipal) {
           setDireccion(`${direccionPrincipal.calle}, ${direccionPrincipal.numero}, ${direccionPrincipal.comuna}, ${direccionPrincipal.ciudad}, ${direccionPrincipal.region}`);
