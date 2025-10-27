@@ -4,14 +4,13 @@ module.exports = function(config) {
     frameworks: ['jasmine'],
     
     files: [
+      'setupTests.js', // Asegúrate de que este archivo esté incluido
       'src/**/*.spec.js'
     ],
     
     preprocessors: {
-      'src/**/*.spec.js': ['webpack', 'sourcemap'],
-      // Agregar coverage para archivos fuente (no specs)
-      'src/**/!(*.spec).js': ['webpack', 'coverage'],
-      'src/**/!(*.spec).jsx': ['webpack', 'coverage']
+      'src/**/*.spec.js': ['webpack'],
+      'setupTests.js': ['webpack']
     },
     
     webpack: {
@@ -28,7 +27,6 @@ module.exports = function(config) {
                   '@babel/preset-env',
                   ['@babel/preset-react', { runtime: 'automatic' }]
                 ],
-                // Agregar plugin de istanbul solo en entorno de test
                 plugins: process.env.NODE_ENV === 'test' ? ['istanbul'] : []
               }
             }
@@ -106,13 +104,18 @@ module.exports = function(config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['ChromeHeadless'],
-    singleRun: false,
+    singleRun: true,
     concurrency: Infinity,
     
     client: {
       jasmine: {
         random: false
       }
-    }
+    },
+    
+    browserDisconnectTimeout: 10000, // Tiempo de espera antes de desconectar (en ms)
+    browserDisconnectTolerance: 3,  // Número de intentos antes de desconectar
+    browserNoActivityTimeout: 30000, // Tiempo de espera sin actividad (en ms)
+    captureTimeout: 60000 // Tiempo máximo para capturar el navegador (en ms)
   });
 };
