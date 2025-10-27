@@ -53,7 +53,11 @@ async function setupInstantClient() {
   }
 
   // Eliminar el archivo ZIP
-  fs.unlinkSync(outputZip);
+  if (fs.existsSync(outputZip)) {
+    fs.unlinkSync(outputZip);
+  } else {
+    console.error(`❌ Archivo ZIP no encontrado: ${outputZip}`);
+  }
 
   console.log(`✅ Oracle Instant Client configurado en: ${instantClientPath}`);
 }
@@ -69,7 +73,13 @@ function downloadFile(url, dest) {
       }
       response.pipe(file);
       file.on('finish', () => {
-        file.close(resolve);
+        file.close(() => {
+          if (fs.existsSync(dest)) {
+            resolve();
+          } else {
+            reject(new Error(`Archivo no encontrado después de la descarga: ${dest}`));
+          }
+        });
       });
     }).on('error', (err) => {
       fs.unlink(dest, () => reject(err));
