@@ -74,17 +74,35 @@ async function setupInstantClient() {
     const extractedPath = path.join(rootDir, extractedFolder);
     console.log(`✅ Carpeta descomprimida encontrada: ${extractedPath}`);
 
+    // Crear el directorio de destino si no existe
+    if (!fs.existsSync(instantClientPath)) {
+      fs.mkdirSync(instantClientPath, { recursive: true });
+    }
+
     // Mover el contenido de la subcarpeta a la raíz de instantClientPath
     const files = fs.readdirSync(extractedPath);
     files.forEach((file) => {
       const src = path.join(extractedPath, file);
       const dest = path.join(instantClientPath, file);
-      fs.renameSync(src, dest);
+
+      try {
+        // Si el archivo ya existe en el destino, elimínalo antes de mover
+        if (fs.existsSync(dest)) {
+          fs.rmSync(dest, { recursive: true, force: true });
+        }
+        fs.renameSync(src, dest);
+      } catch (err) {
+        console.error(`❌ Error al mover el archivo ${file}: ${err.message}`);
+      }
     });
 
     // Eliminar la carpeta vacía "instantclient_21_19"
-    fs.rmdirSync(extractedPath);
-    console.log(`✅ Contenido movido a: ${instantClientPath}`);
+    try {
+      fs.rmdirSync(extractedPath, { recursive: true });
+      console.log(`✅ Contenido movido a: ${instantClientPath}`);
+    } catch (err) {
+      console.error(`❌ Error al eliminar la carpeta ${extractedPath}: ${err.message}`);
+    }
   } else {
     console.error(`❌ No se encontró la carpeta descomprimida en: ${rootDir}`);
     process.exit(1);
