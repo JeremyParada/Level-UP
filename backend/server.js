@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const db = require('./config/database');
 const productosRouter = require('./routes/productos');
-const usuariosRouter = require('./routes/usuarios');
+const usuariosRoutes = require('./routes/usuarios');
 const pedidosRouter = require('./routes/pedidos');
 const resenasRouter = require('./routes/resenas');
 const carritoRouter = require('./routes/carrito');  // ← NUEVO
@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Rutas
 app.use('/api/productos', productosRouter);
-app.use('/api/usuarios', usuariosRouter);
+app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/pedidos', pedidosRouter);
 app.use('/api/resenas', resenasRouter);
 app.use('/api/carrito', carritoRouter);  // ← NUEVO

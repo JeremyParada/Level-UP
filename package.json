@@ -66,5 +66,5 @@
     "style-loader": "^4.0.0",
     "webpack": "^5.97.1"
   },
-  "proxy": "http://localhost:3001"
+  "proxy": "http://13.217.197.146:3001"
 }
