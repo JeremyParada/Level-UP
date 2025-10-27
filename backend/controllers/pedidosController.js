@@ -8,7 +8,7 @@ exports.crearPedido = async (req, res) => {
 
     // Validar que el usuario tenga una dirección registrada
     const sqlDireccion = `
-      SELECT id_direccion_envio
+      SELECT id_direccion
       FROM direcciones
       WHERE id_usuario = :id_usuario AND es_principal = 1
     `;
@@ -20,7 +20,7 @@ exports.crearPedido = async (req, res) => {
       });
     }
 
-    const idDireccionEnvio = resultDireccion.rows[0].ID_DIRECCION_ENVIO;
+    const idDireccionEnvio = resultDireccion.rows[0].ID_DIRECCION; // Cambiar ID_DIRECCION_ENVIO a ID_DIRECCION
 
     // Calcular totales
     let totalBruto = 0;
