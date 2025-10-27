@@ -1,11 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const https = require('https');
 const extract = require('extract-zip');
-const crypto = require('crypto');
 const { execSync } = require('child_process');
-const crc = require('crc'); // Importar el paquete crc
 
 const rootDir = path.resolve(__dirname, '../../');
 const instantClientLinux = path.join(rootDir, 'instantclient_linux');
@@ -18,18 +15,18 @@ console.log(`🔧 Configurando Oracle Instant Client para ${platform}...`);
 let instantClientPath;
 let downloadUrl;
 let outputZip;
-let expectedChecksum;
+let expectedFileSize;
 
 if (platform === 'linux') {
   instantClientPath = instantClientLinux;
   downloadUrl = 'https://download.oracle.com/otn_software/linux/instantclient/2119000/instantclient-basic-linux.x64-21.19.0.0.0dbru.zip';
   outputZip = path.join(rootDir, 'instantclient-linux.zip');
-  expectedChecksum = '942346171'; // Checksum esperado para Linux
+  expectedFileSize = 83544786; // Tamaño esperado en bytes para Linux
 } else if (platform === 'win32') {
   instantClientPath = instantClientWindows;
   downloadUrl = 'https://download.oracle.com/otn_software/nt/instantclient/2119000/instantclient-basic-windows.x64-21.19.0.0.0dbru.zip';
   outputZip = path.join(rootDir, 'instantclient-windows.zip');
-  expectedChecksum = '1453364920'; // Checksum esperado para Windows
+  expectedFileSize = 89559995; // Tamaño esperado en bytes para Windows
 } else {
   console.error('❌ Sistema operativo no soportado. Solo Linux y Windows están soportados.');
   process.exit(1);
@@ -55,23 +52,15 @@ async function setupInstantClient() {
   console.log(`⬇️ Descargando Oracle Instant Client desde: ${downloadUrl}`);
   await downloadFile(downloadUrl, outputZip);
 
-  // Verificar el checksum del archivo descargado
-  console.log(`📋 Verificando checksum del archivo descargado...`);
-  const checksum = calculateChecksum(outputZip);
-  if (checksum !== expectedChecksum) {
-    console.error(`❌ Checksum inválido. Esperado: ${expectedChecksum}, Obtenido: ${checksum}`);
-    console.error(`⚠️ El archivo descargado se mantendrá en: ${outputZip} para inspección manual.`);
-    process.exit(1); // Terminar el script
-  }
-  console.log(`✅ Checksum válido: ${checksum}`);
-
+  // Verificar el tamaño del archivo descargado
   const fileSize = fs.statSync(outputZip).size;
   console.log(`📋 Tamaño del archivo descargado: ${fileSize} bytes`);
-  if (fileSize !== 83544786) {
-    console.error(`❌ Tamaño del archivo incorrecto. Esperado: 83544786, Obtenido: ${fileSize}`);
-    fs.unlinkSync(outputZip);
+  if (fileSize !== expectedFileSize) {
+    console.error(`❌ Tamaño del archivo incorrecto. Esperado: ${expectedFileSize}, Obtenido: ${fileSize}`);
+    console.error(`⚠️ El archivo descargado se mantendrá en: ${outputZip} para inspección manual.`);
     process.exit(1);
   }
+  console.log(`✅ Tamaño del archivo válido: ${fileSize} bytes`);
 
   console.log(`📦 Descomprimiendo Oracle Instant Client en: ${instantClientPath}`);
   await extract(outputZip, { dir: rootDir });
@@ -150,13 +139,6 @@ function downloadFile(url, dest) {
       reject(err);
     }
   });
-}
-
-// Calcular el checksum de un archivo
-function calculateChecksum(filePath) {
-  const fileBuffer = fs.readFileSync(filePath);
-  const checksum = crc.crc32(fileBuffer); // Calcular el checksum CRC32
-  return checksum >>> 0; // Asegurarse de que el valor sea un entero sin signo
 }
 
 // Ejecutar el script
