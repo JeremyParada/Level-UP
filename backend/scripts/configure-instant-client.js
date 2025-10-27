@@ -34,6 +34,7 @@ if (platform === 'linux') {
 async function setupInstantClient() {
   if (fs.existsSync(instantClientPath)) {
     console.log(`✅ Oracle Instant Client ya está configurado en: ${instantClientPath}`);
+    configureEnvironmentVariable();
     return;
   }
 
@@ -60,6 +61,27 @@ async function setupInstantClient() {
   }
 
   console.log(`✅ Oracle Instant Client configurado en: ${instantClientPath}`);
+  configureEnvironmentVariable();
+}
+
+// Configurar la variable de entorno
+function configureEnvironmentVariable() {
+  if (platform === 'linux') {
+    const bashrcPath = path.join(os.homedir(), '.bashrc');
+    const exportCommand = `export LD_LIBRARY_PATH=${instantClientPath}:$LD_LIBRARY_PATH`;
+
+    if (!fs.readFileSync(bashrcPath, 'utf8').includes(exportCommand)) {
+      fs.appendFileSync(bashrcPath, `\n# Configuración de Oracle Instant Client\n${exportCommand}\n`);
+      console.log(`✅ Variable de entorno LD_LIBRARY_PATH configurada en ${bashrcPath}`);
+    }
+
+    // Aplicar la configuración en la sesión actual
+    execSync(`export LD_LIBRARY_PATH=${instantClientPath}:$LD_LIBRARY_PATH`);
+  } else if (platform === 'win32') {
+    const setxCommand = `setx PATH "%PATH%;${instantClientPath}"`;
+    execSync(setxCommand, { stdio: 'inherit' });
+    console.log(`✅ Variable de entorno PATH configurada en Windows`);
+  }
 }
 
 // Descargar un archivo desde una URL
