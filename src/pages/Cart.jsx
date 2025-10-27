@@ -23,17 +23,16 @@ const Cart = () => {
 
   const cargarProductos = useCallback(async () => {
     try {
-      const response = await fetch('/assets/data/productos.json');
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/productos`);
       const todosLosProductos = await response.json();
-      
-      // Obtener detalles de productos en el carrito
+
       const productosCarrito = carrito.map(item => {
         const producto = todosLosProductos.find(p => p.codigo === item.codigo);
         return {
           ...producto,
           cantidad: item.cantidad
         };
-      }).filter(p => p.codigo); // Filtrar productos no encontrados
+      }).filter(p => p.codigo);
 
       setProductos(productosCarrito);
       setLoading(false);
