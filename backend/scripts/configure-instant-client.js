@@ -155,8 +155,8 @@ function downloadFile(url, dest) {
 // Calcular el checksum de un archivo
 function calculateChecksum(filePath) {
   const fileBuffer = fs.readFileSync(filePath);
-  const checksum = crc.crc32(fileBuffer).toString(); // Calcular el checksum CRC32
-  return checksum;
+  const checksum = crc.crc32(fileBuffer); // Calcular el checksum CRC32
+  return checksum >>> 0; // Asegurarse de que el valor sea un entero sin signo
 }
 
 // Ejecutar el script
