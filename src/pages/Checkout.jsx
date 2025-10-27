@@ -23,15 +23,9 @@ const Checkout = () => {
       return;
     }
 
-    // Normalizar las claves del objeto a minúsculas
-    const usuarioNormalizado = Object.keys(usuario).reduce((acc, key) => {
-      acc[key.toLowerCase()] = usuario[key];
-      return acc;
-    }, {});
-
     const cargarDireccion = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/direcciones/usuario/${usuarioNormalizado.idusuario}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/direcciones/usuario/${usuario.id_usuario}`);
         const direcciones = await response.json();
 
         if (!Array.isArray(direcciones)) {
