@@ -67,7 +67,7 @@ const Home = () => {
           <div className="row align-items-center">
             <div className="col-md-8">
               <h3 className="color-acento-azul mb-3">¿Por qué registrarte en Level-Up Gamer?</h3>
-              <div className="row">
+              <div className="row text-white">
                 <div className="col-md-6">
                   <ul className="list-unstyled">
                     <li className="mb-2">✅ <span className="color-acento-verde">20% descuento</span> si eres de DuocUC</li>
@@ -155,19 +155,19 @@ const Home = () => {
       <section className="text-center py-5">
         <div className="card card-formulario rounded-4 p-4">
           <h3 className="color-acento-azul mb-3">¿Listo para subir de nivel?</h3>
-          <p className="mb-4">Explora nuestro catálogo completo y descubre los mejores productos gaming</p>
+          <p className="mb-4 color-acento-azul">Explora nuestro catálogo completo y descubre los mejores productos gaming</p>
           <div className="row">
             <div className="col-md-3 mb-2">
-              <Link to="/productos" className="btn btn-agregar-producto w-100">Productos</Link>
+              <Link to="/productos" className="btn btn-info w-100">Productos</Link>
             </div>
             <div className="col-md-3 mb-2">
-              <Link to="/comunidad" className="btn btn-outline-secondary w-100">Comunidad</Link>
+              <Link to="/comunidad" className="btn btn-info w-100">Comunidad</Link>
             </div>
             <div className="col-md-3 mb-2">
-              <Link to="/resenas" className="btn btn-outline-secondary w-100">Reseñas</Link>
+              <Link to="/resenas" className="btn btn-info w-100">Reseñas</Link>
             </div>
             <div className="col-md-3 mb-2">
-              <Link to="/registro" className="btn btn-registrarse w-100">Únete Ya</Link>
+              <Link to="/registro" className="btn btn-info w-100">Únete Ya</Link>
             </div>
           </div>
         </div>
