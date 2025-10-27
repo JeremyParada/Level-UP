@@ -12,6 +12,10 @@ function verifySignature(req, body) {
     .update(body)
     .digest('hex')}`;
   const headerSignature = req.headers['x-hub-signature-256'];
+
+  console.log('Generated Signature:', signature);
+  console.log('Header Signature:', headerSignature);
+
   return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(headerSignature));
 }
 
