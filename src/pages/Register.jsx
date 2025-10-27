@@ -16,7 +16,8 @@ const Register = () => {
     nombre: '',
     apellido: '',
     fechaNacimiento: '',
-    codigoReferido: ''
+    codigoReferido: '',
+    telefono: ''
   });
 
   const [validated, setValidated] = useState(false);
@@ -80,6 +81,17 @@ const Register = () => {
       }
     }
 
+    const telefonoRegex = /^\+56 9 \d{4} \d{4}$/;
+    if (!telefonoRegex.test(formData.telefono)) {
+      esValido = false;
+      mensajesError.push('El teléfono debe tener el formato +56 9 XXXX XXXX');
+    }
+
+    if (new Date(formData.fechaNacimiento) > new Date()) {
+      esValido = false;
+      mensajesError.push('La fecha de nacimiento no puede ser en el futuro');
+    }
+
     if (!esValido || form.checkValidity() === false) {
       e.stopPropagation();
       setValidated(true);
@@ -97,6 +109,7 @@ const Register = () => {
       apellido: formData.apellido,
       fechaNacimiento: formData.fechaNacimiento,
       codigoReferido: formData.codigoReferido,
+      telefono: formData.telefono,
       puntos: 100,
       nivel: 1,
       fechaRegistro: new Date().toISOString()
@@ -251,6 +264,20 @@ const Register = () => {
                       value={formData.codigoReferido}
                       onChange={handleChange}
                     />
+                  </Form.Group>
+
+                  <Form.Group className="mb-3" controlId="telefono">
+                    <Form.Label>Teléfono</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      placeholder="+56 9 XXXX XXXX"
+                      value={formData.telefono}
+                      onChange={handleChange}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      El teléfono debe tener el formato +56 9 XXXX XXXX
+                    </Form.Control.Feedback>
                   </Form.Group>
 
                   <Button variant="primary" type="submit" className="w-100 mt-3">

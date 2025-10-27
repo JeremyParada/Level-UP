@@ -12,6 +12,7 @@ import Reviews from './pages/Reviews';
 import Community from './pages/Community';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import Checkout from './pages/Checkout';
 import { CartProvider } from './context/CartContext';
 import { NotificationProvider } from './context/NotificationContext';
 import './App.css';
@@ -29,6 +30,7 @@ function App() {
               <Route path="/productos" element={<Products />} />
               <Route path="/producto-detalle/:codigo" element={<ProductDetailPage />} />
               <Route path="/carrito" element={<Cart />} />
+              <Route path="/checkout" element={<Checkout />} />
               <Route path="/perfil" element={<Profile />} />
               <Route path="/resenas" element={<Reviews />} />
               <Route path="/comunidad" element={<Community />} />
