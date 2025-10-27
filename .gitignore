@@ -41,5 +41,5 @@ Thumbs.db
 dist/
 
 #instantclient
-/instantclient_linux
-/instantclient_windows
+instantclient_linux/
+instantclient_windows/
