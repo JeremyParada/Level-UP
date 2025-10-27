@@ -38,12 +38,15 @@ exports.crearPedido = async (req, res) => {
 
     totalNeto = totalBruto - descuentoAplicado;
 
+    // Calcular puntos ganados (1 punto por cada $1,000 gastados)
+    const puntosGanados = Math.floor(totalNeto / 1000);
+
     // Crear el pedido
     const sqlPedido = `
       INSERT INTO pedidos (id_usuario, id_direccion_envio, total_bruto, descuento_aplicado, total_neto, metodo_pago)
       VALUES (:id_usuario, :id_direccion_envio, :total_bruto, :descuento_aplicado, :total_neto, :metodo_pago)
     `;
-    await db.execute(sqlPedido, {
+    const resultPedido = await db.execute(sqlPedido, {
       id_usuario: idUsuario,
       id_direccion_envio: idDireccionEnvio,
       total_bruto: totalBruto,
@@ -52,7 +55,25 @@ exports.crearPedido = async (req, res) => {
       metodo_pago: metodoPago
     });
 
-    res.status(201).json({ message: 'Pedido creado exitosamente' });
+    // Actualizar puntos del usuario
+    const sqlActualizarPuntos = `
+      UPDATE usuarios
+      SET puntos_levelup = puntos_levelup + :puntos
+      WHERE id_usuario = :id_usuario
+    `;
+    await db.execute(sqlActualizarPuntos, {
+      puntos: puntosGanados,
+      id_usuario: idUsuario
+    });
+
+    res.status(201).json({
+      message: 'Pedido creado exitosamente',
+      idPedido: resultPedido.lastRowid,
+      totalBruto,
+      descuentoAplicado,
+      totalNeto,
+      puntos: puntosGanados
+    });
   } catch (err) {
     console.error('Error al crear pedido:', err);
     res.status(500).json({ error: 'Error al crear pedido', details: err.message });
