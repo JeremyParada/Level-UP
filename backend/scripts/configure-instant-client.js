@@ -145,14 +145,13 @@ function downloadFile(url, dest) {
       response.pipe(file);
       file.on('finish', () => {
         file.close(() => {
-          if (fs.existsSync(dest)) {
-            console.log(`✅ Archivo descargado correctamente: ${dest}`);
-            resolve();
-          } else {
-            console.error(`❌ Archivo no encontrado después de la descarga: ${dest}`);
-            reject(new Error(`Archivo no encontrado después de la descarga: ${dest}`));
-          }
+          console.log(`✅ Archivo descargado correctamente: ${dest}`);
+          resolve();
         });
+      });
+      file.on('error', (err) => {
+        console.error(`❌ Error al escribir el archivo: ${err.message}`);
+        fs.unlink(dest, () => reject(err));
       });
     }).on('error', (err) => {
       console.error(`❌ Error durante la descarga: ${err.message}`);
