@@ -40,6 +40,6 @@ Thumbs.db
 # Build
 dist/
 
-#instantclient
+# Ignorar instantclient
 instantclient_linux/
 instantclient_windows/
