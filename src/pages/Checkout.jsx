@@ -1,18 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
-import { useNotification } from '../hooks/useNotification'; // Asegúrate de importar esto
+import { useNotification } from '../hooks/useNotification';
 import Modal from '../components/Modal';
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { carrito, vaciarCarrito } = useCart();
-  const { exito, error, info } = useNotification(); // Asegúrate de incluir `info`
+  const { exito, error } = useNotification();
 
   const [direccion, setDireccion] = useState('');
   const [metodoPago, setMetodoPago] = useState('');
   const [procesando, setProcesando] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
+
+  // Cargar dirección principal del usuario
+  useEffect(() => {
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    if (!usuario) {
+      error('Debes iniciar sesión para continuar.');
+      navigate('/login');
+      return;
+    }
+
+    const cargarDireccion = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/direcciones/usuario/${usuario.id_usuario}`);
+        const direcciones = await response.json();
+
+        const direccionPrincipal = direcciones.find(d => d.es_principal === 1);
+        if (direccionPrincipal) {
+          setDireccion(`${direccionPrincipal.calle}, ${direccionPrincipal.numero}, ${direccionPrincipal.comuna}, ${direccionPrincipal.ciudad}, ${direccionPrincipal.region}`);
+        } else {
+          error('No tienes una dirección registrada. Por favor, agrega una antes de continuar.');
+          navigate('/perfil');
+        }
+      } catch (err) {
+        console.error('Error al cargar dirección:', err);
+        error('Error al cargar dirección. Intenta nuevamente.');
+      }
+    };
+
+    cargarDireccion();
+  }, [navigate, error]);
 
   const handleFinalizarCompra = () => {
     if (!direccion || !metodoPago) {
@@ -20,7 +50,6 @@ const Checkout = () => {
       return;
     }
 
-    // Mostrar el modal para confirmar la compra
     setMostrarModal(true);
   };
 
@@ -29,11 +58,12 @@ const Checkout = () => {
     setProcesando(true);
 
     try {
+      const usuario = JSON.parse(localStorage.getItem('usuario'));
       const response = await fetch(`${process.env.REACT_APP_API_URL}/pedidos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          idUsuario: JSON.parse(localStorage.getItem('usuario')).id,
+          idUsuario: usuario.id_usuario,
           productos: carrito,
           metodoPago,
         }),
@@ -44,7 +74,7 @@ const Checkout = () => {
       if (response.ok) {
         exito(`🎉 ¡Compra realizada exitosamente!<br>Has ganado ${data.puntos} puntos LevelUp.`);
         vaciarCarrito();
-        navigate('/perfil'); // Redirigir al perfil o historial de compras
+        navigate('/perfil');
       } else {
         error(data.error || 'Error al procesar la compra');
       }
@@ -58,7 +88,6 @@ const Checkout = () => {
 
   const cancelarCompra = () => {
     setMostrarModal(false);
-    info('La compra ha sido cancelada.'); // Aquí se usa `info`
   };
 
   return (
@@ -73,9 +102,8 @@ const Checkout = () => {
             type="text" 
             className="form-control" 
             id="direccion" 
-            placeholder="Ingresa tu dirección"
-            value={direccion}
-            onChange={(e) => setDireccion(e.target.value)}
+            value={direccion} 
+            readOnly 
           />
         </div>
 
@@ -102,7 +130,6 @@ const Checkout = () => {
         </button>
       </div>
 
-      {/* Modal para confirmar la compra */}
       {mostrarModal && (
         <Modal
           titulo="Confirmar Compra"
