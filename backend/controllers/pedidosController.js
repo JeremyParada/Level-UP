@@ -8,7 +8,7 @@ exports.crearPedido = async (req, res) => {
 
     // Validar que el usuario tenga una dirección registrada
     const sqlDireccion = `
-      SELECT id_direccion
+      SELECT id_direccion_envio
       FROM direcciones
       WHERE id_usuario = :id_usuario AND es_principal = 1
     `;
@@ -20,7 +20,7 @@ exports.crearPedido = async (req, res) => {
       });
     }
 
-    const idDireccion = resultDireccion.rows[0].ID_DIRECCION;
+    const idDireccionEnvio = resultDireccion.rows[0].ID_DIRECCION_ENVIO;
 
     // Calcular totales
     let totalBruto = 0;
@@ -30,13 +30,13 @@ exports.crearPedido = async (req, res) => {
 
     // Crear el pedido
     const sqlPedido = `
-      INSERT INTO pedidos (id_usuario, id_direccion, total_bruto, metodo_pago)
-      VALUES (:id_usuario, :id_direccion, :total_bruto, :metodo_pago)
+      INSERT INTO pedidos (id_usuario, id_direccion_envio, total_bruto, metodo_pago)
+      VALUES (:id_usuario, :id_direccion_envio, :total_bruto, :metodo_pago)
       RETURNING id_pedido INTO :id_pedido
     `;
     const resultPedido = await db.execute(sqlPedido, {
       id_usuario: idUsuario,
-      id_direccion: idDireccion,
+      id_direccion_envio: idDireccionEnvio,
       total_bruto: totalBruto,
       metodo_pago: metodoPago,
       id_pedido: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT }
@@ -58,16 +58,7 @@ exports.crearPedido = async (req, res) => {
       });
     }
 
-    // Calcular y asignar puntos
-    const puntos = Math.floor(totalBruto / 1000) * 10; // 10 puntos por cada $1.000
-    const sqlPuntos = `
-      BEGIN
-        pkg_levelup_gamer.proc_actualizar_puntos(:id_usuario, :puntos, 'COMPRA');
-      END;
-    `;
-    await db.execute(sqlPuntos, { id_usuario: idUsuario, puntos });
-
-    res.status(201).json({ message: 'Pedido creado exitosamente', idPedido, puntos });
+    res.status(201).json({ message: 'Pedido creado exitosamente', idPedido });
   } catch (err) {
     console.error('Error al crear pedido:', err);
     res.status(500).json({ error: 'Error al crear pedido', details: err.message });
