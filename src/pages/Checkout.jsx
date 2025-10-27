@@ -17,15 +17,21 @@ const Checkout = () => {
   // Cargar dirección principal del usuario
   useEffect(() => {
     const usuario = JSON.parse(localStorage.getItem('usuario'));
-    if (!usuario || !usuario.id_usuario) {
+    if (!usuario) {
       error('Debes iniciar sesión para continuar.');
       navigate('/login');
       return;
     }
 
+    // Normalizar las claves del objeto a minúsculas
+    const usuarioNormalizado = Object.keys(usuario).reduce((acc, key) => {
+      acc[key.toLowerCase()] = usuario[key];
+      return acc;
+    }, {});
+
     const cargarDireccion = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/direcciones/usuario/${usuario.id_usuario}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/direcciones/usuario/${usuarioNormalizado.idusuario}`);
         const direcciones = await response.json();
 
         if (!Array.isArray(direcciones)) {
