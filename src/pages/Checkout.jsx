@@ -17,7 +17,7 @@ const Checkout = () => {
   // Cargar dirección principal del usuario
   useEffect(() => {
     const usuario = JSON.parse(localStorage.getItem('usuario'));
-    if (!usuario) {
+    if (!usuario || !usuario.id_usuario) {
       error('Debes iniciar sesión para continuar.');
       navigate('/login');
       return;
