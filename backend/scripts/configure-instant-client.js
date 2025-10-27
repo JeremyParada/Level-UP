@@ -5,6 +5,7 @@ const https = require('https');
 const extract = require('extract-zip');
 const crypto = require('crypto');
 const { execSync } = require('child_process');
+const crc = require('crc'); // Importar el paquete crc
 
 const rootDir = path.resolve(__dirname, '../../');
 const instantClientLinux = path.join(rootDir, 'instantclient_linux');
@@ -154,8 +155,8 @@ function downloadFile(url, dest) {
 // Calcular el checksum de un archivo
 function calculateChecksum(filePath) {
   const fileBuffer = fs.readFileSync(filePath);
-  const checksum = crypto.createHash('crc32').update(fileBuffer).digest('hex');
-  return parseInt(checksum, 16).toString(); // Convertir a formato decimal
+  const checksum = crc.crc32(fileBuffer).toString(); // Calcular el checksum CRC32
+  return checksum;
 }
 
 // Ejecutar el script
