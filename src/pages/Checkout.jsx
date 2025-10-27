@@ -25,6 +25,9 @@ const Checkout = () => {
     codigoPostal: ''
   });
 
+  const [direcciones, setDirecciones] = useState([]); // Lista de direcciones del usuario
+  const [direccionSeleccionada, setDireccionSeleccionada] = useState(''); // Dirección seleccionada
+
   // Función para normalizar las claves del objeto usuario
   const normalizarUsuario = (usuario) => {
     return Object.keys(usuario).reduce((acc, key) => {
@@ -69,8 +72,11 @@ const Checkout = () => {
         // Normalizar las claves de cada dirección
         const direccionesNormalizadas = direcciones.map(normalizarClaves);
 
+        setDirecciones(direccionesNormalizadas);
+
         const direccionPrincipal = direccionesNormalizadas.find(d => d.es_principal === 1);
         if (direccionPrincipal) {
+          setDireccionSeleccionada(direccionPrincipal.id_direccion);
           setDireccion(`${direccionPrincipal.calle}, ${direccionPrincipal.numero}, ${direccionPrincipal.comuna}, ${direccionPrincipal.ciudad}, ${direccionPrincipal.region}`);
         } else {
           error('No tienes una dirección registrada. Por favor, agrega una en el checkout.');
@@ -186,13 +192,26 @@ const Checkout = () => {
       <div className="card card-formulario rounded-4 p-4">
         <div className="mb-3">
           <label htmlFor="direccion" className="form-label">Dirección de Envío</label>
-          <input 
-            type="text" 
-            className="form-control" 
+          <select 
+            className="form-select" 
             id="direccion" 
-            value={direccion} 
-            readOnly 
-          />
+            value={direccionSeleccionada}
+            onChange={(e) => {
+              const direccionId = e.target.value;
+              setDireccionSeleccionada(direccionId);
+
+              const direccion = direcciones.find(d => d.id_direccion === parseInt(direccionId));
+              if (direccion) {
+                setDireccion(`${direccion.calle}, ${direccion.numero}, ${direccion.comuna}, ${direccion.ciudad}, ${direccion.region}`);
+              }
+            }}
+          >
+            {direcciones.map(direccion => (
+              <option key={direccion.id_direccion} value={direccion.id_direccion}>
+                {`${direccion.calle}, ${direccion.numero}, ${direccion.comuna}, ${direccion.ciudad}, ${direccion.region}`}
+              </option>
+            ))}
+          </select>
           <button 
             className="btn btn-outline-primary mt-3"
             onClick={() => setMostrarFormularioDireccion(true)}
