@@ -1,5 +1,7 @@
 const oracledb = require('oracledb');
 const db = require('../config/database');
+const fs = require('fs');
+const path = require('path');
 
 // Obtener todos los productos con su categoría
 exports.getProductos = async (req, res) => {
@@ -26,16 +28,31 @@ exports.getProductos = async (req, res) => {
     const result = await connection.execute(sql, {}, { outFormat: oracledb.OBJECT });
 
     // Asociar imágenes a los productos
-    const productos = result.rows.map((row) => ({
-      id: row.ID,
-      codigo: row.CODIGO,
-      nombre: row.NOMBRE,
-      precio: row.PRECIO,
-      descripcion: row.DESCRIPCION || '',
-      stock: row.STOCK,
-      categoria: row.CATEGORIA,
-      imagen: `/assets/img/${row.CODIGO.toLowerCase()}.jpg` // Asociar imagen por código
-    }));
+    const productos = result.rows.map((row) => {
+      const codigo = row.CODIGO.toLowerCase();
+      const imgPathJpg = path.join(__dirname, '../../build/assets/img', `${codigo}.jpg`);
+      const imgPathJpeg = path.join(__dirname, '../../build/assets/img', `${codigo}.jpeg`);
+
+      let imagen = null;
+      if (fs.existsSync(imgPathJpg)) {
+        imagen = `/assets/img/${codigo}.jpg`;
+      } else if (fs.existsSync(imgPathJpeg)) {
+        imagen = `/assets/img/${codigo}.jpeg`;
+      } else {
+        imagen = `/assets/img/default.jpg`; // Imagen por defecto si no se encuentra ninguna
+      }
+
+      return {
+        id: row.ID,
+        codigo: row.CODIGO,
+        nombre: row.NOMBRE,
+        precio: row.PRECIO,
+        descripcion: row.DESCRIPCION || '',
+        stock: row.STOCK,
+        categoria: row.CATEGORIA,
+        imagen,
+      };
+    });
 
     res.json(productos);
   } catch (err) {
