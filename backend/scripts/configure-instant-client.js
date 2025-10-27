@@ -3,6 +3,7 @@ const path = require('path');
 const os = require('os');
 const https = require('https');
 const extract = require('extract-zip');
+const crypto = require('crypto');
 const { execSync } = require('child_process');
 
 const rootDir = path.resolve(__dirname, '../../');
@@ -16,15 +17,18 @@ console.log(`🔧 Configurando Oracle Instant Client para ${platform}...`);
 let instantClientPath;
 let downloadUrl;
 let outputZip;
+let expectedChecksum;
 
 if (platform === 'linux') {
   instantClientPath = instantClientLinux;
   downloadUrl = 'https://download.oracle.com/otn_software/linux/instantclient/2119000/instantclient-basic-linux.x64-21.19.0.0.0dbru.zip';
   outputZip = path.join(rootDir, 'instantclient-linux.zip');
+  expectedChecksum = '942346171'; // Checksum esperado para Linux
 } else if (platform === 'win32') {
   instantClientPath = instantClientWindows;
   downloadUrl = 'https://download.oracle.com/otn_software/nt/instantclient/2119000/instantclient-basic-windows.x64-21.19.0.0.0dbru.zip';
   outputZip = path.join(rootDir, 'instantclient-windows.zip');
+  expectedChecksum = '1453364920'; // Checksum esperado para Windows
 } else {
   console.error('❌ Sistema operativo no soportado. Solo Linux y Windows están soportados.');
   process.exit(1);
@@ -49,7 +53,15 @@ async function setupInstantClient() {
 
   console.log(`⬇️ Descargando Oracle Instant Client desde: ${downloadUrl}`);
   await downloadFile(downloadUrl, outputZip);
-  console.log(`Archivo descargado: ${outputZip}`);
+
+  console.log(`📋 Verificando checksum del archivo descargado...`);
+  const checksum = calculateChecksum(outputZip);
+  if (checksum !== expectedChecksum) {
+    console.error(`❌ Checksum inválido. Esperado: ${expectedChecksum}, Obtenido: ${checksum}`);
+    fs.unlinkSync(outputZip);
+    process.exit(1);
+  }
+  console.log(`✅ Checksum válido: ${checksum}`);
 
   console.log(`📦 Descomprimiendo Oracle Instant Client en: ${instantClientPath}`);
   await extract(outputZip, { dir: rootDir });
@@ -137,6 +149,13 @@ function downloadFile(url, dest) {
       fs.unlink(dest, () => reject(err));
     });
   });
+}
+
+// Calcular el checksum de un archivo
+function calculateChecksum(filePath) {
+  const fileBuffer = fs.readFileSync(filePath);
+  const checksum = crypto.createHash('crc32').update(fileBuffer).digest('hex');
+  return parseInt(checksum, 16).toString(); // Convertir a formato decimal
 }
 
 // Ejecutar el script
