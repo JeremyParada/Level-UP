@@ -74,23 +74,30 @@ async function setupInstantClient() {
     const extractedPath = path.join(rootDir, extractedFolder);
     console.log(`✅ Carpeta descomprimida encontrada: ${extractedPath}`);
 
-    // Crear el directorio de destino si no existe
-    if (!fs.existsSync(instantClientPath)) {
-      fs.mkdirSync(instantClientPath, { recursive: true });
+    // Eliminar todos los archivos existentes en el directorio de destino
+    if (fs.existsSync(instantClientPath)) {
+      console.log(`🧹 Eliminando archivos existentes en: ${instantClientPath}`);
+      fs.rmSync(instantClientPath, { recursive: true, force: true });
     }
 
-    // Mover el contenido de la subcarpeta a la raíz de instantClientPath
+    // Crear el directorio de destino
+    fs.mkdirSync(instantClientPath, { recursive: true });
+
+    // Copiar todos los archivos y enlaces simbólicos desde la carpeta descomprimida
     const files = fs.readdirSync(extractedPath);
     files.forEach((file) => {
       const src = path.join(extractedPath, file);
       const dest = path.join(instantClientPath, file);
 
       try {
-        // Si el archivo ya existe en el destino, elimínalo antes de mover
-        if (fs.existsSync(dest)) {
-          fs.rmSync(dest, { recursive: true, force: true });
+        if (fs.lstatSync(src).isSymbolicLink()) {
+          // Si es un enlace simbólico, recrearlo en el destino
+          const symlinkTarget = fs.readlinkSync(src);
+          fs.symlinkSync(symlinkTarget, dest);
+        } else {
+          // Si es un archivo o directorio, moverlo al destino
+          fs.renameSync(src, dest);
         }
-        fs.renameSync(src, dest);
       } catch (err) {
         console.error(`❌ Error al mover el archivo ${file}: ${err.message}`);
       }
