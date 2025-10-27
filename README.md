@@ -4,41 +4,45 @@
 
 Level-UP Gamer Store es una tienda de comercio electrónico especializada en productos gaming desarrollada como proyecto académico. La aplicación web ofrece una experiencia completa de compra online con funcionalidades avanzadas de carrito, gestión de productos, sistema de reseñas y comunidad gamer, integrada con una base de datos Oracle Cloud.
 
+---
+
 ## Características Principales
 
 ### Funcionalidades Core
-- **Catálogo de Productos**: Navegación y búsqueda de productos gaming desde Oracle Cloud
-- **Carrito de Compras**: Sistema completo con gestión de cantidades y totales
-- **Sistema de Reseñas**: Los usuarios pueden calificar y comentar productos
-- **Gestión de Perfil**: Información personal y sistema de puntos LevelUp
-- **Comunidad Gamer**: Eventos, torneos y blog gaming
-- **Pedidos**: Gestión completa de pedidos con historial
+- **Catálogo de Productos**: Navegación y búsqueda de productos gaming desde Oracle Cloud.
+- **Carrito de Compras**: Sistema completo con gestión de cantidades y totales.
+- **Sistema de Reseñas**: Los usuarios pueden calificar y comentar productos.
+- **Gestión de Perfil**: Información personal y sistema de puntos LevelUp.
+- **Comunidad Gamer**: Eventos, torneos y blog gaming.
+- **Pedidos**: Gestión completa de pedidos con historial.
 
 ### Características Técnicas
-- **Backend Node.js + Express**: API RESTful conectada a Oracle Cloud
-- **Oracle Cloud Database**: Base de datos en la nube con procedimientos PL/SQL
-- **Diseño Responsivo**: Compatible con dispositivos móviles y desktop
-- **Notificaciones Elegantes**: Sistema de toast notifications sin popups
-- **Contador Dinámico**: Badge del carrito que se actualiza en tiempo real
-- **Persistencia Cloud**: Datos almacenados en Oracle Cloud Database
-- **Validaciones**: Formularios con validación client-side y server-side
+- **Backend Node.js + Express**: API RESTful conectada a Oracle Cloud.
+- **Oracle Cloud Database**: Base de datos en la nube con procedimientos PL/SQL.
+- **Diseño Responsivo**: Compatible con dispositivos móviles y desktop.
+- **Notificaciones Elegantes**: Sistema de toast notifications sin popups.
+- **Contador Dinámico**: Badge del carrito que se actualiza en tiempo real.
+- **Persistencia Cloud**: Datos almacenados en Oracle Cloud Database.
+- **Validaciones**: Formularios con validación client-side y server-side.
 
 ### Experiencia de Usuario
-- **Tema Gaming**: Colores azul neón (#1E90FF) y verde neón (#39FF14)
-- **Tipografías**: Orbitron para títulos, Roboto para texto
-- **Animaciones**: Transiciones suaves y efectos hover
-- **Feedback Visual**: Confirmaciones y notificaciones informativas
+- **Tema Gaming**: Colores azul neón (#1E90FF) y verde neón (#39FF14).
+- **Tipografías**: Orbitron para títulos, Roboto para texto.
+- **Animaciones**: Transiciones suaves y efectos hover.
+- **Feedback Visual**: Confirmaciones y notificaciones informativas.
+
+---
 
 ## Estructura del Proyecto
 
-```
+```plaintext
 Level-UP/
-├── README.md                     # Documentación del proyecto
-├── package.json                  # Dependencias React
+├── [README.md](http://_vscodecontentref_/1)                     # Documentación del proyecto
+├── [package.json](http://_vscodecontentref_/2)                  # Dependencias React
 ├── .gitignore
 ├── backend/
 │   ├── .env                      # Variables de entorno (Oracle Cloud)
-│   ├── package.json              # Dependencias backend
+│   ├── [package.json](http://_vscodecontentref_/3)              # Dependencias backend
 │   ├── server.js                 # Servidor Express principal
 │   ├── test-connection.js        # Prueba de conexión Oracle
 │   ├── config/
@@ -53,7 +57,7 @@ Level-UP/
 │       ├── productos.js          # Rutas de productos
 │       ├── usuarios.js           # Rutas de usuarios
 │       ├── pedidos.js            # Rutas de pedidos
-│       ├── resenas.js            # Rutas de reseñas
+│       ├── [resenas.js](http://_vscodecontentref_/4)            # Rutas de reseñas
 │       └── carrito.js            # Rutas del carrito
 ├── wallet/                       # Oracle Cloud Wallet
 │   ├── cwallet.sso
@@ -61,7 +65,7 @@ Level-UP/
 │   ├── sqlnet.ora
 │   └── tnsnames.ora
 ├── public/
-│   ├── index.html
+│   ├── [index.html](http://_vscodecontentref_/5)
 │   ├── manifest.json
 │   └── assets/
 │       ├── css/
@@ -70,12 +74,12 @@ Level-UP/
 │       └── img/
 └── src/
     ├── App.js
-    ├── index.js
+    ├── [index.js](http://_vscodecontentref_/6)
     ├── components/
     │   ├── layout/
     │   │   ├── Header.jsx
     │   │   ├── Navbar.jsx
-    │   │   └── Footer.jsx
+    │   │   └── [Footer.jsx](http://_vscodecontentref_/7)
     │   └── productos/
     │       └── ProductCard.jsx
     ├── context/
@@ -85,14 +89,14 @@ Level-UP/
     │   ├── useCart.js
     │   └── useNotification.js
     ├── pages/
-    │   ├── Home.jsx
+    │   ├── [Home.jsx](http://_vscodecontentref_/8)
     │   ├── Products.jsx
-    │   ├── ProductDetailPage.jsx
-    │   ├── Cart.jsx
-    │   ├── Register.jsx
-    │   ├── Profile.jsx
-    │   ├── Reviews.jsx
-    │   └── Community.jsx
+    │   ├── [ProductDetailPage.jsx](http://_vscodecontentref_/9)
+    │   ├── [Cart.jsx](http://_vscodecontentref_/10)
+    │   ├── [Register.jsx](http://_vscodecontentref_/11)
+    │   ├── [Profile.jsx](http://_vscodecontentref_/12)
+    │   ├── [Reviews.jsx](http://_vscodecontentref_/13)
+    │   └── [Community.jsx](http://_vscodecontentref_/14)
     └── utils/
 ```
 
@@ -527,28 +531,31 @@ GET /api/health
 
 ## Base de Datos Oracle Cloud
 
+### Cambios Recientes
+- **Columna `descripcion` en la tabla `productos`:**
+  - Tipo de dato cambiado de `CLOB` a `VARCHAR2(500)` para simplificar el manejo de datos en el backend.
+
 ### Tablas Principales
+1. **USUARIOS**: Información de usuarios y puntos LevelUp.
+2. **PRODUCTOS**: Catálogo de productos gaming.
+   - `descripcion`: Ahora es `VARCHAR2(500)`.
+3. **CATEGORIAS**: Clasificación de productos.
+4. **CARRITO**: Carritos de compra activos.
+5. **DETALLE_CARRITO**: Productos en cada carrito.
+6. **PEDIDOS**: Órdenes de compra.
+7. **DETALLE_PEDIDO**: Productos de cada pedido.
+8. **RESENAS**: Calificaciones y comentarios.
+9. **DIRECCIONES**: Direcciones de envío.
+10. **REFERIDOS**: Sistema de referidos.
 
-1. **USUARIOS**: Información de usuarios y puntos LevelUp
-2. **PRODUCTOS**: Catálogo de productos gaming
-3. **CATEGORIAS**: Clasificación de productos
-4. **CARRITO**: Carritos de compra activos
-5. **DETALLE_CARRITO**: Productos en cada carrito
-6. **PEDIDOS**: Órdenes de compra
-7. **DETALLE_PEDIDO**: Productos de cada pedido
-8. **RESENAS**: Calificaciones y comentarios
-9. **DIRECCIONES**: Direcciones de envío
-10. **REFERIDOS**: Sistema de referidos
+---
 
-### Paquete PL/SQL: PKG_LEVELUP_GAMER
+### Endpoints Actualizados
 
-#### Funciones
-- `func_calcular_descuento(p_id_usuario, p_total_compra)`: Calcula descuento DuocUC
-- `func_calcular_puntos(p_total_compra)`: Calcula puntos por compra
-
-#### Procedimientos
-- `proc_actualizar_puntos(p_id_usuario, p_puntos, p_tipo)`: Gestiona puntos del usuario
-- `proc_procesar_pedido(p_id_pedido)`: Procesa un pedido completo
+#### **Obtener Todos los Productos**
+```http
+GET /api/productos
+```
 
 ---
 

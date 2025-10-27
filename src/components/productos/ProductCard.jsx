@@ -19,20 +19,22 @@ const ProductCard = ({ producto }) => {
   return (
     <div className="card card-producto h-100">
       <img 
-        src={producto.imagen} 
+        src={producto.imagen || '/assets/img/default.jpg'} 
         className="card-img-top p-3" 
-        alt={producto.nombre}
+        alt={producto.nombre || 'Producto sin nombre'}
         style={{ height: '200px', objectFit: 'contain' }}
       />
       <div className="card-body d-flex flex-column">
         <span className="badge bg-secondary mb-2 align-self-start">
-          {producto.categoria}
+          {producto.categoria || 'Sin categoría'}
         </span>
-        <h5 className="card-title">{producto.nombre}</h5>
-        <p className="card-text flex-grow-1">{producto.descripcion.substring(0, 100)}...</p>
+        <h5 className="card-title">{producto.nombre || 'Producto sin nombre'}</h5>
+        <p className="card-text flex-grow-1">
+          {producto.descripcion ? producto.descripcion.substring(0, 100) + '...' : 'Sin descripción'}
+        </p>
         <div className="mt-auto">
-          <p className="precio mb-2">{formatearPrecio(producto.precio)}</p>
-          <p className="codigo small mb-3">Código: {producto.codigo}</p>
+          <p className="precio mb-2">{formatearPrecio(producto.precio || 0)}</p>
+          <p className="codigo small mb-3">Código: {producto.codigo || 'N/A'}</p>
           <div className="d-grid gap-2">
             <button 
               className="btn btn-agregar-producto"

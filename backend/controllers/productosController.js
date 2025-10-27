@@ -1,40 +1,64 @@
+const oracledb = require('oracledb');
 const db = require('../config/database');
 
 // Obtener todos los productos con su categoría
 exports.getProductos = async (req, res) => {
+  let connection;
+
   try {
     const sql = `
       SELECT 
-        p.id_producto,
-        p.codigo_producto,
-        p.nombre_producto,
+        p.id_producto AS id,
+        p.codigo_producto AS codigo,
+        p.nombre_producto AS nombre,
         p.precio,
         p.descripcion,
         p.stock,
-        p.estado_producto,
-        c.nombre_categoria
+        c.nombre_categoria AS categoria
       FROM productos p
       JOIN categorias c ON p.id_categoria = c.id_categoria
       WHERE p.estado_producto = 'ACTIVO'
       ORDER BY p.nombre_producto
     `;
-    
-    const result = await db.execute(sql);
-    res.json(result.rows);
+
+    connection = await oracledb.getConnection();
+
+    // Configurar el formato de salida como objetos
+    const result = await connection.execute(sql, {}, { outFormat: oracledb.OBJECT });
+
+    // Mapear los resultados
+    const productos = result.rows.map((row) => ({
+      id: row.ID,
+      codigo: row.CODIGO,
+      nombre: row.NOMBRE,
+      precio: row.PRECIO,
+      descripcion: row.DESCRIPCION || '', // Asegurar que sea una cadena
+      stock: row.STOCK,
+      categoria: row.CATEGORIA,
+    }));
+
+    res.json(productos);
   } catch (err) {
     console.error('Error al obtener productos:', err);
-    res.status(500).json({ 
-      error: 'Error al obtener productos',
-      details: err.message 
-    });
+    res.status(500).json({ error: 'Error al obtener productos', details: err.message });
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error('Error al cerrar conexión:', err);
+      }
+    }
   }
 };
 
 // Obtener producto por código
 exports.getProductoPorCodigo = async (req, res) => {
+  let connection;
+
   try {
     const { codigo } = req.params;
-    
+
     const sql = `
       SELECT 
         p.id_producto,
@@ -48,23 +72,44 @@ exports.getProductoPorCodigo = async (req, res) => {
         c.nombre_categoria
       FROM productos p
       JOIN categorias c ON p.id_categoria = c.id_categoria
-      WHERE p.codigo_producto = :codigo
+      WHERE p.id_producto = :codigo
         AND p.estado_producto = 'ACTIVO'
     `;
-    
-    const result = await db.execute(sql, { codigo });
-    
+
+    connection = await oracledb.getConnection();
+    const result = await connection.execute(sql, { codigo });
+
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Producto no encontrado' });
     }
-    
-    res.json(result.rows[0]);
+
+    const producto = result.rows[0];
+
+    res.json({
+      id: producto.ID_PRODUCTO,
+      codigo: producto.CODIGO_PRODUCTO,
+      nombre: producto.NOMBRE_PRODUCTO,
+      precio: producto.PRECIO,
+      descripcion: producto.DESCRIPCION || '',
+      stock: producto.STOCK,
+      estado: producto.ESTADO_PRODUCTO,
+      idCategoria: producto.ID_CATEGORIA,
+      categoria: producto.NOMBRE_CATEGORIA,
+    });
   } catch (err) {
     console.error('Error al obtener producto:', err);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Error al obtener producto',
-      details: err.message 
+      details: err.message,
     });
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error('Error al cerrar conexión:', err);
+      }
+    }
   }
 };
 
@@ -83,14 +128,14 @@ exports.getCategorias = async (req, res) => {
       GROUP BY c.id_categoria, c.nombre_categoria, c.descripcion
       ORDER BY c.nombre_categoria
     `;
-    
+
     const result = await db.execute(sql);
     res.json(result.rows);
   } catch (err) {
     console.error('Error al obtener categorías:', err);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Error al obtener categorías',
-      details: err.message 
+      details: err.message
     });
   }
 };
@@ -99,7 +144,7 @@ exports.getCategorias = async (req, res) => {
 exports.getProductosPorCategoria = async (req, res) => {
   try {
     const { idCategoria } = req.params;
-    
+
     const sql = `
       SELECT 
         p.id_producto,
@@ -115,14 +160,14 @@ exports.getProductosPorCategoria = async (req, res) => {
         AND p.estado_producto = 'ACTIVO'
       ORDER BY p.nombre_producto
     `;
-    
+
     const result = await db.execute(sql, { id_categoria: idCategoria });
     res.json(result.rows);
   } catch (err) {
     console.error('Error al obtener productos por categoría:', err);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Error al obtener productos',
-      details: err.message 
+      details: err.message
     });
   }
 };
