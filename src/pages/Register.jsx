@@ -69,13 +69,19 @@ const Register = () => {
       return;
     }
 
-    // Enviar datos al backend
+    // Validar código postal
+    if (formData.codigoPostal && isNaN(formData.codigoPostal)) {
+      error('El código postal debe ser un número.');
+      return;
+    }
+
+    // Continuar con el registro
     registrarUsuario();
   };
 
   const registrarUsuario = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/usuarios`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/usuarios/registro`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
