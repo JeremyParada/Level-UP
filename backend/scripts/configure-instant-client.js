@@ -65,12 +65,29 @@ async function setupInstantClient() {
   console.log(`📦 Descomprimiendo Oracle Instant Client en: ${instantClientPath}`);
   await extract(outputZip, { dir: rootDir });
 
-  // Renombrar la carpeta descomprimida
+  // Verificar si la carpeta descomprimida contiene una subcarpeta como "instantclient_21_19"
   const extractedFolder = fs.readdirSync(rootDir).find((folder) =>
-    folder.startsWith('instantclient')
+    folder.startsWith('instantclient_')
   );
+
   if (extractedFolder) {
-    fs.renameSync(path.join(rootDir, extractedFolder), instantClientPath);
+    const extractedPath = path.join(rootDir, extractedFolder);
+    console.log(`✅ Carpeta descomprimida encontrada: ${extractedPath}`);
+
+    // Mover el contenido de la subcarpeta a la raíz de instantClientPath
+    const files = fs.readdirSync(extractedPath);
+    files.forEach((file) => {
+      const src = path.join(extractedPath, file);
+      const dest = path.join(instantClientPath, file);
+      fs.renameSync(src, dest);
+    });
+
+    // Eliminar la carpeta vacía "instantclient_21_19"
+    fs.rmdirSync(extractedPath);
+    console.log(`✅ Contenido movido a: ${instantClientPath}`);
+  } else {
+    console.error(`❌ No se encontró la carpeta descomprimida en: ${rootDir}`);
+    process.exit(1);
   }
 
   // Eliminar el archivo ZIP
