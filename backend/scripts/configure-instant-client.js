@@ -64,6 +64,14 @@ async function setupInstantClient() {
   }
   console.log(`✅ Checksum válido: ${checksum}`);
 
+  const fileSize = fs.statSync(outputZip).size;
+  console.log(`📋 Tamaño del archivo descargado: ${fileSize} bytes`);
+  if (fileSize !== 83544786) {
+    console.error(`❌ Tamaño del archivo incorrecto. Esperado: 83544786, Obtenido: ${fileSize}`);
+    fs.unlinkSync(outputZip);
+    process.exit(1);
+  }
+
   console.log(`📦 Descomprimiendo Oracle Instant Client en: ${instantClientPath}`);
   await extract(outputZip, { dir: rootDir });
 
@@ -133,6 +141,7 @@ function downloadFile(url, dest) {
         reject(new Error(`Error al descargar el archivo: ${response.statusCode}`));
         return;
       }
+      console.log(`📥 Descargando...`);
       response.pipe(file);
       file.on('finish', () => {
         file.close(() => {
