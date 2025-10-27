@@ -1,4 +1,5 @@
 const db = require('../config/database');
+const oracledb = require('oracledb'); // Asegúrate de importar oracledb
 
 // Obtener direcciones de un usuario
 exports.getDireccionesPorUsuario = async (req, res) => {
