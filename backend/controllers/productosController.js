@@ -89,7 +89,7 @@ exports.getProductoPorCodigo = async (req, res) => {
         c.nombre_categoria
       FROM productos p
       JOIN categorias c ON p.id_categoria = c.id_categoria
-      WHERE p.id_producto = :codigo
+      WHERE p.codigo_producto = :codigo
         AND p.estado_producto = 'ACTIVO'
     `;
 
