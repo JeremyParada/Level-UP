@@ -17,7 +17,7 @@ const Checkout = () => {
   // Cargar dirección principal del usuario
   useEffect(() => {
     const usuario = JSON.parse(localStorage.getItem('usuario'));
-    if (!usuario) {
+    if (!usuario || !usuario.idUsuario) {
       error('Debes iniciar sesión para continuar.');
       navigate('/login');
       return;
@@ -25,7 +25,7 @@ const Checkout = () => {
 
     const cargarDireccion = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/direcciones/usuario/${usuario.id_usuario}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/direcciones/usuario/${usuario.idUsuario}`);
         const direcciones = await response.json();
 
         if (!Array.isArray(direcciones)) {
