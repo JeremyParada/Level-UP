@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import { useNotification } from '../hooks/useNotification';
@@ -21,11 +21,7 @@ const Cart = () => {
   const [descuentoAplicado, setDescuentoAplicado] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    cargarProductos();
-  }, [carrito]);
-
-  const cargarProductos = async () => {
+  const cargarProductos = useCallback(async () => {
     try {
       const response = await fetch('/assets/data/productos.json');
       const todosLosProductos = await response.json();
@@ -45,7 +41,11 @@ const Cart = () => {
       console.error('Error cargando productos:', err);
       setLoading(false);
     }
-  };
+  }, [carrito]);
+
+  useEffect(() => {
+    cargarProductos();
+  }, [cargarProductos]);
 
   const formatearPrecio = (precio) => {
     return new Intl.NumberFormat('es-CL', {

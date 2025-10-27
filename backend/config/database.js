@@ -1,6 +1,28 @@
 const oracledb = require('oracledb');
 const path = require('path');
+const os = require('os');
 require('dotenv').config();
+
+// Detectar el sistema operativo
+const platform = os.platform();
+let instantClientPath;
+
+// Configurar la ruta del Instant Client según el sistema operativo
+if (platform === 'win32') {
+  // Ruta para Windows
+  instantClientPath = path.join(__dirname, '../../instantclient_windows');
+  if (!process.env.PATH.includes(instantClientPath)) {
+    process.env.PATH = `${instantClientPath};${process.env.PATH}`;
+    console.log(`🔧 Oracle Instant Client añadido al PATH: ${instantClientPath}`);
+  }
+} else if (platform === 'linux') {
+  // Ruta para Linux
+  instantClientPath = path.join(__dirname, '../../instantclient_linux');
+  console.log(`🔧 Verificando Oracle Instant Client en Linux: ${instantClientPath}`);
+} else {
+  console.error('❌ Sistema operativo no soportado. Solo Windows y Linux están soportados.');
+  process.exit(1);
+}
 
 // Configurar wallet de Oracle Cloud
 const walletLocation = process.env.TNS_ADMIN || path.join(__dirname, '../../wallet');
@@ -8,8 +30,8 @@ const walletPassword = process.env.WALLET_PASSWORD || ''; // Solo si tu wallet t
 
 // Configuración para Oracle Cloud
 oracledb.initOracleClient({
-  libDir: process.env.ORACLE_CLIENT_LIB || undefined, // Windows: 'C:\\oracle\\instantclient_21_13'
-  configDir: walletLocation
+  libDir: instantClientPath, // Ruta al Instant Client
+  configDir: walletLocation  // Ruta al wallet de Oracle
 });
 
 // Configuración de conexión
@@ -72,18 +94,17 @@ async function execute(sql, binds = [], opts = {}) {
   opts.autoCommit = true;
 
   try {
-    connection = await oracledb.getConnection();
+    const pool = oracledb.getPool(); // Obtener el pool existente
+    connection = await pool.getConnection(); // Obtener una conexión del pool
     const result = await connection.execute(sql, binds, opts);
     return result;
   } catch (err) {
     console.error('❌ Error en consulta:', err);
-    console.error('SQL:', sql);
-    console.error('Binds:', binds);
     throw err;
   } finally {
     if (connection) {
       try {
-        await connection.close();
+        await connection.close(); // Cerrar la conexión después de usarla
       } catch (err) {
         console.error('❌ Error al cerrar conexión:', err);
       }

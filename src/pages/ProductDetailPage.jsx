@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import { useNotification } from '../hooks/useNotification';
@@ -21,12 +21,7 @@ const ProductDetailPage = () => {
     comentario: ''
   });
 
-  useEffect(() => {
-    cargarProducto();
-    cargarResenas();
-  }, [codigo]);
-
-  const cargarProducto = async () => {
+  const cargarProducto = useCallback(async () => {
     try {
       const response = await fetch('/assets/data/productos.json');
       const productos = await response.json();
@@ -45,13 +40,18 @@ const ProductDetailPage = () => {
       error('Error al cargar el producto');
       setLoading(false);
     }
-  };
+  }, [codigo, error, navigate]);
 
-  const cargarResenas = () => {
+  const cargarResenas = useCallback(() => {
     const resenasGuardadas = JSON.parse(localStorage.getItem('resenas')) || [];
     const resenasFiltradas = resenasGuardadas.filter(r => r.codigoProducto === codigo);
     setResenas(resenasFiltradas);
-  };
+  }, [codigo]);
+
+  useEffect(() => {
+    cargarProducto();
+    cargarResenas();
+  }, [cargarProducto, cargarResenas]);
 
   const formatearPrecio = (precio) => {
     return new Intl.NumberFormat('es-CL', {

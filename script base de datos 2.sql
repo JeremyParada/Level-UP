@@ -181,7 +181,7 @@ CREATE TABLE productos (
     codigo_producto VARCHAR2(50) NOT NULL UNIQUE,
     nombre_producto VARCHAR2(200) NOT NULL,
     precio NUMBER(10,2) NOT NULL CHECK (precio > 0),
-    descripcion CLOB,
+    descripcion VARCHAR2(500),
     stock NUMBER(10) DEFAULT 0 CHECK (stock >= 0),
     estado_producto VARCHAR2(20) DEFAULT 'ACTIVO' CHECK (estado_producto IN ('ACTIVO', 'INACTIVO', 'DESCONTINUADO')),
     fecha_creacion DATE DEFAULT SYSDATE,
