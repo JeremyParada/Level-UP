@@ -50,7 +50,7 @@ const server = http.createServer((req, res) => {
           git pull origin main &&
           cd backend &&
           npm install &&
-          pm2 restart server
+          pm2 restart Level-UP Backend
           `,
           (err, stdout, stderr) => {
             if (err) {
