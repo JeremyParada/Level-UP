@@ -16,6 +16,11 @@ function verifySignature(req, body) {
   console.log('Generated Signature:', signature);
   console.log('Header Signature:', headerSignature);
 
+  if (!headerSignature) {
+    console.error('❌ No se recibió el encabezado X-Hub-Signature-256');
+    return false;
+  }
+
   return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(headerSignature));
 }
 
