@@ -1,0 +1,120 @@
+Signature-Version: 1.0
+Created-By: 11.0.25 (Oracle Corporation)
+SHA-256-Digest-Manifest: FKiZ4kP0VOSshAbMX6PcGg627hS8cZ+rfdM4nsadU44=
+SHA-256-Digest-Manifest-Main-Attributes: rXGLzFRoiTCUr2HhBcoohKqa0SdlZ6G
+ pz173+fKLH2E=
+
+Name: instantclient_21_19/libclntsh.so.21.1
+SHA-256-Digest: SF+lGQ0KKnNkgcqVrIPP25quz96ZB1I1g1qoBA+f6p4=
+
+Name: instantclient_21_19/libocci.so.18.1
+SHA-256-Digest: EISx8xBZJGGwwhL9wxZgKUAQf2zOta3k762oFFJPOJo=
+
+Name: instantclient_21_19/BASIC_LICENSE
+SHA-256-Digest: l7x7rWxpalAIGwjIzpQU9E+Ll0A1hSmxqXlwXd+eec0=
+
+Name: instantclient_21_19/libclntsh.so.20.1
+SHA-256-Digest: aJ/dW2jiqvZwZHx4ES0xNlEl8qWBVTYsY3rTcahIinE=
+
+Name: instantclient_21_19/ucp.jar
+SHA-256-Digest: v/cwA9evcTaAvUozsKBUxrd6sJpFaI7HgP3vhitkDps=
+
+Name: instantclient_21_19/libclntsh.so
+SHA-256-Digest: PNTuj90ftlzwfs8jhWjQjEDmviviu3qwAROko7o8F6Q=
+
+Name: instantclient_21_19/xstreams.jar
+SHA-256-Digest: 0Bkxb7WYWj14QGh0SHof2A6hQG4Pgjcbggd/X0SMzl0=
+
+Name: instantclient_21_19/libclntshcore.so.12.1
+SHA-256-Digest: R5ZAsR2ginhDVvqh2QooHcemR6TRwBrePr7ym0AC4Io=
+
+Name: instantclient_21_19/libocci.so.19.1
+SHA-256-Digest: 37c/J3irnEYM6Z4zErLehq3+WDRatA3m7Elve3cElYM=
+
+Name: instantclient_21_19/uidrvci
+SHA-256-Digest: qxNop7FL8fvNQbguiZPkBx6MaP52xFkq9MPOmhQfKOw=
+
+Name: instantclient_21_19/liboramysql.so
+SHA-256-Digest: YFEBG1iPeiyfQLgLs9Ef0mo8gXIChjQCoOUpnLtt5aM=
+
+Name: instantclient_21_19/libclntshcore.so.19.1
+SHA-256-Digest: 7DqvO33gPvx8ysSwABJMVMThgJDaRVdtMvzr0BA3eqA=
+
+Name: instantclient_21_19/libclntshcore.so.18.1
+SHA-256-Digest: jPm8oT6DuG2Fr2sMFdcPdnwVPliPSYZEtXdxlEL+I7Q=
+
+Name: instantclient_21_19/adrci
+SHA-256-Digest: vMw1d+15X1QLjR2lbXCaxxOFF+BeG+0TdXHUeo1fbTI=
+
+Name: instantclient_21_19/libocci.so
+SHA-256-Digest: TNoSb4d6671dKyvtE3WMvLQdx/EqLbW+3bXT70BfzXM=
+
+Name: instantclient_21_19/libocci.so.10.1
+SHA-256-Digest: 85+mECfkrfzKzz9+B+tBaSNGprzythL4SI9QJ3Sp8BM=
+
+Name: instantclient_21_19/libclntshcore.so
+SHA-256-Digest: n1wEcQiFXjPptr5o/maJOlux/BoUgz3lRyCF7yjYWJc=
+
+Name: instantclient_21_19/libnnz21.so
+SHA-256-Digest: fQhYJht7WTlmsAHe1990wfmKAfqB+cE3XIiUiQ06pfI=
+
+Name: instantclient_21_19/libocci.so.12.1
+SHA-256-Digest: ALy4ImY6ofrkHQr6NO5XJ9eQIG3MaKHZChkeBn4Lxog=
+
+Name: instantclient_21_19/libocci.so.11.1
+SHA-256-Digest: wW7gkveb9SZuQ3agifWxIaQ7PE6w2tEhjDJTdmNadvw=
+
+Name: instantclient_21_19/ojdbc8.jar
+SHA-256-Digest: GPAUFpcIUpArh2W5pxiCz5SoS5miKlAaxzVyKWnqt/g=
+
+Name: instantclient_21_19/libclntsh.so.10.1
+SHA-256-Digest: wC0GpLWFUDEht1Oq6/y/aGSR6HiQe01ZwcGp/U7CRVA=
+
+Name: instantclient_21_19/libocci_gcc53.so.21.1
+SHA-256-Digest: vYHqs5PNCQot2qJlBVRKphbmHghhKbVhv6RnDwD1dC0=
+
+Name: instantclient_21_19/libclntshcore.so.20.1
+SHA-256-Digest: BjcbD0ZyBLCuXL+YpcvWxm9QMVVXsYmcBDmz6L6a7qU=
+
+Name: instantclient_21_19/libclntsh.so.12.1
+SHA-256-Digest: 6+XhSM8ajc2Lim+fsHFOLfHOL/OoT7QNqeocz/XvjH0=
+
+Name: instantclient_21_19/libocijdbc21.so
+SHA-256-Digest: F514we+SZ6I3znoHwdMuJYWl+ZRem5KHzAlnTfI6a/o=
+
+Name: instantclient_21_19/libclntsh.so.11.1
+SHA-256-Digest: lNPkcqmB1faD4FQhx4ZuAx6hM4D75o3qU/ntTkyOr90=
+
+Name: instantclient_21_19/libclntshcore.so.21.1
+SHA-256-Digest: r/RaZ4IIMOnD/+1n58AYpONn6yZqC1mTfCeiqEvEWVQ=
+
+Name: instantclient_21_19/genezi
+SHA-256-Digest: sCi1orKd6bqZYME6fNY047I+QviOzvciVfwvgk47vec=
+
+Name: instantclient_21_19/libclntsh.so.18.1
+SHA-256-Digest: 7zuyNGtweLASuEeYJ8a7ItW1GRd3MNtfa2+UAdBqwlw=
+
+Name: instantclient_21_19/libclntsh.so.19.1
+SHA-256-Digest: wB8u/4pSyJSracA09fY4gp6JP27ZqimnwVgrAzuUq2M=
+
+Name: instantclient_21_19/ojdbc11.jar
+SHA-256-Digest: zO7q1m9W4mKluIxynk+bHi93uGamOGb26HyTx9dnIiQ=
+
+Name: instantclient_21_19/BASIC_README
+SHA-256-Digest: jb4l+G5GGs8gGQc0bujw0cw51oR1Nuq/7h+79ncu6MY=
+
+Name: instantclient_21_19/libocci_gcc53.so
+SHA-256-Digest: vpzqoUoa/hrCdIN3cQaPmrpE+La3wnzARfQF6nb/E8U=
+
+Name: instantclient_21_19/network/admin/README
+SHA-256-Digest: TxQaENhVCgMoiQ2XZbvJXMPbDLPO5vuFQ9LWKAWIxWk=
+
+Name: instantclient_21_19/libociei.so
+SHA-256-Digest: FyJ4Zv9eRHST+XRSDT3AHKfTbka2XRjFbHCzVbcgoN8=
+
+Name: instantclient_21_19/libocci.so.20.1
+SHA-256-Digest: U4JTEd519OP81RJxN8HMobiv9cxEqmeaju2+VtpdMYo=
+
+Name: instantclient_21_19/libocci.so.21.1
+SHA-256-Digest: RoWqVdIa2wyjS2lLxmZveZuVdaSaIsLw5n81uWKFDbQ=
+
