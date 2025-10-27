@@ -45,7 +45,6 @@ const server = http.createServer((req, res) => {
         console.log('🔄 Recibiendo cambios del repositorio...');
         exec(
           `
-          cd Level-UP &&
           git reset --hard &&
           git pull origin main &&
           cd backend &&
