@@ -78,15 +78,15 @@ exports.getProductoPorCodigo = async (req, res) => {
 
     const sql = `
       SELECT 
-        p.id_producto,
-        p.codigo_producto,
-        p.nombre_producto,
+        p.id_producto AS id,
+        p.codigo_producto AS codigo,
+        p.nombre_producto AS nombre,
         p.precio,
         p.descripcion,
         p.stock,
-        p.estado_producto,
-        c.id_categoria,
-        c.nombre_categoria
+        p.estado_producto AS estado,
+        c.id_categoria AS id_categoria,
+        c.nombre_categoria AS categoria
       FROM productos p
       JOIN categorias c ON p.id_categoria = c.id_categoria
       WHERE p.codigo_producto = :codigo
@@ -94,7 +94,7 @@ exports.getProductoPorCodigo = async (req, res) => {
     `;
 
     connection = await oracledb.getConnection();
-    const result = await connection.execute(sql, { codigo });
+    const result = await connection.execute(sql, { codigo }, { outFormat: oracledb.OBJECT });
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Producto no encontrado' });
@@ -103,15 +103,16 @@ exports.getProductoPorCodigo = async (req, res) => {
     const producto = result.rows[0];
 
     res.json({
-      id: producto.ID_PRODUCTO,
-      codigo: producto.CODIGO_PRODUCTO,
-      nombre: producto.NOMBRE_PRODUCTO,
+      id: producto.ID,
+      codigo: producto.CODIGO,
+      nombre: producto.NOMBRE,
       precio: producto.PRECIO,
       descripcion: producto.DESCRIPCION || '',
       stock: producto.STOCK,
-      estado: producto.ESTADO_PRODUCTO,
+      estado: producto.ESTADO,
       idCategoria: producto.ID_CATEGORIA,
-      categoria: producto.NOMBRE_CATEGORIA,
+      categoria: producto.CATEGORIA,
+      imagen: `/assets/img/${producto.CODIGO.toLowerCase()}.jpg`, // Ruta de la imagen
     });
   } catch (err) {
     console.error('Error al obtener producto:', err);
