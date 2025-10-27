@@ -10,8 +10,7 @@ exports.crearPedido = async (req, res) => {
     const sqlDireccion = `
       SELECT id_direccion
       FROM direcciones
-      WHERE id_usuario = :id_usuario
-        AND es_principal = 1
+      WHERE id_usuario = :id_usuario AND es_principal = 1
     `;
     const resultDireccion = await db.execute(sqlDireccion, { id_usuario: idUsuario });
 

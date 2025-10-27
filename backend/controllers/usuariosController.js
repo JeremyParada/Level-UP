@@ -4,22 +4,43 @@ const oracledb = require('oracledb');
 // Registrar usuario
 exports.registrarUsuario = async (req, res) => {
   try {
-    const { nombre, apellido, email, password, fechaNacimiento, telefono } = req.body;
-    
+    const { nombre, apellido, email, password, fechaNacimiento, telefono, calle, numero, comuna, ciudad, region, codigoPostal } = req.body;
+
     // Validación básica
-    if (!nombre || !apellido || !email || !password || !fechaNacimiento) {
+    if (!nombre || !apellido || !email || !password || !fechaNacimiento || !calle || !numero || !comuna || !ciudad || !region) {
       return res.status(400).json({ error: 'Todos los campos son obligatorios' });
     }
-    
-    const sql = `
+
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!regexEmail.test(email)) {
+      return res.status(400).json({ error: 'El correo electrónico no es válido' });
+    }
+
+    const hoy = new Date();
+    const fechaNac = new Date(fechaNacimiento);
+    const edad = hoy.getFullYear() - fechaNac.getFullYear();
+    const mes = hoy.getMonth() - fechaNac.getMonth();
+    if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+      edad--;
+    }
+    if (edad < 18) {
+      return res.status(400).json({ error: 'Debes ser mayor de 18 años para registrarte' });
+    }
+
+    const regexTelefono = /^\+56 9 \d{4} \d{4}$/;
+    if (telefono && !regexTelefono.test(telefono)) {
+      return res.status(400).json({ error: 'El teléfono debe tener el formato +56 9 XXXX XXXX' });
+    }
+
+    // Insertar usuario
+    const sqlUsuario = `
       INSERT INTO usuarios (
         nombre, apellido, email, password, fecha_nacimiento, telefono
       ) VALUES (
         :nombre, :apellido, :email, :password, TO_DATE(:fecha_nacimiento, 'YYYY-MM-DD'), :telefono
       ) RETURNING id_usuario INTO :id_usuario
     `;
-    
-    const result = await db.execute(sql, {
+    const resultUsuario = await db.execute(sqlUsuario, {
       nombre,
       apellido,
       email,
@@ -28,23 +49,31 @@ exports.registrarUsuario = async (req, res) => {
       telefono: telefono || null,
       id_usuario: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT }
     });
-    
-    res.status(201).json({
-      message: 'Usuario registrado exitosamente',
-      id_usuario: result.outBinds.id_usuario[0]
+
+    const idUsuario = resultUsuario.outBinds.id_usuario[0];
+
+    // Insertar dirección
+    const sqlDireccion = `
+      INSERT INTO direcciones (
+        id_usuario, tipo_direccion, calle, numero, comuna, ciudad, region, codigo_postal, es_principal
+      ) VALUES (
+        :idUsuario, 'ENVIO', :calle, :numero, :comuna, :ciudad, :region, :codigoPostal, 1
+      )
+    `;
+    await db.execute(sqlDireccion, {
+      idUsuario,
+      calle,
+      numero,
+      comuna,
+      ciudad,
+      region,
+      codigoPostal
     });
+
+    res.status(201).json({ message: 'Usuario registrado exitosamente', idUsuario });
   } catch (err) {
     console.error('Error al registrar usuario:', err);
-    
-    // Verificar si es error de email duplicado
-    if (err.errorNum === 1) {
-      return res.status(409).json({ error: 'El email ya está registrado' });
-    }
-    
-    res.status(500).json({ 
-      error: 'Error al registrar usuario',
-      details: err.message 
-    });
+    res.status(500).json({ error: 'Error al registrar usuario', details: err.message });
   }
 };
 
@@ -148,40 +177,21 @@ exports.actualizarPuntos = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email y contraseña son requeridos' });
-    }
-    
+
     const sql = `
-      SELECT 
-        id_usuario,
-        nombre,
-        apellido,
-        email,
-        puntos_levelup,
-        descuento_duoc
+      SELECT id_usuario, nombre, apellido, email
       FROM usuarios
-      WHERE email = :email
-        AND password = :password
-        AND estado_usuario = 'ACTIVO'
+      WHERE email = :email AND password = :password
     `;
-    
     const result = await db.execute(sql, { email, password });
-    
+
     if (result.rows.length === 0) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
-    
-    res.json({
-      message: 'Login exitoso',
-      usuario: result.rows[0]
-    });
+
+    res.json({ message: 'Login exitoso', usuario: result.rows[0] });
   } catch (err) {
     console.error('Error en login:', err);
-    res.status(500).json({ 
-      error: 'Error en login',
-      details: err.message 
-    });
+    res.status(500).json({ error: 'Error en login', details: err.message });
   }
 };

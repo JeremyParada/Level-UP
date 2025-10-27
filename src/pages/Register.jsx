@@ -17,7 +17,13 @@ const Register = () => {
     apellido: '',
     fechaNacimiento: '',
     codigoReferido: '',
-    telefono: ''
+    telefono: '',
+    calle: '',
+    numero: '',
+    comuna: '',
+    ciudad: '',
+    region: '',
+    codigoPostal: ''
   });
 
   const [validated, setValidated] = useState(false);
@@ -45,97 +51,54 @@ const Register = () => {
     e.preventDefault();
     const form = e.currentTarget;
 
-    let usuariosExistentes = JSON.parse(localStorage.getItem('usuarios')) || [];
-
-    // Validación: email ya registrado
-    if (usuariosExistentes.some(u => u.email === formData.email)) {
-      error('Este correo ya está registrado');
-      return;
-    }
-
-    // Validaciones personalizadas
-    let esValido = true;
-    let mensajesError = [];
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      esValido = false;
-      mensajesError.push('Email inválido');
-    }
-
-    if (formData.password.length < 6) {
-      esValido = false;
-      mensajesError.push('La contraseña debe tener al menos 6 caracteres');
-    }
-
-    if (formData.password !== formData.password2) {
-      esValido = false;
-      mensajesError.push('Las contraseñas no coinciden');
-    }
-
-    if (formData.fechaNacimiento) {
-      const edad = validarEdad(formData.fechaNacimiento);
-      if (edad < 18) {
-        esValido = false;
-        mensajesError.push('Debes ser mayor de 18 años');
-      }
-    }
-
-    const telefonoRegex = /^\+56 9 \d{4} \d{4}$/;
-    if (!telefonoRegex.test(formData.telefono)) {
-      esValido = false;
-      mensajesError.push('El teléfono debe tener el formato +56 9 XXXX XXXX');
-    }
-
-    if (new Date(formData.fechaNacimiento) > new Date()) {
-      esValido = false;
-      mensajesError.push('La fecha de nacimiento no puede ser en el futuro');
-    }
-
-    if (!esValido || form.checkValidity() === false) {
-      e.stopPropagation();
+    if (!form.checkValidity()) {
       setValidated(true);
-      if (mensajesError.length > 0) {
-        error(mensajesError.join('<br>'));
-      }
       return;
     }
 
-    // Crear usuario
-    const usuario = {
-      email: formData.email,
-      password: formData.password,
-      nombre: formData.nombre,
-      apellido: formData.apellido,
-      fechaNacimiento: formData.fechaNacimiento,
-      codigoReferido: formData.codigoReferido,
-      telefono: formData.telefono,
-      puntos: 100,
-      nivel: 1,
-      fechaRegistro: new Date().toISOString()
-    };
-
-    // Guardar lista completa de usuarios
-    let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-    usuarios.push(usuario);
-    localStorage.setItem('usuarios', JSON.stringify(usuarios));
-
-    // Guardar sesión actual
-    localStorage.setItem('usuario', JSON.stringify(usuario));
-    setUsuario(usuario); // <-- actualiza el contexto global inmediatamente
-
-    // Mensaje de bienvenida
-    if (formData.email.includes('@duoc.cl') || formData.email.includes('@duocuc.cl')) {
-      localStorage.setItem('descuentoDuoc', 'true');
-      exito(`¡Bienvenido ${formData.nombre}!<br>¡Tienes 20% de descuento DuocUC activado! 🎓`);
-    } else {
-      exito(`¡Bienvenido ${formData.nombre}!<br>Tu cuenta ha sido creada exitosamente 🎮`);
+    // Validar dirección
+    if (!formData.calle || !formData.numero || !formData.comuna || !formData.ciudad || !formData.region) {
+      error('Todos los campos de dirección son obligatorios.');
+      return;
     }
 
-    // Redirigir al perfil
-    setTimeout(() => {
-      navigate('/perfil');
-    }, 2000);
+    // Validar teléfono
+    const regexTelefono = /^\+56 9 \d{4} \d{4}$/;
+    if (!regexTelefono.test(formData.telefono)) {
+      error('El teléfono debe tener el formato +56 9 XXXX XXXX.');
+      return;
+    }
+
+    // Validar código postal
+    if (formData.codigoPostal && isNaN(formData.codigoPostal)) {
+      error('El código postal debe ser un número.');
+      return;
+    }
+
+    // Continuar con el registro
+    registrarUsuario();
+  };
+
+  const registrarUsuario = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/usuarios`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        exito('¡Registro exitoso! 🎉');
+        navigate('/perfil');
+      } else {
+        error(data.error || 'Error al registrar usuario.');
+      }
+    } catch (err) {
+      console.error('Error al registrar usuario:', err);
+      error('Error al registrar usuario.');
+    }
   };
 
   return (
@@ -278,6 +241,86 @@ const Register = () => {
                     <Form.Control.Feedback type="invalid">
                       El teléfono debe tener el formato +56 9 XXXX XXXX
                     </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <Form.Group className="mb-3" controlId="calle">
+                    <Form.Label>Calle</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      placeholder="Ej: Av. Siempre Viva"
+                      value={formData.calle}
+                      onChange={handleChange}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Debes ingresar una calle.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <Form.Group className="mb-3" controlId="numero">
+                    <Form.Label>Número</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      placeholder="Ej: 742"
+                      value={formData.numero}
+                      onChange={handleChange}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Debes ingresar un número.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <Form.Group className="mb-3" controlId="comuna">
+                    <Form.Label>Comuna</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      placeholder="Ej: Springfield"
+                      value={formData.comuna}
+                      onChange={handleChange}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Debes ingresar una comuna.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <Form.Group className="mb-3" controlId="ciudad">
+                    <Form.Label>Ciudad</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      placeholder="Ej: Springfield"
+                      value={formData.ciudad}
+                      onChange={handleChange}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Debes ingresar una ciudad.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <Form.Group className="mb-3" controlId="region">
+                    <Form.Label>Región</Form.Label>
+                    <Form.Control
+                      required
+                      type="text"
+                      placeholder="Ej: Región Metropolitana"
+                      value={formData.region}
+                      onChange={handleChange}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Debes ingresar una región.
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <Form.Group className="mb-3" controlId="codigoPostal">
+                    <Form.Label>Código Postal</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Ej: 1234567"
+                      value={formData.codigoPostal}
+                      onChange={handleChange}
+                    />
                   </Form.Group>
 
                   <Button variant="primary" type="submit" className="w-100 mt-3">

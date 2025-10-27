@@ -1,4 +1,5 @@
 import React from 'react';
+import './Modal.css'; // Asegúrate de tener estilos personalizados si es necesario
 
 const Modal = ({ titulo, mensaje, onConfirmar, onCancelar }) => {
   return (
