@@ -41,12 +41,18 @@ const Profile = () => {
   const cargarDatosPerfil = () => {
     const usuario = JSON.parse(localStorage.getItem('usuario'));
     if (usuario) {
+      // Normalizar las claves del objeto a minúsculas
+      const usuarioNormalizado = Object.keys(usuario).reduce((acc, key) => {
+        acc[key.toLowerCase()] = usuario[key];
+        return acc;
+      }, {});
+
       setPerfil({
-        ...usuario,
-        gamerTag: usuario.gamerTag || `${usuario.nombre}_${Math.random().toString(36).substr(2, 4)}`.toUpperCase(),
-        telefono: usuario.telefono || '',
-        juegoFavorito: usuario.juegoFavorito || '',
-        codigoReferido: usuario.codigoReferido || 'GAMER' + Math.random().toString(36).substr(2, 6).toUpperCase()
+        ...usuarioNormalizado,
+        gamerTag: usuarioNormalizado.gamertag || `${usuarioNormalizado.nombre}_${Math.random().toString(36).substr(2, 4)}`.toUpperCase(),
+        telefono: usuarioNormalizado.telefono || '',
+        juegoFavorito: usuarioNormalizado.juegofavorito || '',
+        codigoReferido: usuarioNormalizado.codigoreferido || 'GAMER' + Math.random().toString(36).substr(2, 6).toUpperCase()
       });
     }
   };
@@ -63,7 +69,7 @@ const Profile = () => {
     const descuentos = [];
 
     // Descuento DuocUC
-    if (usuario.email.endsWith('@duoc.cl') || usuario.email.endsWith('@duocuc.cl')) {
+    if (usuario?.email?.endsWith('@duoc.cl') || usuario?.email?.endsWith('@duocuc.cl')) {
       descuentos.push({
         titulo: 'Descuento DuocUC 🎓',
         descripcion: '20% de descuento de por vida',
