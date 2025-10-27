@@ -55,7 +55,8 @@ const server = http.createServer((req, res) => {
           sudo chown -R ubuntu:ubuntu build &&
           npm install &&
           npm run build &&
-          sudo chown -R www-data:www-data build
+          sudo chown -R www-data:www-data build &&
+          sudo systemctl restart nginx
           `,
           (err, stdout, stderr) => {
             if (err) {
