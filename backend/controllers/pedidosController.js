@@ -29,88 +29,49 @@ exports.crearPedido = async (req, res) => {
       totalBruto += prod.precio * prod.cantidad;
     }
 
-    // Calcular descuento usando la función del paquete
-    let descuentoAplicado = 0;
-    try {
-      const sqlDescuento = `
-        SELECT pkg_levelup_gamer.func_calcular_descuento(:id_usuario, :total) AS descuento
-        FROM DUAL
-      `;
-      const resultDescuento = await db.execute(sqlDescuento, {
-        id_usuario: idUsuario,
-        total: totalBruto
-      });
-      descuentoAplicado = resultDescuento.rows[0].DESCUENTO || 0;
-    } catch (err) {
-      console.log('No se pudo calcular descuento, continuando sin descuento:', err.message);
-    }
-
-    const totalNeto = totalBruto - descuentoAplicado;
-
-    // Insertar pedido
+    // Crear el pedido
     const sqlPedido = `
-      INSERT INTO pedidos (
-        id_usuario, id_direccion_envio, total_bruto, descuento_aplicado, total_neto, metodo_pago
-      ) VALUES (
-        :id_usuario, :id_direccion, :total_bruto, :descuento, :total_neto, :metodo_pago
-      ) RETURNING id_pedido INTO :id_pedido
+      INSERT INTO pedidos (id_usuario, id_direccion, total_bruto, metodo_pago)
+      VALUES (:id_usuario, :id_direccion, :total_bruto, :metodo_pago)
+      RETURNING id_pedido INTO :id_pedido
     `;
-
     const resultPedido = await db.execute(sqlPedido, {
       id_usuario: idUsuario,
-      id_direccion: idDireccion || null,
+      id_direccion: idDireccion,
       total_bruto: totalBruto,
-      descuento: descuentoAplicado,
-      total_neto: totalNeto,
-      metodo_pago: metodoPago || 'WEBPAY',
+      metodo_pago: metodoPago,
       id_pedido: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT }
     });
 
     const idPedido = resultPedido.outBinds.id_pedido[0];
 
-    // Insertar detalle de pedido
+    // Insertar productos en detalle_pedido
     for (const prod of productos) {
       const sqlDetalle = `
-        INSERT INTO detalle_pedido (
-          id_pedido, id_producto, cantidad, precio_unitario
-        ) VALUES (
-          :id_pedido, :id_producto, :cantidad, :precio_unitario
-        )
+        INSERT INTO detalle_pedido (id_pedido, id_producto, cantidad, precio_unitario)
+        VALUES (:id_pedido, :id_producto, :cantidad, :precio_unitario)
       `;
-
       await db.execute(sqlDetalle, {
         id_pedido: idPedido,
-        id_producto: prod.id_producto,
+        id_producto: prod.id,
         cantidad: prod.cantidad,
         precio_unitario: prod.precio
       });
-
-      // Actualizar stock
-      const sqlStock = `
-        UPDATE productos 
-        SET stock = stock - :cantidad
-        WHERE id_producto = :id_producto
-      `;
-
-      await db.execute(sqlStock, {
-        cantidad: prod.cantidad,
-        id_producto: prod.id_producto
-      });
     }
 
-    res.status(201).json({ 
-      message: 'Pedido creado exitosamente',
-      id_pedido: idPedido,
-      total_bruto: totalBruto,
-      descuento_aplicado: descuentoAplicado,
-      total_neto: totalNeto
-    });
+    // Calcular y asignar puntos
+    const puntos = Math.floor(totalBruto / 1000) * 10; // 10 puntos por cada $1.000
+    const sqlPuntos = `
+      BEGIN
+        pkg_levelup_gamer.proc_actualizar_puntos(:id_usuario, :puntos, 'COMPRA');
+      END;
+    `;
+    await db.execute(sqlPuntos, { id_usuario: idUsuario, puntos });
+
+    res.status(201).json({ message: 'Pedido creado exitosamente', idPedido, puntos });
   } catch (err) {
     console.error('Error al crear pedido:', err);
-    res.status(500).json({ 
-      error: 'Error al crear pedido',
-      details: err.message 
-    });
+    res.status(500).json({ error: 'Error al crear pedido', details: err.message });
   }
 };
 
