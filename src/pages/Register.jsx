@@ -69,13 +69,7 @@ const Register = () => {
       return;
     }
 
-    // Validar código postal
-    if (formData.codigoPostal && isNaN(formData.codigoPostal)) {
-      error('El código postal debe ser un número.');
-      return;
-    }
-
-    // Continuar con el registro
+    // Enviar datos al backend
     registrarUsuario();
   };
 

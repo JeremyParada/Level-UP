@@ -4,18 +4,33 @@ const oracledb = require('oracledb');
 // Registrar usuario
 exports.registrarUsuario = async (req, res) => {
   try {
-    const { nombre, apellido, email, password, fechaNacimiento, telefono, calle, numero, comuna, ciudad, region, codigoPostal } = req.body;
+    const {
+      nombre,
+      apellido,
+      email,
+      password,
+      fechaNacimiento,
+      telefono,
+      calle,
+      numero,
+      comuna,
+      ciudad,
+      region,
+      codigoPostal
+    } = req.body;
 
-    // Validación básica
+    // Validar campos obligatorios
     if (!nombre || !apellido || !email || !password || !fechaNacimiento || !calle || !numero || !comuna || !ciudad || !region) {
       return res.status(400).json({ error: 'Todos los campos son obligatorios' });
     }
 
+    // Validar formato de email
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!regexEmail.test(email)) {
       return res.status(400).json({ error: 'El correo electrónico no es válido' });
     }
 
+    // Validar edad mínima
     const hoy = new Date();
     const fechaNac = new Date(fechaNacimiento);
     const edad = hoy.getFullYear() - fechaNac.getFullYear();
@@ -25,11 +40,6 @@ exports.registrarUsuario = async (req, res) => {
     }
     if (edad < 18) {
       return res.status(400).json({ error: 'Debes ser mayor de 18 años para registrarte' });
-    }
-
-    const regexTelefono = /^\+56 9 \d{4} \d{4}$/;
-    if (telefono && !regexTelefono.test(telefono)) {
-      return res.status(400).json({ error: 'El teléfono debe tener el formato +56 9 XXXX XXXX' });
     }
 
     // Insertar usuario
@@ -44,7 +54,7 @@ exports.registrarUsuario = async (req, res) => {
       nombre,
       apellido,
       email,
-      password, // ⚠️ En producción, usar bcrypt
+      password, // ⚠️ En producción, usar bcrypt para encriptar la contraseña
       fecha_nacimiento: fechaNacimiento,
       telefono: telefono || null,
       id_usuario: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT }
