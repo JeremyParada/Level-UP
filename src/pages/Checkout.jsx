@@ -95,7 +95,7 @@ const Checkout = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           idUsuario: usuarioNormalizado.idusuario,
-          productos: carrito,
+          productos: carrito, // Asegúrate de que `carrito` contiene `precio` y `cantidad`
           metodoPago,
         }),
       });

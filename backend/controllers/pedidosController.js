@@ -20,45 +20,39 @@ exports.crearPedido = async (req, res) => {
       });
     }
 
-    const idDireccionEnvio = resultDireccion.rows[0].ID_DIRECCION; // Cambiar ID_DIRECCION_ENVIO a ID_DIRECCION
+    const idDireccionEnvio = resultDireccion.rows[0].ID_DIRECCION;
 
     // Calcular totales
     let totalBruto = 0;
-    for (const prod of productos) {
-      totalBruto += prod.precio * prod.cantidad;
+    let descuentoAplicado = 0;
+    let totalNeto = 0;
+
+    for (const producto of productos) {
+      totalBruto += producto.precio * producto.cantidad;
     }
+
+    // Aplicar descuento si corresponde
+    if (idUsuario && totalBruto > 50000) {
+      descuentoAplicado = totalBruto * 0.1; // Ejemplo: 10% de descuento
+    }
+
+    totalNeto = totalBruto - descuentoAplicado;
 
     // Crear el pedido
     const sqlPedido = `
-      INSERT INTO pedidos (id_usuario, id_direccion_envio, total_bruto, metodo_pago)
-      VALUES (:id_usuario, :id_direccion_envio, :total_bruto, :metodo_pago)
-      RETURNING id_pedido INTO :id_pedido
+      INSERT INTO pedidos (id_usuario, id_direccion_envio, total_bruto, descuento_aplicado, total_neto, metodo_pago)
+      VALUES (:id_usuario, :id_direccion_envio, :total_bruto, :descuento_aplicado, :total_neto, :metodo_pago)
     `;
-    const resultPedido = await db.execute(sqlPedido, {
+    await db.execute(sqlPedido, {
       id_usuario: idUsuario,
       id_direccion_envio: idDireccionEnvio,
       total_bruto: totalBruto,
-      metodo_pago: metodoPago,
-      id_pedido: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT }
+      descuento_aplicado: descuentoAplicado,
+      total_neto: totalNeto,
+      metodo_pago: metodoPago
     });
 
-    const idPedido = resultPedido.outBinds.id_pedido[0];
-
-    // Insertar productos en detalle_pedido
-    for (const prod of productos) {
-      const sqlDetalle = `
-        INSERT INTO detalle_pedido (id_pedido, id_producto, cantidad, precio_unitario)
-        VALUES (:id_pedido, :id_producto, :cantidad, :precio_unitario)
-      `;
-      await db.execute(sqlDetalle, {
-        id_pedido: idPedido,
-        id_producto: prod.id,
-        cantidad: prod.cantidad,
-        precio_unitario: prod.precio
-      });
-    }
-
-    res.status(201).json({ message: 'Pedido creado exitosamente', idPedido });
+    res.status(201).json({ message: 'Pedido creado exitosamente' });
   } catch (err) {
     console.error('Error al crear pedido:', err);
     res.status(500).json({ error: 'Error al crear pedido', details: err.message });
