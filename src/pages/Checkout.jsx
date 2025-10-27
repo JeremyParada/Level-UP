@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import { useNotification } from '../hooks/useNotification';
 import Modal from '../components/Modal';
+import DireccionForm from '../components/DireccionForm'; // Asegúrate de importar el componente
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -13,6 +14,16 @@ const Checkout = () => {
   const [metodoPago, setMetodoPago] = useState('');
   const [procesando, setProcesando] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [mostrarFormularioDireccion, setMostrarFormularioDireccion] = useState(false);
+
+  const [nuevaDireccion, setNuevaDireccion] = useState({
+    calle: '',
+    numero: '',
+    comuna: '',
+    ciudad: '',
+    region: '',
+    codigoPostal: ''
+  });
 
   // Función para normalizar las claves del objeto usuario
   const normalizarUsuario = (usuario) => {
@@ -125,6 +136,48 @@ const Checkout = () => {
     setMostrarModal(false);
   };
 
+  const handleChangeDireccion = (e) => {
+    setNuevaDireccion({
+      ...nuevaDireccion,
+      [e.target.id]: e.target.value
+    });
+  };
+
+  const handleGuardarDireccion = async () => {
+    try {
+      const usuario = JSON.parse(localStorage.getItem('usuario'));
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/direcciones`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...nuevaDireccion,
+          idUsuario: usuario.idusuario,
+          tipoDireccion: 'ENVIO',
+          esPrincipal: 0
+        }),
+      });
+
+      if (response.ok) {
+        exito('¡Dirección añadida exitosamente!');
+        setMostrarFormularioDireccion(false);
+        setNuevaDireccion({
+          calle: '',
+          numero: '',
+          comuna: '',
+          ciudad: '',
+          region: '',
+          codigoPostal: ''
+        });
+      } else {
+        const data = await response.json();
+        error(data.error || 'Error al guardar la dirección.');
+      }
+    } catch (err) {
+      console.error('Error al guardar dirección:', err);
+      error('Error al guardar la dirección.');
+    }
+  };
+
   return (
     <main className="container my-5">
       <h1 className="texto-principal">Checkout</h1>
@@ -140,6 +193,12 @@ const Checkout = () => {
             value={direccion} 
             readOnly 
           />
+          <button 
+            className="btn btn-outline-primary mt-3"
+            onClick={() => setMostrarFormularioDireccion(true)}
+          >
+            Añadir Nueva Dirección
+          </button>
         </div>
 
         <div className="mb-3">
@@ -171,6 +230,20 @@ const Checkout = () => {
           mensaje={`¿Confirmas tu compra por un total de ${carrito.reduce((sum, p) => sum + p.precio * p.cantidad, 0)}?`}
           onConfirmar={confirmarCompra}
           onCancelar={cancelarCompra}
+        />
+      )}
+
+      {mostrarFormularioDireccion && (
+        <Modal
+          titulo="Añadir Nueva Dirección"
+          mensaje={
+            <DireccionForm 
+              formData={nuevaDireccion} 
+              handleChange={handleChangeDireccion} 
+            />
+          }
+          onConfirmar={handleGuardarDireccion}
+          onCancelar={() => setMostrarFormularioDireccion(false)}
         />
       )}
     </main>
