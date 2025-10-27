@@ -24,6 +24,21 @@ function verifySignature(req, body) {
   return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(headerSignature));
 }
 
+// Ejecutar un comando con logs
+function ejecutarComando(comando, descripcion, callback) {
+  console.log(`🔄 Ejecutando: ${descripcion}`);
+  exec(comando, (err, stdout, stderr) => {
+    if (err) {
+      console.error(`❌ Error en "${descripcion}":`, stderr);
+      callback(err);
+      return;
+    }
+    console.log(`✅ Completado: ${descripcion}`);
+    console.log(stdout);
+    callback(null);
+  });
+}
+
 // Crear servidor HTTP
 const server = http.createServer((req, res) => {
   if (req.method === 'POST' && req.url === '/webhook') {
@@ -43,27 +58,55 @@ const server = http.createServer((req, res) => {
       const payload = JSON.parse(body);
       if (payload.ref === 'refs/heads/main') {
         console.log('🔄 Recibiendo cambios del repositorio...');
-        exec(
-          `
-          cd /home/ubuntu/Level-UP &&
-          git reset --hard &&
-          git pull origin main &&
-          cd backend &&
-          npm install &&
-          pm2 restart "Level-UP Backend" &&
-          cd ../ &&
-          sudo chown -R ubuntu:ubuntu build &&
-          npm install &&
-          npm run build &&
-          sudo chown -R www-data:www-data build &&
-          sudo systemctl restart nginx
-          `,
-          (err, stdout, stderr) => {
-            if (err) {
-              console.error('❌ Error al actualizar el servidor:', stderr);
-              return;
-            }
-            console.log('✅ Servidor actualizado con éxito:', stdout);
+
+        // Ejecutar los comandos uno por uno
+        ejecutarComando(
+          'cd /home/ubuntu/Level-UP && git reset --hard && git pull origin main',
+          'Actualizar el repositorio',
+          (err) => {
+            if (err) return;
+
+            ejecutarComando(
+              'cd /home/ubuntu/Level-UP/backend && npm install && pm2 restart "Level-UP Backend"',
+              'Actualizar dependencias y reiniciar el backend',
+              (err) => {
+                if (err) return;
+
+                ejecutarComando(
+                  'cd /home/ubuntu/Level-UP && sudo chown -R ubuntu:ubuntu build',
+                  'Cambiar permisos del directorio build (ubuntu)',
+                  (err) => {
+                    if (err) return;
+
+                    ejecutarComando(
+                      'cd /home/ubuntu/Level-UP && npm install && npm run build',
+                      'Construir el proyecto',
+                      (err) => {
+                        if (err) return;
+
+                        ejecutarComando(
+                          'cd /home/ubuntu/Level-UP && sudo chown -R www-data:www-data build',
+                          'Cambiar permisos del directorio build (www-data)',
+                          (err) => {
+                            if (err) return;
+
+                            ejecutarComando(
+                              'sudo systemctl restart nginx',
+                              'Reiniciar Nginx',
+                              (err) => {
+                                if (err) return;
+
+                                console.log('🚀 Actualización completada con éxito.');
+                              }
+                            );
+                          }
+                        );
+                      }
+                    );
+                  }
+                );
+              }
+            );
           }
         );
       }
