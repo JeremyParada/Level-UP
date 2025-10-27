@@ -87,9 +87,11 @@ function configureEnvironmentVariable() {
 // Descargar un archivo desde una URL
 function downloadFile(url, dest) {
   return new Promise((resolve, reject) => {
+    console.log(`⬇️ Iniciando descarga desde: ${url}`);
     const file = fs.createWriteStream(dest);
     https.get(url, (response) => {
       if (response.statusCode !== 200) {
+        console.error(`❌ Error al descargar el archivo: Código de estado ${response.statusCode}`);
         reject(new Error(`Error al descargar el archivo: ${response.statusCode}`));
         return;
       }
@@ -97,13 +99,16 @@ function downloadFile(url, dest) {
       file.on('finish', () => {
         file.close(() => {
           if (fs.existsSync(dest)) {
+            console.log(`✅ Archivo descargado correctamente: ${dest}`);
             resolve();
           } else {
+            console.error(`❌ Archivo no encontrado después de la descarga: ${dest}`);
             reject(new Error(`Archivo no encontrado después de la descarga: ${dest}`));
           }
         });
       });
     }).on('error', (err) => {
+      console.error(`❌ Error durante la descarga: ${err.message}`);
       fs.unlink(dest, () => reject(err));
     });
   });
