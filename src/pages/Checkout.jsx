@@ -14,10 +14,26 @@ const Checkout = () => {
   const [procesando, setProcesando] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
 
+  // Función para normalizar las claves del objeto usuario
+  const normalizarUsuario = (usuario) => {
+    return Object.keys(usuario).reduce((acc, key) => {
+      acc[key.toLowerCase()] = usuario[key];
+      return acc;
+    }, {});
+  };
+
   // Cargar dirección principal del usuario
   useEffect(() => {
     const usuario = JSON.parse(localStorage.getItem('usuario'));
-    if (!usuario || !usuario.idUsuario) {
+    if (!usuario) {
+      error('Debes iniciar sesión para continuar.');
+      navigate('/login');
+      return;
+    }
+
+    const usuarioNormalizado = normalizarUsuario(usuario);
+
+    if (!usuarioNormalizado.idusuario) {
       error('Debes iniciar sesión para continuar.');
       navigate('/login');
       return;
@@ -25,7 +41,7 @@ const Checkout = () => {
 
     const cargarDireccion = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/direcciones/usuario/${usuario.idUsuario}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/direcciones/usuario/${usuarioNormalizado.idusuario}`);
         const direcciones = await response.json();
 
         if (!Array.isArray(direcciones)) {
@@ -63,11 +79,13 @@ const Checkout = () => {
 
     try {
       const usuario = JSON.parse(localStorage.getItem('usuario'));
+      const usuarioNormalizado = normalizarUsuario(usuario);
+
       const response = await fetch(`${process.env.REACT_APP_API_URL}/pedidos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          idUsuario: usuario.id_usuario,
+          idUsuario: usuarioNormalizado.idusuario,
           productos: carrito,
           metodoPago,
         }),
