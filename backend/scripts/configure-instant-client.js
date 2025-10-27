@@ -30,12 +30,21 @@ if (platform === 'linux') {
   process.exit(1);
 }
 
+// Archivos necesarios para Oracle Instant Client
+const requiredFiles = ['libclntsh.so', 'libocci.so', 'libclntshcore.so'];
+
 // Descargar y descomprimir el Instant Client
 async function setupInstantClient() {
   if (fs.existsSync(instantClientPath)) {
-    console.log(`✅ Oracle Instant Client ya está configurado en: ${instantClientPath}`);
-    configureEnvironmentVariable();
-    return;
+    console.log(`✅ Verificando Oracle Instant Client en: ${instantClientPath}`);
+    if (checkRequiredFiles(instantClientPath)) {
+      console.log(`✅ Todos los archivos necesarios están presentes.`);
+      configureEnvironmentVariable();
+      return;
+    } else {
+      console.error(`❌ Faltan archivos necesarios en ${instantClientPath}. Eliminando carpeta...`);
+      fs.rmSync(instantClientPath, { recursive: true, force: true });
+    }
   }
 
   console.log(`⬇️ Descargando Oracle Instant Client desde: ${downloadUrl}`);
@@ -60,8 +69,24 @@ async function setupInstantClient() {
     console.error(`❌ Archivo ZIP no encontrado: ${outputZip}`);
   }
 
-  console.log(`✅ Oracle Instant Client configurado en: ${instantClientPath}`);
-  configureEnvironmentVariable();
+  if (checkRequiredFiles(instantClientPath)) {
+    console.log(`✅ Oracle Instant Client configurado correctamente en: ${instantClientPath}`);
+    configureEnvironmentVariable();
+  } else {
+    console.error(`❌ Faltan archivos necesarios incluso después de la descarga y descompresión.`);
+    process.exit(1);
+  }
+}
+
+// Verificar si los archivos necesarios están presentes
+function checkRequiredFiles(directory) {
+  for (const file of requiredFiles) {
+    if (!fs.existsSync(path.join(directory, file))) {
+      console.error(`❌ Archivo faltante: ${file}`);
+      return false;
+    }
+  }
+  return true;
 }
 
 // Configurar la variable de entorno
