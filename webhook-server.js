@@ -52,8 +52,10 @@ const server = http.createServer((req, res) => {
           npm install &&
           pm2 restart "Level-UP Backend" &&
           cd ../ &&
+          sudo chown -R ubuntu:ubuntu build &&
           npm install &&
-          npm run build
+          npm run build &&
+          sudo chown -R www-data:www-data build
           `,
           (err, stdout, stderr) => {
             if (err) {

@@ -23,18 +23,18 @@ exports.getProductos = async (req, res) => {
 
     connection = await oracledb.getConnection();
 
-    // Configurar el formato de salida como objetos
     const result = await connection.execute(sql, {}, { outFormat: oracledb.OBJECT });
 
-    // Mapear los resultados
+    // Asociar imágenes a los productos
     const productos = result.rows.map((row) => ({
       id: row.ID,
       codigo: row.CODIGO,
       nombre: row.NOMBRE,
       precio: row.PRECIO,
-      descripcion: row.DESCRIPCION || '', // Asegurar que sea una cadena
+      descripcion: row.DESCRIPCION || '',
       stock: row.STOCK,
       categoria: row.CATEGORIA,
+      imagen: `/assets/img/${row.CODIGO.toLowerCase()}.jpg` // Asociar imagen por código
     }));
 
     res.json(productos);
