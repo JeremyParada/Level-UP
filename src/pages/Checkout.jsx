@@ -95,7 +95,7 @@ const Checkout = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           idUsuario: usuarioNormalizado.idusuario,
-          productos: carrito, // Asegúrate de que `carrito` contiene `precio` y `cantidad`
+          productos: carrito,
           metodoPago,
         }),
       });
@@ -103,6 +103,10 @@ const Checkout = () => {
       const data = await response.json();
 
       if (response.ok) {
+        // Actualizar los puntos en localStorage
+        usuarioNormalizado.puntos += data.puntos;
+        localStorage.setItem('usuario', JSON.stringify(usuarioNormalizado));
+
         exito(`🎉 ¡Compra realizada exitosamente!<br>Has ganado ${data.puntos} puntos LevelUp.`);
         vaciarCarrito();
         navigate('/perfil');
