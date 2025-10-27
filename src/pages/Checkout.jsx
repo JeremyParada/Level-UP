@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
-import { useNotification } from '../hooks/useNotification';
+import { useNotification } from '../hooks/useNotification'; // Asegúrate de importar esto
 import Modal from '../components/Modal';
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { carrito, vaciarCarrito } = useCart();
-  const { exito, error } = useNotification();
+  const { exito, error, info } = useNotification(); // Asegúrate de incluir `info`
 
   const [direccion, setDireccion] = useState('');
   const [metodoPago, setMetodoPago] = useState('');
@@ -58,7 +58,7 @@ const Checkout = () => {
 
   const cancelarCompra = () => {
     setMostrarModal(false);
-    info('La compra ha sido cancelada.');
+    info('La compra ha sido cancelada.'); // Aquí se usa `info`
   };
 
   return (
