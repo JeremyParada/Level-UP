@@ -13,19 +13,27 @@ const Login = () => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const usuariosRegistrados = JSON.parse(localStorage.getItem('usuarios')) || [];
-    const usuarioEncontrado = usuariosRegistrados.find(
-      (u) => u.email === formData.email && u.password === formData.password
-    );
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/usuarios/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
-    if (usuarioEncontrado) {
-      login(usuarioEncontrado);
-      navigate('/perfil');
-    } else {
-      setError('Correo o contraseña incorrectos');
+      const data = await response.json();
+
+      if (response.ok) {
+        login(data.usuario);
+        navigate('/perfil');
+      } else {
+        setError(data.error || 'Error al iniciar sesión');
+      }
+    } catch (err) {
+      console.error('Error en login:', err);
+      setError('Error al iniciar sesión');
     }
   };
 

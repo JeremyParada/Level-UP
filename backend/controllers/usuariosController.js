@@ -153,7 +153,7 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     const sql = `
-      SELECT id_usuario, nombre, apellido, email
+      SELECT id_usuario, nombre, apellido, email, puntos_levelup, descuento_duoc
       FROM usuarios
       WHERE email = :email AND password = :password
     `;
