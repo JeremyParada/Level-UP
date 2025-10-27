@@ -23,17 +23,16 @@ const ProductDetailPage = () => {
 
   const cargarProducto = useCallback(async () => {
     try {
-      const response = await fetch('/assets/data/productos.json');
-      const productos = await response.json();
-      const productoEncontrado = productos.find(p => p.codigo === codigo);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/productos/${codigo}`);
+      const producto = await response.json();
 
-      if (!productoEncontrado) {
+      if (!producto || producto.error) {
         error('Producto no encontrado');
         setTimeout(() => navigate('/productos'), 2000);
         return;
       }
 
-      setProducto(productoEncontrado);
+      setProducto(producto);
       setLoading(false);
     } catch (err) {
       console.error('Error cargando producto:', err);
