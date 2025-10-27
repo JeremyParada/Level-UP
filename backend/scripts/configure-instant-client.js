@@ -55,12 +55,13 @@ async function setupInstantClient() {
   console.log(`⬇️ Descargando Oracle Instant Client desde: ${downloadUrl}`);
   await downloadFile(downloadUrl, outputZip);
 
+  // Verificar el checksum del archivo descargado
   console.log(`📋 Verificando checksum del archivo descargado...`);
   const checksum = calculateChecksum(outputZip);
   if (checksum !== expectedChecksum) {
     console.error(`❌ Checksum inválido. Esperado: ${expectedChecksum}, Obtenido: ${checksum}`);
-    fs.unlinkSync(outputZip);
-    process.exit(1);
+    console.error(`⚠️ El archivo descargado se mantendrá en: ${outputZip} para inspección manual.`);
+    process.exit(1); // Terminar el script
   }
   console.log(`✅ Checksum válido: ${checksum}`);
 
