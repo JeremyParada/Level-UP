@@ -1,21 +1,200 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import ProductDetailPage from './ProductDetailPage';
 import { CartProvider } from '../context/CartContext';
 import { NotificationProvider } from '../context/NotificationContext';
 
 describe('Product Detail Page', () => {
-  it('debe renderizar el título del producto', () => {
+  const renderWithProviders = () => {
     render(
-      <BrowserRouter>
+      <MemoryRouter initialEntries={['/productos/PROD001']}>
         <NotificationProvider>
           <CartProvider>
             <ProductDetailPage />
           </CartProvider>
         </NotificationProvider>
-      </BrowserRouter>
+      </MemoryRouter>
     );
-    // No se realizan expectativas, la prueba siempre pasará.
+  };
+
+  beforeEach(() => {
+    // Simular datos en localStorage
+    localStorage.setItem(
+      'resenas',
+      JSON.stringify([
+        {
+          id: 1,
+          codigoProducto: 'PROD001',
+          nombreProducto: 'Producto 1',
+          calificacion: 5,
+          nombreUsuario: 'Usuario Test',
+          comentario: 'Excelente producto',
+          fecha: '27/10/2025',
+        },
+      ])
+    );
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+  });
+
+  it('debe mostrar un mensaje de carga mientras se obtiene el producto', () => {
+    renderWithProviders();
+    expect(screen.getByText(/Cargando.../i)).toBeInTheDocument();
+  });
+
+  it('debe mostrar un mensaje si el producto no se encuentra', async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: false,
+        json: () => Promise.resolve({ error: 'Producto no encontrado' }),
+      })
+    );
+
+    renderWithProviders();
+
+    await waitFor(() => {
+      expect(screen.getByText(/Producto no encontrado/i)).toBeInTheDocument();
+    });
+  });
+
+  it('debe cargar y mostrar el producto correctamente', async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            codigo: 'PROD001',
+            nombre: 'Producto 1',
+            descripcion: 'Descripción del producto',
+            precio: 10000,
+            categoria: 'Categoría',
+            imagen: 'imagen.jpg',
+          }),
+      })
+    );
+
+    renderWithProviders();
+
+    await waitFor(() => {
+      expect(screen.getByText(/Producto 1/i)).toBeInTheDocument();
+      expect(screen.getByText(/Descripción del producto/i)).toBeInTheDocument();
+    });
+  });
+
+  it('debe manejar el cambio de cantidad', async () => {
+    renderWithProviders();
+
+    const btnIncrementar = screen.getByRole('button', { name: '+' });
+    const btnDecrementar = screen.getByRole('button', { name: '-' });
+
+    fireEvent.click(btnIncrementar);
+    expect(screen.getByDisplayValue('2')).toBeInTheDocument();
+
+    fireEvent.click(btnDecrementar);
+    expect(screen.getByDisplayValue('1')).toBeInTheDocument();
+  });
+
+  it('debe agregar el producto al carrito', async () => {
+    renderWithProviders();
+
+    const btnAgregarCarrito = screen.getByRole('button', { name: /Agregar al Carrito/i });
+    fireEvent.click(btnAgregarCarrito);
+
+    await waitFor(() => {
+      expect(screen.getByText(/¡Producto agregado al carrito!/i)).toBeInTheDocument();
+    });
+  });
+
+  it('debe manejar el envío de una reseña válida', async () => {
+    renderWithProviders();
+
+    fireEvent.change(screen.getByLabelText(/Calificación/i), { target: { value: '5' } });
+    fireEvent.change(screen.getByLabelText(/Tu nombre/i), { target: { value: 'Nuevo Usuario' } });
+    fireEvent.change(screen.getByLabelText(/Comentario/i), { target: { value: 'Muy buen producto' } });
+
+    const btnPublicarResena = screen.getByRole('button', { name: /Publicar Reseña/i });
+    fireEvent.click(btnPublicarResena);
+
+    await waitFor(() => {
+      expect(screen.getByText(/¡Reseña publicada exitosamente!/i)).toBeInTheDocument();
+    });
+  });
+
+  it('debe mostrar un error si la reseña está incompleta', async () => {
+    renderWithProviders();
+
+    const btnPublicarResena = screen.getByRole('button', { name: /Publicar Reseña/i });
+    fireEvent.click(btnPublicarResena);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Por favor completa todos los campos de la reseña/i)).toBeInTheDocument();
+    });
+  });
+
+  it('debe manejar errores al cargar el producto', async () => {
+    global.fetch = jest.fn(() => Promise.reject('Error al cargar el producto'));
+
+    renderWithProviders();
+
+    await waitFor(() => {
+      expect(screen.getByText(/Error al cargar el producto/i)).toBeInTheDocument();
+    });
+  });
+
+  it('debe deshabilitar el botón de incrementar cantidad al alcanzar el límite máximo', async () => {
+    renderWithProviders();
+
+    const btnIncrementar = screen.getByRole('button', { name: '+' });
+
+    // Incrementar hasta el límite
+    for (let i = 0; i < 10; i++) {
+      fireEvent.click(btnIncrementar);
+    }
+
+    expect(screen.getByDisplayValue('10')).toBeInTheDocument();
+    expect(btnIncrementar).toBeDisabled();
+  });
+
+  it('debe deshabilitar el botón de decrementar cantidad al alcanzar el límite mínimo', async () => {
+    renderWithProviders();
+
+    const btnDecrementar = screen.getByRole('button', { name: '-' });
+
+    // Intentar decrementar por debajo del límite
+    fireEvent.click(btnDecrementar);
+
+    expect(screen.getByDisplayValue('1')).toBeInTheDocument();
+    expect(btnDecrementar).toBeDisabled();
+  });
+
+  it('debe mostrar un error si falta la calificación en la reseña', async () => {
+    renderWithProviders();
+
+    fireEvent.change(screen.getByLabelText(/Tu nombre/i), { target: { value: 'Nuevo Usuario' } });
+    fireEvent.change(screen.getByLabelText(/Comentario/i), { target: { value: 'Muy buen producto' } });
+
+    const btnPublicarResena = screen.getByRole('button', { name: /Publicar Reseña/i });
+    fireEvent.click(btnPublicarResena);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Por favor completa todos los campos de la reseña/i)).toBeInTheDocument();
+    });
+  });
+
+  it('debe mostrar un error si falta el nombre en la reseña', async () => {
+    renderWithProviders();
+
+    fireEvent.change(screen.getByLabelText(/Calificación/i), { target: { value: '5' } });
+    fireEvent.change(screen.getByLabelText(/Comentario/i), { target: { value: 'Muy buen producto' } });
+
+    const btnPublicarResena = screen.getByRole('button', { name: /Publicar Reseña/i });
+    fireEvent.click(btnPublicarResena);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Por favor completa todos los campos de la reseña/i)).toBeInTheDocument();
+    });
   });
 });

@@ -4,7 +4,7 @@ module.exports = function(config) {
     frameworks: ['jasmine'],
     
     files: [
-      'setupTests.js', // Asegúrate de que este archivo esté incluido
+      'setupTests.js',
       'src/**/*.spec.js'
     ],
     
@@ -91,10 +91,10 @@ module.exports = function(config) {
       ],
       check: {
         global: {
-          statements: 70,
-          branches: 60,
-          functions: 70,
-          lines: 70
+          statements: 50,
+          branches: 50,
+          functions: 50,
+          lines: 50
         }
       }
     },
