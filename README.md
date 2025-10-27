@@ -833,7 +833,7 @@ Este proyecto es desarrollado con fines académicos para **DuocUC 2025**. Todos 
 
 ## Changelog
 
-### Versión 2.0.0 (Enero 2025)
+### Versión 2.0.0 (Octubre 2025)
 - ✅ Integración completa con Oracle Cloud Database
 - ✅ API RESTful con Node.js + Express
 - ✅ 25 endpoints funcionales
@@ -842,7 +842,7 @@ Este proyecto es desarrollado con fines académicos para **DuocUC 2025**. Todos 
 - ✅ Gestión de pedidos completa
 - ✅ Sistema de reseñas persistente
 
-### Versión 1.0.0 (Septiembre 2024)
+### Versión 1.0.0 (Septiembre 2025)
 - ✅ Implementación completa del ecommerce
 - ✅ Sistema de notificaciones sin popups
 - ✅ Contador dinámico del carrito
