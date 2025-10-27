@@ -109,7 +109,7 @@ const Reviews = () => {
       <section className="text-center fondo-catalogo">
         <div className="row py-lg-5 fondo-texto-catalogo">
           <div className="col-lg-6 col-md-8 mx-auto">
-            <h1 className="texto-principal">Reseñas de Productos</h1>
+            <h1 className="texto-principal ">Reseñas de Productos</h1>
             <p className="color-acento-verde">
               Conoce las opiniones de otros gamers
             </p>
@@ -172,7 +172,7 @@ const Reviews = () => {
                   </label>
                   <input 
                     type="text" 
-                    className="form-control" 
+                    className="form-control inputblanco" 
                     id="nombreUsuario"
                     placeholder="Tu nombre gamer"
                     value={formResena.nombreUsuario}
@@ -185,7 +185,7 @@ const Reviews = () => {
                     Tu reseña
                   </label>
                   <textarea 
-                    className="form-control" 
+                    className="form-control inputblanco" 
                     id="comentario" 
                     rows="4"
                     placeholder="Comparte tu experiencia con este producto..."
@@ -207,14 +207,14 @@ const Reviews = () => {
       <section className="container mb-4">
         <div className="row">
           <div className="col-lg-3 mb-3">
-            <div className="card card-producto p-3 text-center">
+            <div className="card card-producto p-3 text-center color-acento-verde">
               <h4 className="color-acento-verde mb-2">
                 {renderEstrellas(Math.round(promedioCalificaciones))}
               </h4>
               <p className="mb-0">
                 <strong>{promedioCalificaciones}</strong> de 5
               </p>
-              <small className="text-muted">{resenas.length} reseñas</small>
+              <small className="">{resenas.length} reseñas</small>
             </div>
           </div>
           <div className="col-lg-9">
@@ -223,7 +223,7 @@ const Reviews = () => {
                 <div className="col-md-6 mb-2 mb-md-0">
                   <input 
                     type="text" 
-                    className="form-control" 
+                    className="form-control inputblanco" 
                     placeholder="Buscar por producto..."
                     value={filtroProducto}
                     onChange={(e) => setFiltroProducto(e.target.value)}
@@ -263,7 +263,7 @@ const Reviews = () => {
                     ? 'Aún no hay reseñas' 
                     : 'No se encontraron reseñas con esos filtros'}
                 </h5>
-                <p className="mb-3">
+                <p className="mb-3 text-white">
                   {resenas.length === 0 
                     ? '¡Sé el primero en compartir tu opinión!' 
                     : 'Intenta con otros criterios de búsqueda'}

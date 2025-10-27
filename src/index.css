@@ -67,7 +67,7 @@ code {
 }
 
 .fondo-texto-catalogo {
-    background-color: rgba(255, 255, 255, 0.677);
+    background-color: rgba(17, 17, 17, 0.677);
 }
 
 /* fondo y estilo general de las cards de productos */
@@ -252,4 +252,9 @@ code {
     0% { transform: scale(1); }
     50% { transform: scale(1.2); }
     100% { transform: scale(1); }
+}
+
+.inputblanco::placeholder {
+  color: white;
+  opacity: 0.3; /* opcional, para que no se vea transparente */
 }
