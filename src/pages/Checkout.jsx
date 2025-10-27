@@ -22,6 +22,13 @@ const Checkout = () => {
     }, {});
   };
 
+  const normalizarClaves = (obj) => {
+    return Object.keys(obj).reduce((acc, key) => {
+      acc[key.toLowerCase()] = obj[key];
+      return acc;
+    }, {});
+  };
+
   // Cargar dirección principal del usuario
   useEffect(() => {
     const usuario = JSON.parse(localStorage.getItem('usuario'));
@@ -48,12 +55,14 @@ const Checkout = () => {
           throw new Error('La respuesta del servidor no es válida.');
         }
 
-        const direccionPrincipal = direcciones.find(d => d.es_principal === 1);
+        // Normalizar las claves de cada dirección
+        const direccionesNormalizadas = direcciones.map(normalizarClaves);
+
+        const direccionPrincipal = direccionesNormalizadas.find(d => d.es_principal === 1);
         if (direccionPrincipal) {
           setDireccion(`${direccionPrincipal.calle}, ${direccionPrincipal.numero}, ${direccionPrincipal.comuna}, ${direccionPrincipal.ciudad}, ${direccionPrincipal.region}`);
         } else {
-          error('No tienes una dirección registrada. Por favor, agrega una antes de continuar.');
-          navigate('/perfil');
+          error('No tienes una dirección registrada. Por favor, agrega una en el checkout.');
         }
       } catch (err) {
         console.error('Error al cargar dirección:', err);
