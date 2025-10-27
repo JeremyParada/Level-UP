@@ -10,7 +10,6 @@ const pedidosRouter = require('./routes/pedidos');
 const resenasRouter = require('./routes/resenas');
 const carritoRouter = require('./routes/carrito');  // ← NUEVO
 const referidosRoutes = require('./routes/referidosRoutes');
-const poolStatusRoutes = require('./routes/pool-status'); // Importar la ruta
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -27,7 +26,6 @@ app.use('/api/pedidos', pedidosRouter);
 app.use('/api/resenas', resenasRouter);
 app.use('/api/carrito', carritoRouter);  // ← NUEVO
 app.use('/api', referidosRoutes);
-app.use('/api', poolStatusRoutes); // Registrar la ruta para el estado del pool
 
 // Ruta de prueba
 app.get('/api/health', (req, res) => {
