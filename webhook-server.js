@@ -45,11 +45,15 @@ const server = http.createServer((req, res) => {
         console.log('🔄 Recibiendo cambios del repositorio...');
         exec(
           `
+          cd /home/ubuntu/Level-UP &&
           git reset --hard &&
           git pull origin main &&
           cd backend &&
           npm install &&
-          pm2 restart "Level-UP Backend"
+          pm2 restart "Level-UP Backend" &&
+          cd ../ &&
+          npm install &&
+          npm run build
           `,
           (err, stdout, stderr) => {
             if (err) {
