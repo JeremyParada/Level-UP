@@ -39,6 +39,7 @@ async function setupInstantClient() {
 
   console.log(`⬇️ Descargando Oracle Instant Client desde: ${downloadUrl}`);
   await downloadFile(downloadUrl, outputZip);
+  console.log(`Archivo descargado: ${outputZip}`);
 
   console.log(`📦 Descomprimiendo Oracle Instant Client en: ${instantClientPath}`);
   await extract(outputZip, { dir: rootDir });
