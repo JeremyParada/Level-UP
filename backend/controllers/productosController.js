@@ -146,7 +146,6 @@ exports.getCategorias = async (req, res) => {
       GROUP BY c.id_categoria, c.nombre_categoria, c.descripcion
       ORDER BY c.nombre_categoria
     `;
-
     const result = await db.execute(sql);
     res.json(result.rows);
   } catch (err) {
@@ -162,7 +161,6 @@ exports.getCategorias = async (req, res) => {
 exports.getProductosPorCategoria = async (req, res) => {
   try {
     const { idCategoria } = req.params;
-
     const sql = `
       SELECT 
         p.id_producto,
@@ -178,7 +176,6 @@ exports.getProductosPorCategoria = async (req, res) => {
         AND p.estado_producto = 'ACTIVO'
       ORDER BY p.nombre_producto
     `;
-
     const result = await db.execute(sql, { id_categoria: idCategoria });
     res.json(result.rows);
   } catch (err) {
