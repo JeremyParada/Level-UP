@@ -25,7 +25,7 @@ const Cart = () => {
 
   const cargarProductos = useCallback(async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/productos`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/productos`);
       const todosLosProductos = await response.json();
 
       const productosCarrito = carrito.map(item => {

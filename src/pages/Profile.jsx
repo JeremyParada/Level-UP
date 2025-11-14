@@ -6,6 +6,7 @@ import { AuthContext } from '../context/AuthContext';
 const Profile = () => {
   const { exito } = useNotification();
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext) || {};
 
   const [perfil, setPerfil] = useState({
     nombre: '',
@@ -15,7 +16,7 @@ const Profile = () => {
     fechaNacimiento: '',
     telefono: '',
     juegoFavorito: '',
-    puntos: 100,
+    puntos: 0,
     nivel: 1,
     codigoReferido: '',
     fechaRegistro: ''
@@ -23,53 +24,91 @@ const Profile = () => {
 
   const [historialCompras, setHistorialCompras] = useState([]);
   const [descuentosActivos, setDescuentosActivos] = useState([]);
+  const [cargando, setCargando] = useState(true);
+
+  const getUserId = () => {
+    if (user && user.idUsuario) return user.idUsuario;
+    const stored = localStorage.getItem('usuario');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        return parsed.idUsuario || parsed.id_usuario || parsed.id;
+      } catch (_) {
+        return null;
+      }
+    }
+    return null;
+  };
 
   useEffect(() => {
-    const usuario = JSON.parse(localStorage.getItem('usuario'));
-    if (!usuario) {
+    const idUsuario = getUserId();
+    if (!idUsuario) {
       alert('Debes registrarte o iniciar sesión para acceder a tu perfil.');
       navigate('/registro');
+      return;
     }
+
+    const cargarTodo = async () => {
+      try {
+        await cargarDatosPerfil(idUsuario);
+        await cargarHistorialCompras(idUsuario);
+        calcularDescuentos();
+      } finally {
+        setCargando(false);
+      }
+    };
+
+    cargarTodo();
   }, [navigate]);
 
-  useEffect(() => {
-    cargarDatosPerfil();
-    cargarHistorialCompras();
-    calcularDescuentos();
-  }, []);
+  const cargarDatosPerfil = async (idUsuario) => {
+    try {
+      const response = await fetch(`/api/v1/usuarios/me/${idUsuario}`);
+      if (!response.ok) {
+        throw new Error('No se pudo obtener el perfil');
+      }
+      const data = await response.json();
 
-  const cargarDatosPerfil = () => {
-    const usuario = JSON.parse(localStorage.getItem('usuario'));
-    if (usuario) {
-      // Normalizar las claves del objeto a minúsculas
-      const usuarioNormalizado = Object.keys(usuario).reduce((acc, key) => {
-        acc[key.toLowerCase()] = usuario[key];
-        return acc;
-      }, {});
-
-      setPerfil({
-        ...usuarioNormalizado,
-        gamerTag: usuarioNormalizado.gamertag || `${usuarioNormalizado.nombre}_${Math.random().toString(36).substr(2, 4)}`.toUpperCase(),
-        telefono: usuarioNormalizado.telefono || '',
-        juegoFavorito: usuarioNormalizado.juegofavorito || '',
-        codigoReferido: usuarioNormalizado.codigoreferido || 'GAMER' + Math.random().toString(36).substr(2, 6).toUpperCase()
-      });
+      setPerfil((prev) => ({
+        ...prev,
+        nombre: data.nombre,
+        apellido: data.apellido,
+        email: data.email,
+        fechaNacimiento: data.fechaNacimiento,
+        telefono: data.telefono || '',
+        puntos: data.puntos,
+        nivel: data.nivel,
+        fechaRegistro: data.fechaRegistro,
+        gamerTag:
+          prev.gamerTag ||
+          `${data.nombre || 'GAMER'}_${Math.random().toString(36).substr(2, 4)}`.toUpperCase(),
+        codigoReferido:
+          prev.codigoReferido ||
+          'GAMER' + Math.random().toString(36).substr(2, 6).toUpperCase()
+      }));
+    } catch (err) {
+      console.error('Error al cargar perfil:', err);
     }
   };
 
-  const cargarHistorialCompras = () => {
-    const historial = JSON.parse(localStorage.getItem('historialCompras')) || [];
-    setHistorialCompras(historial);
+  const cargarHistorialCompras = async (idUsuario) => {
+    try {
+      const response = await fetch(`/api/v1/pedidos/usuario/${idUsuario}`);
+      if (!response.ok) {
+        throw new Error('No se pudo obtener el historial de compras');
+      }
+      const data = await response.json();
+      setHistorialCompras(data || []);
+    } catch (err) {
+      console.error('Error al cargar historial de compras:', err);
+      setHistorialCompras([]);
+    }
   };
 
   const calcularDescuentos = () => {
-    const usuario = JSON.parse(localStorage.getItem('usuario'));
-    if (!usuario) return;
-
     const descuentos = [];
 
-    // Descuento DuocUC
-    if (usuario?.email?.endsWith('@duoc.cl') || usuario?.email?.endsWith('@duocuc.cl')) {
+    if (perfil?.email?.endsWith('@duoc.cl') || perfil?.email?.endsWith('@duocuc.cl')) {
       descuentos.push({
         titulo: 'Descuento DuocUC 🎓',
         descripcion: '20% de descuento de por vida',
@@ -78,9 +117,8 @@ const Profile = () => {
       });
     }
 
-    // Descuentos por nivel
-    const nivel = Math.floor(usuario.puntos / 200);
-    
+    const nivel = Math.floor((perfil.puntos || 0) / 200);
+
     if (nivel >= 5) {
       descuentos.push({
         titulo: 'Gamer Veterano 🏅',
@@ -103,32 +141,49 @@ const Profile = () => {
   };
 
   const calcularNivel = () => {
-    return Math.floor(perfil.puntos / 200) + 1;
+    return Math.floor((perfil.puntos || 0) / 200) + 1;
   };
 
   const puntosParaSiguienteNivel = () => {
     const nivelActual = calcularNivel();
     const puntosNecesarios = nivelActual * 200;
-    return puntosNecesarios - perfil.puntos;
+    return puntosNecesarios - (perfil.puntos || 0);
   };
 
   const porcentajeProgreso = () => {
     const nivelActual = calcularNivel();
     const puntosBase = (nivelActual - 1) * 200;
-    const puntosEnNivel = perfil.puntos - puntosBase;
+    const puntosEnNivel = (perfil.puntos || 0) - puntosBase;
     return (puntosEnNivel / 200) * 100;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const usuarioActualizado = {
-      ...perfil,
-      nivel: calcularNivel()
-    };
+    const idUsuario = getUserId();
+    if (!idUsuario) return;
 
-    localStorage.setItem('usuario', JSON.stringify(usuarioActualizado));
-    exito('✅ ¡Perfil actualizado exitosamente!');
+    try {
+      const payload = {
+        nombre: perfil.nombre,
+        apellido: perfil.apellido,
+        telefono: perfil.telefono,
+        fechaNacimiento: perfil.fechaNacimiento
+      };
+
+      const response = await fetch(`/api/v1/usuarios/me/${idUsuario}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error('No se pudo actualizar el perfil');
+      }
+
+      exito('✅ ¡Perfil actualizado exitosamente!');
+    } catch (err) {
+      console.error('Error al actualizar perfil:', err);
+    }
   };
 
   const handleChange = (e) => {
@@ -139,34 +194,31 @@ const Profile = () => {
   };
 
   const copiarCodigoReferido = () => {
-    // Copy the code to clipboard
-    navigator.clipboard.writeText(perfil.codigoReferido)
+    if (!perfil.codigoReferido) return;
+    navigator.clipboard
+      .writeText(perfil.codigoReferido)
       .then(() => {
-        // Make sure to call the success notification
         exito('Código de referido copiado al portapapeles');
       })
-      .catch(error => {
-        console.error('Error al copiar código:', error);
+      .catch((error) => {
+        console.error('Error al copiar código de referido:', error);
       });
   };
 
   const formatearPrecio = (precio) => {
-    return new Intl.NumberFormat('es-CL', {
+    if (precio == null) return '$0';
+    return precio.toLocaleString('es-CL', {
       style: 'currency',
       currency: 'CLP'
-    }).format(precio);
+    });
   };
 
-  const { logout } = useContext(AuthContext);
+  const { logout } = useContext(AuthContext) || {};
   const handleLogout = () => {
-    logout();
-    exito("👋 Sesión cerrada correctamente");
-    navigate("/login");
+    if (logout) logout();
+    navigate('/');
   };
 
-
-
-  // aqui empieza el html
   return (
     <main>
       {/* Header */}
