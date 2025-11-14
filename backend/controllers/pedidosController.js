@@ -4,100 +4,79 @@ const oracledb = require('oracledb');
 // Crear pedido
 exports.crearPedido = async (req, res) => {
   try {
-    const { idUsuario, productos, metodoPago, idDireccion } = req.body;
-    
-    if (!idUsuario || !productos || productos.length === 0) {
-      return res.status(400).json({ error: 'Datos de pedido incompletos' });
+    const { idUsuario, productos, metodoPago } = req.body;
+
+    // Validar que el usuario tenga una dirección registrada
+    const sqlDireccion = `
+      SELECT id_direccion
+      FROM direcciones
+      WHERE id_usuario = :id_usuario AND es_principal = 1
+    `;
+    const resultDireccion = await db.execute(sqlDireccion, { id_usuario: idUsuario });
+
+    if (resultDireccion.rows.length === 0) {
+      return res.status(400).json({
+        error: 'No tienes una dirección de despacho registrada. Por favor, agrega una antes de finalizar la compra.'
+      });
     }
-    
+
+    const idDireccionEnvio = resultDireccion.rows[0].ID_DIRECCION;
+
     // Calcular totales
     let totalBruto = 0;
-    for (const prod of productos) {
-      totalBruto += prod.precio * prod.cantidad;
-    }
-    
-    // Calcular descuento usando la función del paquete
     let descuentoAplicado = 0;
-    try {
-      const sqlDescuento = `
-        SELECT pkg_levelup_gamer.func_calcular_descuento(:id_usuario, :total) AS descuento
-        FROM DUAL
-      `;
-      const resultDescuento = await db.execute(sqlDescuento, {
-        id_usuario: idUsuario,
-        total: totalBruto
-      });
-      descuentoAplicado = resultDescuento.rows[0].DESCUENTO || 0;
-    } catch (err) {
-      console.log('No se pudo calcular descuento, continuando sin descuento:', err.message);
+    let totalNeto = 0;
+
+    for (const producto of productos) {
+      totalBruto += producto.precio * producto.cantidad;
     }
-    
-    const totalNeto = totalBruto - descuentoAplicado;
-    
-    // Insertar pedido
+
+    // Aplicar descuento si corresponde
+    if (idUsuario && totalBruto > 50000) {
+      descuentoAplicado = totalBruto * 0.1; // Ejemplo: 10% de descuento
+    }
+
+    totalNeto = totalBruto - descuentoAplicado;
+
+    // Calcular puntos ganados (1 punto por cada $1,000 gastados)
+    const puntosGanados = Math.floor(totalNeto / 1000);
+
+    // Crear el pedido
     const sqlPedido = `
-      INSERT INTO pedidos (
-        id_usuario, id_direccion_envio, total_bruto, descuento_aplicado, total_neto, metodo_pago
-      ) VALUES (
-        :id_usuario, :id_direccion, :total_bruto, :descuento, :total_neto, :metodo_pago
-      ) RETURNING id_pedido INTO :id_pedido
+      INSERT INTO pedidos (id_usuario, id_direccion_envio, total_bruto, descuento_aplicado, total_neto, metodo_pago)
+      VALUES (:id_usuario, :id_direccion_envio, :total_bruto, :descuento_aplicado, :total_neto, :metodo_pago)
     `;
-    
     const resultPedido = await db.execute(sqlPedido, {
       id_usuario: idUsuario,
-      id_direccion: idDireccion || null,
-      total_bruto: totalBruto,
-      descuento: descuentoAplicado,
-      total_neto: totalNeto,
-      metodo_pago: metodoPago || 'WEBPAY',
-      id_pedido: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT }
-    });
-    
-    const idPedido = resultPedido.outBinds.id_pedido[0];
-    
-    // Insertar detalle de pedido
-    for (const prod of productos) {
-      const sqlDetalle = `
-        INSERT INTO detalle_pedido (
-          id_pedido, id_producto, cantidad, precio_unitario
-        ) VALUES (
-          :id_pedido, :id_producto, :cantidad, :precio_unitario
-        )
-      `;
-      
-      await db.execute(sqlDetalle, {
-        id_pedido: idPedido,
-        id_producto: prod.id_producto,
-        cantidad: prod.cantidad,
-        precio_unitario: prod.precio
-      });
-      
-      // Actualizar stock
-      const sqlStock = `
-        UPDATE productos 
-        SET stock = stock - :cantidad
-        WHERE id_producto = :id_producto
-      `;
-      
-      await db.execute(sqlStock, {
-        cantidad: prod.cantidad,
-        id_producto: prod.id_producto
-      });
-    }
-    
-    res.status(201).json({ 
-      message: 'Pedido creado exitosamente',
-      id_pedido: idPedido,
+      id_direccion_envio: idDireccionEnvio,
       total_bruto: totalBruto,
       descuento_aplicado: descuentoAplicado,
-      total_neto: totalNeto
+      total_neto: totalNeto,
+      metodo_pago: metodoPago
+    });
+
+    // Actualizar puntos del usuario
+    const sqlActualizarPuntos = `
+      UPDATE usuarios
+      SET puntos_levelup = puntos_levelup + :puntos
+      WHERE id_usuario = :id_usuario
+    `;
+    await db.execute(sqlActualizarPuntos, {
+      puntos: puntosGanados,
+      id_usuario: idUsuario
+    });
+
+    res.status(201).json({
+      message: 'Pedido creado exitosamente',
+      idPedido: resultPedido.lastRowid,
+      totalBruto,
+      descuentoAplicado,
+      totalNeto,
+      puntos: puntosGanados
     });
   } catch (err) {
     console.error('Error al crear pedido:', err);
-    res.status(500).json({ 
-      error: 'Error al crear pedido',
-      details: err.message 
-    });
+    res.status(500).json({ error: 'Error al crear pedido', details: err.message });
   }
 };
 

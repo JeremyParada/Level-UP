@@ -38,7 +38,6 @@ exports.getCarrito = async (req, res) => {
 exports.agregarAlCarrito = async (req, res) => {
   try {
     const { idUsuario, idProducto, cantidad } = req.body;
-    
     // Verificar si existe carrito activo
     let idCarrito;
     const sqlCarrito = `
@@ -47,9 +46,8 @@ exports.agregarAlCarrito = async (req, res) => {
       WHERE id_usuario = :id_usuario 
         AND estado_carrito = 'ACTIVO'
     `;
-    
     const resultCarrito = await db.execute(sqlCarrito, { id_usuario: idUsuario });
-    
+
     if (resultCarrito.rows.length === 0) {
       // Crear nuevo carrito
       const sqlNuevoCarrito = `
@@ -57,17 +55,14 @@ exports.agregarAlCarrito = async (req, res) => {
         VALUES (:id_usuario)
         RETURNING id_carrito INTO :id_carrito
       `;
-      
       const resultNuevo = await db.execute(sqlNuevoCarrito, {
         id_usuario: idUsuario,
         id_carrito: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT }
       });
-      
       idCarrito = resultNuevo.outBinds.id_carrito[0];
     } else {
       idCarrito = resultCarrito.rows[0].ID_CARRITO;
     }
-    
     // Verificar si el producto ya está en el carrito
     const sqlVerificar = `
       SELECT id_detalle_carrito, cantidad
@@ -75,12 +70,10 @@ exports.agregarAlCarrito = async (req, res) => {
       WHERE id_carrito = :id_carrito
         AND id_producto = :id_producto
     `;
-    
     const resultVerificar = await db.execute(sqlVerificar, {
       id_carrito: idCarrito,
       id_producto: idProducto
     });
-    
     if (resultVerificar.rows.length > 0) {
       // Actualizar cantidad existente
       const nuevaCantidad = resultVerificar.rows[0].CANTIDAD + cantidad;
@@ -89,37 +82,28 @@ exports.agregarAlCarrito = async (req, res) => {
         SET cantidad = :cantidad
         WHERE id_detalle_carrito = :id_detalle
       `;
-      
       await db.execute(sqlActualizar, {
         cantidad: nuevaCantidad,
         id_detalle: resultVerificar.rows[0].ID_DETALLE_CARRITO
       });
-      
-      res.json({ 
-        message: 'Cantidad actualizada en el carrito',
-        cantidad: nuevaCantidad
-      });
     } else {
       // Agregar nuevo producto al carrito
       const sqlDetalle = `
-        INSERT INTO detalle_carrito (id_carrito, id_producto, cantidad)
-        VALUES (:id_carrito, :id_producto, :cantidad)
+        INSERT INTO detalle_carrito (id_carrito, id_producto, cantidad, precio_unitario)
+        VALUES (:id_carrito, :id_producto, :cantidad, 
+          (SELECT precio FROM productos WHERE id_producto = :id_producto))
       `;
-      
       await db.execute(sqlDetalle, {
         id_carrito: idCarrito,
         id_producto: idProducto,
         cantidad
       });
-      
-      res.status(201).json({ message: 'Producto agregado al carrito' });
     }
+
+    res.status(201).json({ message: 'Producto agregado al carrito' });
   } catch (err) {
     console.error('Error al agregar al carrito:', err);
-    res.status(500).json({ 
-      error: 'Error al agregar al carrito',
-      details: err.message 
-    });
+    res.status(500).json({ error: 'Error al agregar al carrito', details: err.message });
   }
 };
 

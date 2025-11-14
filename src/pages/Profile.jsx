@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useNotification } from '../hooks/useNotification';
+import { AuthContext } from '../context/AuthContext';
 
 const Profile = () => {
-  const { exito, info } = useNotification();
+  const { exito } = useNotification();
+  const navigate = useNavigate();
 
   const [perfil, setPerfil] = useState({
     nombre: '',
@@ -23,6 +25,14 @@ const Profile = () => {
   const [descuentosActivos, setDescuentosActivos] = useState([]);
 
   useEffect(() => {
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    if (!usuario) {
+      alert('Debes registrarte o iniciar sesión para acceder a tu perfil.');
+      navigate('/registro');
+    }
+  }, [navigate]);
+
+  useEffect(() => {
     cargarDatosPerfil();
     cargarHistorialCompras();
     calcularDescuentos();
@@ -31,12 +41,18 @@ const Profile = () => {
   const cargarDatosPerfil = () => {
     const usuario = JSON.parse(localStorage.getItem('usuario'));
     if (usuario) {
+      // Normalizar las claves del objeto a minúsculas
+      const usuarioNormalizado = Object.keys(usuario).reduce((acc, key) => {
+        acc[key.toLowerCase()] = usuario[key];
+        return acc;
+      }, {});
+
       setPerfil({
-        ...usuario,
-        gamerTag: usuario.gamerTag || `${usuario.nombre}_${Math.random().toString(36).substr(2, 4)}`.toUpperCase(),
-        telefono: usuario.telefono || '',
-        juegoFavorito: usuario.juegoFavorito || '',
-        codigoReferido: usuario.codigoReferido || 'GAMER' + Math.random().toString(36).substr(2, 6).toUpperCase()
+        ...usuarioNormalizado,
+        gamerTag: usuarioNormalizado.gamertag || `${usuarioNormalizado.nombre}_${Math.random().toString(36).substr(2, 4)}`.toUpperCase(),
+        telefono: usuarioNormalizado.telefono || '',
+        juegoFavorito: usuarioNormalizado.juegofavorito || '',
+        codigoReferido: usuarioNormalizado.codigoreferido || 'GAMER' + Math.random().toString(36).substr(2, 6).toUpperCase()
       });
     }
   };
@@ -53,7 +69,7 @@ const Profile = () => {
     const descuentos = [];
 
     // Descuento DuocUC
-    if (usuario.email.endsWith('@duoc.cl') || usuario.email.endsWith('@duocuc.cl')) {
+    if (usuario?.email?.endsWith('@duoc.cl') || usuario?.email?.endsWith('@duocuc.cl')) {
       descuentos.push({
         titulo: 'Descuento DuocUC 🎓',
         descripcion: '20% de descuento de por vida',
@@ -141,6 +157,16 @@ const Profile = () => {
     }).format(precio);
   };
 
+  const { logout } = useContext(AuthContext);
+  const handleLogout = () => {
+    logout();
+    exito("👋 Sesión cerrada correctamente");
+    navigate("/login");
+  };
+
+
+
+  // aqui empieza el html
   return (
     <main>
       {/* Header */}
@@ -151,6 +177,9 @@ const Profile = () => {
             <p className="color-acento-verde">
               Gestiona tu información y puntos LevelUp
             </p>
+            <button className="btn btn-outline-danger mt-3" onClick={handleLogout}>
+              Cerrar sesión
+            </button>
           </div>
         </div>
       </section>

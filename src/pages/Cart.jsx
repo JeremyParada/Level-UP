@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import { useNotification } from '../hooks/useNotification';
+import Modal from '../components/Modal';
 
 const Cart = () => {
   const navigate = useNavigate();
+  const usuario = JSON.parse(localStorage.getItem('usuario'));
   const { 
     carrito, 
     totalItems, 
@@ -19,24 +21,20 @@ const Cart = () => {
   const [codigoDescuento, setCodigoDescuento] = useState('');
   const [descuentoAplicado, setDescuentoAplicado] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [mostrarModal, setMostrarModal] = useState(false);
 
-  useEffect(() => {
-    cargarProductos();
-  }, [carrito]);
-
-  const cargarProductos = async () => {
+  const cargarProductos = useCallback(async () => {
     try {
-      const response = await fetch('/assets/data/productos.json');
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/productos`);
       const todosLosProductos = await response.json();
-      
-      // Obtener detalles de productos en el carrito
+
       const productosCarrito = carrito.map(item => {
         const producto = todosLosProductos.find(p => p.codigo === item.codigo);
         return {
           ...producto,
           cantidad: item.cantidad
         };
-      }).filter(p => p.codigo); // Filtrar productos no encontrados
+      }).filter(p => p.codigo);
 
       setProductos(productosCarrito);
       setLoading(false);
@@ -44,7 +42,11 @@ const Cart = () => {
       console.error('Error cargando productos:', err);
       setLoading(false);
     }
-  };
+  }, [carrito]);
+
+  useEffect(() => {
+    cargarProductos();
+  }, [cargarProductos]);
 
   const formatearPrecio = (precio) => {
     return new Intl.NumberFormat('es-CL', {
@@ -72,11 +74,17 @@ const Cart = () => {
   };
 
   const handleVaciarCarrito = () => {
-    if (window.confirm('¿Estás seguro de vaciar el carrito?')) {
-      vaciarCarrito();
-      setDescuentoAplicado(null);
-      advertencia('Carrito vaciado');
-    }
+    setMostrarModal(true);
+  };
+
+  const confirmarVaciarCarrito = () => {
+    vaciarCarrito();
+    setMostrarModal(false);
+    advertencia('Carrito vaciado');
+  };
+
+  const cancelarVaciarCarrito = () => {
+    setMostrarModal(false);
   };
 
   const handleAplicarDescuento = () => {
@@ -109,50 +117,21 @@ const Cart = () => {
 
   const handleFinalizarCompra = () => {
     if (productos.length === 0) {
-      advertencia('Tu carrito está vacío');
+      advertencia('Tu carrito está vacío. Agrega productos antes de finalizar la compra.');
       return;
     }
 
-    // Simulación de procesamiento
-    info('⏳ Procesando tu compra...', 2000);
-    
-    setTimeout(() => {
-      exito(
-        '🎉 ¡Compra realizada exitosamente!<br>' +
-        '📧 Recibirás confirmación por email<br>' +
-        '📦 Entrega en 3-5 días hábiles',
-        5000
-      );
+    if (!usuario) {
+      if (window.confirm('Para finalizar la compra, debes registrarte o iniciar sesión. ¿Deseas registrarte ahora?')) {
+        navigate('/registro'); // Redirigir a la página de registro
+      } else {
+        advertencia('Debes registrarte o iniciar sesión para continuar con la compra.');
+      }
+      return;
+    }
 
-      // Guardar en historial (localStorage)
-      const compra = {
-        id: Date.now(),
-        fecha: new Date().toLocaleDateString('es-CL'),
-        items: productos.map(p => ({
-          codigo: p.codigo,
-          nombre: p.nombre,
-          precio: p.precio,
-          cantidad: p.cantidad
-        })),
-        subtotal: calcularSubtotal(),
-        descuento: calcularDescuento(),
-        total: calcularTotal(),
-        codigoDescuento: descuentoAplicado?.codigo || null
-      };
-
-      const historial = JSON.parse(localStorage.getItem('historialCompras')) || [];
-      historial.unshift(compra);
-      localStorage.setItem('historialCompras', JSON.stringify(historial));
-
-      // Limpiar carrito
-      vaciarCarrito();
-      setDescuentoAplicado(null);
-
-      // Redirigir al perfil
-      setTimeout(() => {
-        navigate('/perfil');
-      }, 2000);
-    }, 2000);
+    // Redirigir al Checkout
+    navigate('/checkout');
   };
 
   if (loading) {
@@ -401,6 +380,16 @@ const Cart = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal */}
+      {mostrarModal && (
+        <Modal
+          titulo="Confirmar acción"
+          mensaje="¿Estás seguro de que deseas vaciar el carrito?"
+          onConfirmar={confirmarVaciarCarrito}
+          onCancelar={cancelarVaciarCarrito}
+        />
+      )}
     </main>
   );
 };

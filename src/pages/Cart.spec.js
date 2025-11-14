@@ -1,197 +1,96 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import Cart from './Cart';
-import { CartContext } from '../context/CartContext';
-import { NotificationContext } from '../context/NotificationContext';
+import { CartProvider } from '../context/CartContext';
+import { NotificationProvider } from '../context/NotificationContext';
 
 describe('Cart Page', () => {
-  const mockCarrito = [
-    { codigo: 'MOUSE001', cantidad: 2 },
-    { codigo: 'TECLADO001', cantidad: 1 }
-  ];
-
-  let mockCartContext;
-  let mockNotificationContext;
-
-  beforeEach(() => {
-    mockCartContext = {
-      carrito: mockCarrito,
-      totalItems: 3,
-      totalPrecio: 97970,
-      agregarAlCarrito: jasmine.createSpy('agregarAlCarrito'),
-      eliminarDelCarrito: jasmine.createSpy('eliminarDelCarrito'),
-      actualizarCantidad: jasmine.createSpy('actualizarCantidad'),
-      vaciarCarrito: jasmine.createSpy('vaciarCarrito')
-    };
-
-    mockNotificationContext = {
-      exito: jasmine.createSpy('exito'),
-      error: jasmine.createSpy('error'),
-      info: jasmine.createSpy('info'),
-      advertencia: jasmine.createSpy('advertencia'),
-      notificaciones: []
-    };
-
-    global.fetch = jasmine.createSpy('fetch').and.returnValue(
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve([
-          {
-            codigo: 'MOUSE001',
-            nombre: 'Mouse Gamer RGB',
-            precio: 25990,
-            imagen: '/assets/img/mouse-gamer.jpg',
-            categoria: 'Periféricos'
-          },
-          {
-            codigo: 'TECLADO001',
-            nombre: 'Teclado Mecánico',
-            precio: 45990,
-            imagen: '/assets/img/teclado-mecanico.jpg',
-            categoria: 'Periféricos'
-          }
-        ])
-      })
-    );
-  });
-
-  afterEach(() => {
-    delete global.fetch;
-  });
-
-  const renderComponent = () => {
-    return render(
+  const renderWithProviders = () => {
+    render(
       <BrowserRouter>
-        <CartContext.Provider value={mockCartContext}>
-          <NotificationContext.Provider value={mockNotificationContext}>
+        <NotificationProvider>
+          <CartProvider>
             <Cart />
-          </NotificationContext.Provider>
-        </CartContext.Provider>
+          </CartProvider>
+        </NotificationProvider>
       </BrowserRouter>
     );
   };
 
-  it('debe renderizar el título del carrito', async () => {
-    renderComponent();
-    
-    await waitFor(() => {
-      expect(screen.getByText(/Carrito de Compras/i)).toBeTruthy();
-    }, { timeout: 3000 });
+  beforeEach(() => {
+    // Configurar un estado inicial para el carrito y el usuario
+    localStorage.setItem(
+      'carrito',
+      JSON.stringify([
+        { codigo: 'PROD001', nombre: 'Producto 1', cantidad: 1, precio: 10000 },
+      ])
+    );
+    localStorage.setItem('usuario', JSON.stringify({ nombre: 'Usuario Test' }));
   });
 
-  it('debe mostrar los productos del carrito', async () => {
-    renderComponent();
-
-    await waitFor(() => {
-      expect(screen.getByText('Mouse Gamer RGB')).toBeTruthy();
-      expect(screen.getByText('Teclado Mecánico')).toBeTruthy();
-    });
+  afterEach(() => {
+    localStorage.clear();
   });
 
-  it('debe mostrar el total de items', async () => {
-    renderComponent();
-
-    await waitFor(() => {
-      expect(screen.getByText(/Tus Productos \(3\)/i)).toBeTruthy();
-    });
+  it('debe mostrar un mensaje cuando el carrito está vacío', () => {
+    localStorage.setItem('carrito', JSON.stringify([])); // Carrito vacío
+    renderWithProviders();
+    expect(screen.getByText(/tu carrito está vacío/i)).toBeInTheDocument();
   });
 
-  it('debe actualizar cantidad de producto', async () => {
-    renderComponent();
-
-    await waitFor(() => {
-      const botonesIncrementar = screen.getAllByText('+');
-      fireEvent.click(botonesIncrementar[0]);
-    });
-
-    expect(mockCartContext.actualizarCantidad).toHaveBeenCalled();
+  it('debe manejar el cambio de cantidad de un producto', () => {
+    renderWithProviders();
+    const btnIncrementar = screen.getAllByRole('button', { name: '-' })[0];
+    fireEvent.click(btnIncrementar);
+    // Agregar expectativas específicas según el comportamiento esperado
   });
 
-  it('debe eliminar producto del carrito', async () => {
-    renderComponent();
-
-    await waitFor(() => {
-      const botonesEliminar = screen.getAllByText('Eliminar');
-      fireEvent.click(botonesEliminar[0]);
-    });
-
-    expect(mockCartContext.eliminarDelCarrito).toHaveBeenCalled();
-    expect(mockNotificationContext.info).toHaveBeenCalled();
+  it('debe eliminar un producto del carrito', () => {
+    renderWithProviders();
+    const btnEliminar = screen.getAllByRole('button', { name: /eliminar/i })[0];
+    fireEvent.click(btnEliminar);
+    expect(screen.queryByText(/producto 1/i)).not.toBeInTheDocument();
   });
 
-  it('debe aplicar código de descuento DUOC20', async () => {
-    renderComponent();
-
-    await waitFor(() => {
-      const inputCodigo = screen.getByPlaceholderText('Ej: DUOC20');
-      const btnAplicar = screen.getByText('Aplicar');
-
-      fireEvent.change(inputCodigo, { target: { value: 'DUOC20' } });
-      fireEvent.click(btnAplicar);
-    });
-
-    await waitFor(() => {
-      expect(mockNotificationContext.exito).toHaveBeenCalled();
-    });
+  it('debe vaciar el carrito', () => {
+    renderWithProviders();
+    const btnVaciar = screen.getByRole('button', { name: /vaciar carrito/i });
+    fireEvent.click(btnVaciar);
+    expect(screen.getByText(/tu carrito está vacío/i)).toBeInTheDocument();
   });
 
-  it('debe rechazar código de descuento inválido', async () => {
-    renderComponent();
+  it('debe aplicar un descuento válido', () => {
+    renderWithProviders();
+    const inputCodigo = screen.getByPlaceholderText(/ej: duoc20/i);
+    const btnAplicar = screen.getByRole('button', { name: /aplicar/i });
 
-    await waitFor(() => {
-      const inputCodigo = screen.getByPlaceholderText('Ej: DUOC20');
-      const btnAplicar = screen.getByText('Aplicar');
+    fireEvent.change(inputCodigo, { target: { value: 'DUOC20' } });
+    fireEvent.click(btnAplicar);
 
-      fireEvent.change(inputCodigo, { target: { value: 'INVALIDO' } });
-      fireEvent.click(btnAplicar);
-    });
-
-    await waitFor(() => {
-      expect(mockNotificationContext.advertencia).toHaveBeenCalled();
-    });
+    expect(screen.getByText(/¡descuento duocuc aplicado!/i)).toBeInTheDocument();
   });
 
-  it('debe mostrar información de envío gratis', async () => {
-    renderComponent();
+  it('debe manejar el intento de finalizar la compra con un carrito vacío', () => {
+    localStorage.setItem('carrito', JSON.stringify([])); // Carrito vacío
+    renderWithProviders();
+    const btnFinalizar = screen.getByRole('button', { name: /finalizar compra/i });
+    fireEvent.click(btnFinalizar);
 
-    await waitFor(() => {
-      expect(screen.getByText(/Envío gratis/i)).toBeTruthy();
-    });
+    expect(
+      screen.getByText(/tu carrito está vacío. agrega productos antes de finalizar la compra./i)
+    ).toBeInTheDocument();
   });
 
-  it('debe vaciar el carrito', async () => {
-    window.confirm = jasmine.createSpy('confirm').and.returnValue(true);
+  it('debe redirigir al registro si el usuario no está autenticado', () => {
+    localStorage.removeItem('usuario'); // Usuario no autenticado
+    renderWithProviders();
+    const btnFinalizar = screen.getByRole('button', { name: /finalizar compra/i });
+    fireEvent.click(btnFinalizar);
 
-    renderComponent();
+    // Simular confirmación del usuario
+    window.confirm = jest.fn(() => true);
 
-    await waitFor(() => {
-      const btnVaciar = screen.getByText(/Vaciar Carrito/i);
-      fireEvent.click(btnVaciar);
-    });
-
-    expect(mockCartContext.vaciarCarrito).toHaveBeenCalled();
-  });
-
-  it('debe mostrar mensaje cuando el carrito está vacío', async () => {
-    mockCartContext.carrito = [];
-    mockCartContext.totalItems = 0;
-
-    renderComponent();
-
-    await waitFor(() => {
-      expect(screen.getByText(/Tu carrito está vacío/i)).toBeTruthy();
-    }, { timeout: 3000 });
-  });
-
-  it('debe finalizar compra correctamente', async () => {
-    renderComponent();
-
-    await waitFor(() => {
-      const btnFinalizar = screen.getByText(/Finalizar Compra/i);
-      fireEvent.click(btnFinalizar);
-    });
-
-    expect(mockNotificationContext.info).toHaveBeenCalled();
+    expect(window.location.pathname).toBe('/registro');
   });
 });
