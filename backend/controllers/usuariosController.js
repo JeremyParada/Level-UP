@@ -88,6 +88,57 @@ exports.getPerfil = async (req, res) => {
   }
 };
 
+// Obtener perfil de usuario actual (me)
+exports.getPerfilActual = async (req, res) => {
+  try {
+    const { idUsuario } = req.params;
+
+    if (!idUsuario) {
+      return res.status(400).json({ error: 'idUsuario es requerido' });
+    }
+
+    const sql = `
+      SELECT 
+        id_usuario,
+        nombre,
+        apellido,
+        email,
+        TO_CHAR(fecha_nacimiento, 'YYYY-MM-DD') AS fecha_nacimiento,
+        telefono,
+        TO_CHAR(fecha_registro, 'YYYY-MM-DD') AS fecha_registro,
+        NVL(puntos_levelup, 0) AS puntos_levelup
+      FROM usuarios
+      WHERE id_usuario = :id_usuario
+    `;
+
+    const result = await db.execute(sql, { id_usuario: idUsuario });
+
+    if (!result.rows || result.rows.length === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const u = result.rows[0];
+
+    const puntos = u.PUNTOS_LEVELUP || 0;
+    const nivel = Math.floor(puntos / 200) + 1;
+
+    return res.json({
+      id: u.ID_USUARIO,
+      nombre: u.NOMBRE,
+      apellido: u.APELLIDO,
+      email: u.EMAIL,
+      fechaNacimiento: u.FECHA_NACIMIENTO,
+      telefono: u.TELEFONO,
+      fechaRegistro: u.FECHA_REGISTRO,
+      puntos,
+      nivel
+    });
+  } catch (err) {
+    console.error('Error al obtener perfil actual:', err);
+    return res.status(500).json({ error: 'Error al obtener perfil', details: err.message });
+  }
+};
+
 // Actualizar perfil
 exports.actualizarPerfil = async (req, res) => {
   try {
@@ -116,6 +167,44 @@ exports.actualizarPerfil = async (req, res) => {
       error: 'Error al actualizar perfil',
       details: err.message 
     });
+  }
+};
+
+// Actualizar perfil de usuario actual (me)
+exports.actualizarPerfilActual = async (req, res) => {
+  try {
+    const { idUsuario } = req.params;
+    const { nombre, apellido, telefono, fechaNacimiento } = req.body;
+
+    if (!idUsuario) {
+      return res.status(400).json({ error: 'idUsuario es requerido' });
+    }
+
+    const sql = `
+      UPDATE usuarios
+      SET 
+        nombre = COALESCE(:nombre, nombre),
+        apellido = COALESCE(:apellido, apellido),
+        telefono = COALESCE(:telefono, telefono),
+        fecha_nacimiento = CASE WHEN :fecha_nacimiento IS NOT NULL 
+                                THEN TO_DATE(:fecha_nacimiento, 'YYYY-MM-DD')
+                                ELSE fecha_nacimiento
+                           END
+      WHERE id_usuario = :id_usuario
+    `;
+
+    await db.execute(sql, {
+      id_usuario: idUsuario,
+      nombre,
+      apellido,
+      telefono,
+      fecha_nacimiento: fechaNacimiento || null
+    });
+
+    return res.json({ message: 'Perfil actualizado correctamente' });
+  } catch (err) {
+    console.error('Error al actualizar perfil actual:', err);
+    return res.status(500).json({ error: 'Error al actualizar perfil', details: err.message });
   }
 };
 

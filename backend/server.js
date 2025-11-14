@@ -8,7 +8,7 @@ const productosRouter = require('./routes/productos');
 const usuariosRoutes = require('./routes/usuarios');
 const pedidosRouter = require('./routes/pedidos');
 const resenasRouter = require('./routes/resenas');
-const carritoRouter = require('./routes/carrito');  // ← NUEVO
+const carritoRouter = require('./routes/carrito');
 const referidosRoutes = require('./routes/referidosRoutes');
 const direccionesRoutes = require('./routes/direcciones');
 
@@ -20,16 +20,16 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Rutas
-app.use('/api/productos', productosRouter);
-app.use('/api/usuarios', usuariosRoutes);
-app.use('/api/pedidos', pedidosRouter);
-app.use('/api/resenas', resenasRouter);
-app.use('/api/carrito', carritoRouter);  // ← NUEVO
-app.use('/api', referidosRoutes);
-app.use('/api/direcciones', direccionesRoutes);
+// Rutas versionadas v1
+app.use('/api/v1/productos', productosRouter);
+app.use('/api/v1/usuarios', usuariosRoutes);
+app.use('/api/v1/pedidos', pedidosRouter);
+app.use('/api/v1/resenas', resenasRouter);
+app.use('/api/v1/carrito', carritoRouter);
+app.use('/api/v1', referidosRoutes);
+app.use('/api/v1/direcciones', direccionesRoutes);
 
-// Ruta de prueba
+// Ruta de prueba (se mantiene sin versión para compatibilidad)
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'API Level-UP funcionando correctamente' });
 });

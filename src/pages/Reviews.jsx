@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useNotification } from '../hooks/useNotification';
 
+const API_URL = (process.env.REACT_APP_API_URL || 'http://localhost:3001/api') + '/v1';
+
 const Reviews = () => {
   const { exito, error } = useNotification();
   const [resenas, setResenas] = useState([]);
@@ -25,7 +27,7 @@ const Reviews = () => {
 
   const cargarProductos = async () => {
     try {
-      const response = await fetch('/assets/data/productos.json');
+      const response = await fetch(`${API_URL}/productos`);
       const data = await response.json();
       setProductos(data);
     } catch (err) {
