@@ -38,7 +38,6 @@ exports.getCarrito = async (req, res) => {
 exports.agregarAlCarrito = async (req, res) => {
   try {
     const { idUsuario, idProducto, cantidad } = req.body;
-
     // Verificar si existe carrito activo
     let idCarrito;
     const sqlCarrito = `
@@ -64,7 +63,6 @@ exports.agregarAlCarrito = async (req, res) => {
     } else {
       idCarrito = resultCarrito.rows[0].ID_CARRITO;
     }
-
     // Verificar si el producto ya está en el carrito
     const sqlVerificar = `
       SELECT id_detalle_carrito, cantidad
@@ -76,7 +74,6 @@ exports.agregarAlCarrito = async (req, res) => {
       id_carrito: idCarrito,
       id_producto: idProducto
     });
-
     if (resultVerificar.rows.length > 0) {
       // Actualizar cantidad existente
       const nuevaCantidad = resultVerificar.rows[0].CANTIDAD + cantidad;
