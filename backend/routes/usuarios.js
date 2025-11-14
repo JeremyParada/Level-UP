@@ -9,4 +9,8 @@ router.get('/:idUsuario', usuariosController.getPerfil);
 router.put('/:idUsuario', usuariosController.actualizarPerfil);
 router.post('/:idUsuario/puntos', usuariosController.actualizarPuntos);
 
+// Rutas para "usuario actual" (Profile) usando idUsuario como query param
+router.get('/me/:idUsuario', usuariosController.getPerfilActual);
+router.put('/me/:idUsuario', usuariosController.actualizarPerfilActual);
+
 module.exports = router;

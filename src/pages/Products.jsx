@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import ProductCard from '../components/productos/ProductCard';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
+const API_URL = (process.env.REACT_APP_API_URL || 'http://localhost:3001/api') + '/v1';
 
 const Products = () => {
   const [productos, setProductos] = useState([]);

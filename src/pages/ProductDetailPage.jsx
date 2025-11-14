@@ -23,7 +23,7 @@ const ProductDetailPage = () => {
 
   const cargarProducto = useCallback(async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/productos/${codigo}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/productos/${codigo}`);
       const producto = await response.json();
 
       if (!producto || producto.error) {

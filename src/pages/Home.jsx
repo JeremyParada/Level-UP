@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/productos/ProductCard';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
+const API_URL = (process.env.REACT_APP_API_URL || 'http://localhost:3001/api') + '/v1';
 
 const Home = () => {
   const [productosDestacados, setProductosDestacados] = useState([]);
