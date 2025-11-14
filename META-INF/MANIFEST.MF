@@ -1,0 +1,117 @@
+Manifest-Version: 1.0
+Created-By: 11.0.25 (Oracle Corporation)
+
+Name: instantclient_21_19/libclntsh.so.21.1
+SHA-256-Digest: S2I8XV6qSHEbXKhQFsE9quQmqpTrF3I65q8A1PZSgLY=
+
+Name: instantclient_21_19/libocci.so.18.1
+SHA-256-Digest: aCJLIRQGFENehD8GcHDyn2qaI27+NX/WWJSmQwGHzhE=
+
+Name: instantclient_21_19/BASIC_LICENSE
+SHA-256-Digest: P5PQQaT4aoIGl6b8op6FmzevqaejGJf3k7vZInYFncE=
+
+Name: instantclient_21_19/libclntsh.so.20.1
+SHA-256-Digest: uCIHTP/S/q8ljYJ4EaLKW24gEK95NzOrtOO274xFVvQ=
+
+Name: instantclient_21_19/ucp.jar
+SHA-256-Digest: IO8r7h+pAM1Mg0pC3DYDvJINAjw6TPNlVt9FSQJ0BgQ=
+
+Name: instantclient_21_19/libclntsh.so
+SHA-256-Digest: uCIHTP/S/q8ljYJ4EaLKW24gEK95NzOrtOO274xFVvQ=
+
+Name: instantclient_21_19/xstreams.jar
+SHA-256-Digest: xt8qqcJSz7YeoGn6C3e8miW/QG91PxxAokNjPZKGK/Q=
+
+Name: instantclient_21_19/libclntshcore.so.12.1
+SHA-256-Digest: 6okNH8Ice+7x62Ludt2CUQnwiKMdtp5BGj5ntZXCXII=
+
+Name: instantclient_21_19/libocci.so.19.1
+SHA-256-Digest: aCJLIRQGFENehD8GcHDyn2qaI27+NX/WWJSmQwGHzhE=
+
+Name: instantclient_21_19/uidrvci
+SHA-256-Digest: /eutFwCHe08fe5l/tOZfHjnXPdw4NUGzhcEnkxU+6C0=
+
+Name: instantclient_21_19/liboramysql.so
+SHA-256-Digest: lDM52Fv1XKOp4YGzV16KSTc7GLivo+h2iEZlRHkzQJI=
+
+Name: instantclient_21_19/libclntshcore.so.19.1
+SHA-256-Digest: 6okNH8Ice+7x62Ludt2CUQnwiKMdtp5BGj5ntZXCXII=
+
+Name: instantclient_21_19/libclntshcore.so.18.1
+SHA-256-Digest: 6okNH8Ice+7x62Ludt2CUQnwiKMdtp5BGj5ntZXCXII=
+
+Name: instantclient_21_19/adrci
+SHA-256-Digest: JIaB4J5WH9rdbu3P6q9fjYvcwomg/4TzsXIBvEplyDE=
+
+Name: instantclient_21_19/libocci.so
+SHA-256-Digest: aCJLIRQGFENehD8GcHDyn2qaI27+NX/WWJSmQwGHzhE=
+
+Name: instantclient_21_19/libocci.so.10.1
+SHA-256-Digest: aCJLIRQGFENehD8GcHDyn2qaI27+NX/WWJSmQwGHzhE=
+
+Name: instantclient_21_19/libclntshcore.so
+SHA-256-Digest: 6okNH8Ice+7x62Ludt2CUQnwiKMdtp5BGj5ntZXCXII=
+
+Name: instantclient_21_19/libnnz21.so
+SHA-256-Digest: uRFrFF6vARTDINgVSihkQltUYI0vVV8c3XhfSp8LCb8=
+
+Name: instantclient_21_19/libocci.so.12.1
+SHA-256-Digest: aCJLIRQGFENehD8GcHDyn2qaI27+NX/WWJSmQwGHzhE=
+
+Name: instantclient_21_19/libocci.so.11.1
+SHA-256-Digest: aCJLIRQGFENehD8GcHDyn2qaI27+NX/WWJSmQwGHzhE=
+
+Name: instantclient_21_19/ojdbc8.jar
+SHA-256-Digest: VQHI6k7YnZtMdTfjoStYdkAVkcsdiDnJ+qE/7OM+zXA=
+
+Name: instantclient_21_19/libclntsh.so.10.1
+SHA-256-Digest: uCIHTP/S/q8ljYJ4EaLKW24gEK95NzOrtOO274xFVvQ=
+
+Name: instantclient_21_19/libocci_gcc53.so.21.1
+SHA-256-Digest: KLILFm4zRmj/zlKXTNIPAbvamezXCKrycZlS+HqfhsY=
+
+Name: instantclient_21_19/libclntshcore.so.20.1
+SHA-256-Digest: 6okNH8Ice+7x62Ludt2CUQnwiKMdtp5BGj5ntZXCXII=
+
+Name: instantclient_21_19/libclntsh.so.12.1
+SHA-256-Digest: uCIHTP/S/q8ljYJ4EaLKW24gEK95NzOrtOO274xFVvQ=
+
+Name: instantclient_21_19/libocijdbc21.so
+SHA-256-Digest: X3Wc6dMZHIC86ZN9kabkyd0lbxogkDt+bSBhkICnCIo=
+
+Name: instantclient_21_19/libclntsh.so.11.1
+SHA-256-Digest: uCIHTP/S/q8ljYJ4EaLKW24gEK95NzOrtOO274xFVvQ=
+
+Name: instantclient_21_19/libclntshcore.so.21.1
+SHA-256-Digest: /iCrd6yTugVNkdjZ4VUr/ZATaRCkgLBV4at8ASPvZog=
+
+Name: instantclient_21_19/genezi
+SHA-256-Digest: bynFXrB6tVw5/XLUOt+0AIX7UUdOy0SOzOkOYHXtDuI=
+
+Name: instantclient_21_19/libclntsh.so.18.1
+SHA-256-Digest: uCIHTP/S/q8ljYJ4EaLKW24gEK95NzOrtOO274xFVvQ=
+
+Name: instantclient_21_19/libclntsh.so.19.1
+SHA-256-Digest: uCIHTP/S/q8ljYJ4EaLKW24gEK95NzOrtOO274xFVvQ=
+
+Name: instantclient_21_19/ojdbc11.jar
+SHA-256-Digest: RvxnYlpDaBBEmqguT0dIYADGKbOwEkULTevc+L71uB4=
+
+Name: instantclient_21_19/BASIC_README
+SHA-256-Digest: gK0vKv9mpyPV83Uqup8Y76wYEo/WpQU0DLkKPP2vioE=
+
+Name: instantclient_21_19/libocci_gcc53.so
+SHA-256-Digest: ykHKbRXl+PSpiHO8H5TvjEAUKxSjUDMeR0JvD/lrSwg=
+
+Name: instantclient_21_19/network/admin/README
+SHA-256-Digest: 6/rc95VQpXtaiUJ7dgUQASUmSVQD+6H8rJa5ISLhD+o=
+
+Name: instantclient_21_19/libociei.so
+SHA-256-Digest: LNJGnr88nZAK9+KoBOUgtS+Ums5DxSYyZPPJoFl/Xwc=
+
+Name: instantclient_21_19/libocci.so.20.1
+SHA-256-Digest: aCJLIRQGFENehD8GcHDyn2qaI27+NX/WWJSmQwGHzhE=
+
+Name: instantclient_21_19/libocci.so.21.1
+SHA-256-Digest: 2APCVZ2I969FXmDzt6KC+ItoOyNM05Oi42PU+VcEhCo=
+

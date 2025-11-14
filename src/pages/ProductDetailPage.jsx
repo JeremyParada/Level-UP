@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import { useNotification } from '../hooks/useNotification';
@@ -21,37 +21,36 @@ const ProductDetailPage = () => {
     comentario: ''
   });
 
-  useEffect(() => {
-    cargarProducto();
-    cargarResenas();
-  }, [codigo]);
-
-  const cargarProducto = async () => {
+  const cargarProducto = useCallback(async () => {
     try {
-      const response = await fetch('/assets/data/productos.json');
-      const productos = await response.json();
-      const productoEncontrado = productos.find(p => p.codigo === codigo);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/productos/${codigo}`);
+      const producto = await response.json();
 
-      if (!productoEncontrado) {
+      if (!producto || producto.error) {
         error('Producto no encontrado');
         setTimeout(() => navigate('/productos'), 2000);
         return;
       }
 
-      setProducto(productoEncontrado);
+      setProducto(producto);
       setLoading(false);
     } catch (err) {
       console.error('Error cargando producto:', err);
       error('Error al cargar el producto');
       setLoading(false);
     }
-  };
+  }, [codigo, error, navigate]);
 
-  const cargarResenas = () => {
+  const cargarResenas = useCallback(() => {
     const resenasGuardadas = JSON.parse(localStorage.getItem('resenas')) || [];
     const resenasFiltradas = resenasGuardadas.filter(r => r.codigoProducto === codigo);
     setResenas(resenasFiltradas);
-  };
+  }, [codigo]);
+
+  useEffect(() => {
+    cargarProducto();
+    cargarResenas();
+  }, [cargarProducto, cargarResenas]);
 
   const formatearPrecio = (precio) => {
     return new Intl.NumberFormat('es-CL', {

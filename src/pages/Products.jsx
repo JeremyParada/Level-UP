@@ -1,51 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import { useNotification } from '../hooks/useNotification';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import ProductCard from '../components/productos/ProductCard';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 
 const Products = () => {
-  const { exito, error } = useNotification();
   const [productos, setProductos] = useState([]);
-  const [productosFiltrados, setProductosFiltrados] = useState([]);
   const [categorias, setCategorias] = useState([]);
+  const [productosFiltrados, setProductosFiltrados] = useState([]);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
   const [busqueda, setBusqueda] = useState('');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    cargarProductos();
-    cargarCategorias();
-  }, []);
-
-  const cargarProductos = async () => {
+  // Cargar productos desde la API
+  const cargarProductos = useCallback(async () => {
     try {
       const response = await axios.get(`${API_URL}/productos`);
       setProductos(response.data);
       setProductosFiltrados(response.data);
+      setLoading(false);
     } catch (err) {
       console.error('Error cargando productos:', err);
-      error('Error al cargar productos de la base de datos');
-    } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const cargarCategorias = async () => {
+  // Cargar categorías desde la API
+  const cargarCategorias = useCallback(async () => {
     try {
       const response = await axios.get(`${API_URL}/productos/categorias`);
       setCategorias(response.data);
     } catch (err) {
       console.error('Error cargando categorías:', err);
     }
-  };
+  }, []);
 
-  useEffect(() => {
-    filtrarProductos();
-  }, [categoriaSeleccionada, busqueda, productos]);
-
-  const filtrarProductos = () => {
+  // Filtrar productos según la categoría y la búsqueda
+  const filtrarProductos = useCallback(() => {
     let resultados = [...productos];
 
     if (categoriaSeleccionada) {
@@ -54,16 +45,28 @@ const Products = () => {
 
     if (busqueda.trim()) {
       const termino = busqueda.toLowerCase();
-      resultados = resultados.filter(p => 
-        p.nombre.toLowerCase().includes(termino) ||
-        p.descripcion.toLowerCase().includes(termino) ||
-        p.codigo.toLowerCase().includes(termino)
+      resultados = resultados.filter(
+        p =>
+          p.nombre.toLowerCase().includes(termino) ||
+          p.descripcion.toLowerCase().includes(termino) ||
+          p.codigo.toLowerCase().includes(termino)
       );
     }
 
     setProductosFiltrados(resultados);
-  };
+  }, [categoriaSeleccionada, busqueda, productos]);
 
+  // Efectos para cargar datos y filtrar productos
+  useEffect(() => {
+    cargarProductos();
+    cargarCategorias();
+  }, [cargarProductos, cargarCategorias]);
+
+  useEffect(() => {
+    filtrarProductos();
+  }, [filtrarProductos]);
+
+  // Manejar la búsqueda
   const handleBuscar = (e) => {
     e.preventDefault();
     filtrarProductos();
@@ -86,14 +89,16 @@ const Products = () => {
       <section className="container my-4">
         <div className="row g-2 justify-content-center">
           <div className="col-12 col-md-3">
-            <select 
-              className="form-select" 
+            <select
+              className="form-select"
               value={categoriaSeleccionada}
               onChange={(e) => setCategoriaSeleccionada(e.target.value)}
             >
               <option value="">Todas las categorías</option>
               {categorias.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
+                <option key={cat.ID_CATEGORIA} value={cat.NOMBRE_CATEGORIA}>
+                  {cat.NOMBRE_CATEGORIA}
+                </option>
               ))}
             </select>
           </div>
@@ -101,9 +106,9 @@ const Products = () => {
           <div className="col-12 col-md-6">
             <form onSubmit={handleBuscar}>
               <div className="input-group">
-                <input 
-                  type="text" 
-                  className="form-control" 
+                <input
+                  type="text"
+                  className="form-control"
                   placeholder="¿Qué producto quieres?"
                   value={busqueda}
                   onChange={(e) => setBusqueda(e.target.value)}

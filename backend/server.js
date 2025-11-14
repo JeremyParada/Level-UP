@@ -5,10 +5,12 @@ require('dotenv').config();
 
 const db = require('./config/database');
 const productosRouter = require('./routes/productos');
-const usuariosRouter = require('./routes/usuarios');
+const usuariosRoutes = require('./routes/usuarios');
 const pedidosRouter = require('./routes/pedidos');
 const resenasRouter = require('./routes/resenas');
 const carritoRouter = require('./routes/carrito');  // ← NUEVO
+const referidosRoutes = require('./routes/referidosRoutes');
+const direccionesRoutes = require('./routes/direcciones');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -20,10 +22,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Rutas
 app.use('/api/productos', productosRouter);
-app.use('/api/usuarios', usuariosRouter);
+app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/pedidos', pedidosRouter);
 app.use('/api/resenas', resenasRouter);
 app.use('/api/carrito', carritoRouter);  // ← NUEVO
+app.use('/api', referidosRoutes);
+app.use('/api/direcciones', direccionesRoutes);
 
 // Ruta de prueba
 app.get('/api/health', (req, res) => {
