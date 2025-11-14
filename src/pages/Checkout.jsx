@@ -62,7 +62,7 @@ const Checkout = () => {
 
     const cargarDireccion = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/direcciones/usuario/${usuarioNormalizado.idusuario}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/direcciones/usuario/${usuarioNormalizado.idusuario}`);
         const direcciones = await response.json();
 
         if (!Array.isArray(direcciones)) {
@@ -107,7 +107,7 @@ const Checkout = () => {
       const usuario = JSON.parse(localStorage.getItem('usuario'));
       const usuarioNormalizado = normalizarUsuario(usuario);
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/pedidos`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/pedidos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -152,7 +152,7 @@ const Checkout = () => {
   const handleGuardarDireccion = async () => {
     try {
       const usuario = JSON.parse(localStorage.getItem('usuario'));
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/direcciones`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/direcciones`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

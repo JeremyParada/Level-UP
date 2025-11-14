@@ -17,7 +17,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/usuarios/login`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/usuarios/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
