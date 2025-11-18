@@ -15,7 +15,6 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/usuarios/login`, {
         method: 'POST',
@@ -26,14 +25,14 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        login(data.usuario);
+        // **CAMBIO IMPORTANTE**: Guardar el token y los datos del usuario
+        login(data); // Asumiendo que 'login' en AuthContext guarda todo el objeto
         navigate('/perfil');
       } else {
-        setError(data.error || 'Error al iniciar sesión');
+        setError(data.error || 'Credenciales inválidas');
       }
     } catch (err) {
-      console.error('Error en login:', err);
-      setError('Error al iniciar sesión');
+      setError('No se pudo conectar con el servidor.');
     }
   };
 
