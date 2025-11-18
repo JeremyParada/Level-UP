@@ -63,7 +63,7 @@ const Profile = () => {
 
   const cargarDatosPerfil = async (idUsuario) => {
     try {
-      const response = await fetch(`/api/v1/usuarios/me/${idUsuario}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/usuarios/me/${idUsuario}`);
       if (!response.ok) {
         throw new Error('No se pudo obtener el perfil');
       }
