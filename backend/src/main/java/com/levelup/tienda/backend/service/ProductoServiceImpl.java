@@ -56,4 +56,10 @@ public class ProductoServiceImpl implements ProductoService {
     public List<Categoria> findAllCategorias() {
         return categoriaRepository.findAll();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Producto> findProductoByCodigo(String codigoProducto) {
+        return productoRepository.findByCodigoProducto(codigoProducto);
+    }
 }

@@ -1,22 +1,19 @@
 package com.levelup.tienda.backend.service;
 
-import com.levelup.tienda.backend.dto.RegistroDTO;
-import com.levelup.tienda.backend.model.Administrador; // Asegúrate que esta importación exista
-import com.levelup.tienda.backend.model.Cliente;
-import com.levelup.tienda.backend.model.ERole;
-import com.levelup.tienda.backend.model.Role;
-import com.levelup.tienda.backend.model.Usuario;
-import com.levelup.tienda.backend.repository.DireccionRepository;
-import com.levelup.tienda.backend.repository.RoleRepository;
-import com.levelup.tienda.backend.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.text.SimpleDateFormat;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired; // Asegúrate que esta importación exista
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import com.levelup.tienda.backend.dto.RegistroDTO;
+import com.levelup.tienda.backend.model.Cliente;
+import com.levelup.tienda.backend.model.Usuario;
+import com.levelup.tienda.backend.repository.DireccionRepository;
+import com.levelup.tienda.backend.repository.RoleRepository;
+import com.levelup.tienda.backend.repository.UsuarioRepository;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
@@ -40,12 +37,29 @@ public class UsuarioServiceImpl implements UsuarioService {
             throw new RuntimeException("Error: El email ya está en uso!");
         }
 
-        // Crear siempre un nuevo Cliente
         Cliente usuario = new Cliente();
         usuario.setEmail(registroDTO.getEmail());
         usuario.setPassword(passwordEncoder.encode(registroDTO.getPassword()));
+        usuario.setNombre(registroDTO.getNombre());
+        usuario.setApellido(registroDTO.getApellido());
+        usuario.setTelefono(registroDTO.getTelefono());
+        usuario.setEstadoUsuario("ACTIVO");
+        usuario.setFechaRegistro(new java.util.Date());
+        usuario.setDescuentoDuoc(0);
+        usuario.setPuntosLevelup(0);
 
-        // Guardar el nuevo cliente
+        // Parsear fechaNacimiento
+        if (registroDTO.getFechaNacimiento() != null && !registroDTO.getFechaNacimiento().isEmpty()) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                usuario.setFechaNacimiento(sdf.parse(registroDTO.getFechaNacimiento()));
+            } catch (Exception e) {
+                throw new RuntimeException("Formato de fecha de nacimiento inválido. Use yyyy-MM-dd");
+            }
+        } else {
+            throw new RuntimeException("La fecha de nacimiento es obligatoria");
+        }
+
         return usuarioRepository.save(usuario);
     }
 

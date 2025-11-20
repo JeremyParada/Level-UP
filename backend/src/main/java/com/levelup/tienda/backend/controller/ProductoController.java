@@ -39,6 +39,13 @@ public class ProductoController {
         return productoService.findAllCategorias();
     }
 
+    @GetMapping("/codigo/{codigoProducto}")
+    public ResponseEntity<Producto> getProductoByCodigo(@PathVariable String codigoProducto) {
+        return productoService.findProductoByCodigo(codigoProducto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     // Endpoints de administración (se asegurarán en el Paso 5)
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
