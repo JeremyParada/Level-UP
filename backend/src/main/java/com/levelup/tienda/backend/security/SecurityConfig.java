@@ -1,13 +1,13 @@
 package com.levelup.tienda.backend.security;
 
-import com.levelup.tienda.backend.security.jwt.JwtAuthEntryPoint;
-import com.levelup.tienda.backend.security.jwt.JwtAuthTokenFilter;
-import com.levelup.tienda.backend.service.UserDetailsServiceImpl;
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import static org.springframework.security.config.Customizer.withDefaults;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,9 +22,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
-
-import static org.springframework.security.config.Customizer.withDefaults;
+import com.levelup.tienda.backend.security.jwt.JwtAuthEntryPoint;
+import com.levelup.tienda.backend.security.jwt.JwtAuthTokenFilter;
+import com.levelup.tienda.backend.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -65,8 +65,8 @@ public class SecurityConfig {
                         // Permitir acceso público a productos y registro/login
                         .requestMatchers("/api/v1/productos").permitAll()
                         .requestMatchers("/api/v1/productos/**").permitAll()
-                        .requestMatchers("/api/v1/usuarios/registro").permitAll()
-                        .requestMatchers("/api/v1/usuarios/login").permitAll()
+                        .requestMatchers("/api/v1/auth/register").permitAll()
+                        .requestMatchers("/api/v1/auth/login").permitAll()
                         .requestMatchers("/assets/**").permitAll()
                         .requestMatchers("/assets/img/**").permitAll()
                         .requestMatchers("/public/assets/img/**").permitAll()

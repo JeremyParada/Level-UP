@@ -1,12 +1,15 @@
 package com.levelup.tienda.backend.repository;
 
-import com.levelup.tienda.backend.model.Producto;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.levelup.tienda.backend.model.Producto;
 
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
     List<Producto> findByCategoriaId(Long categoriaId);
+    Optional<Producto> findByCodigoProducto(String codigoProducto);
 }
