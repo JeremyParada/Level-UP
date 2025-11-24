@@ -3,15 +3,19 @@ import React, { createContext, useState, useEffect } from 'react';
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [carrito, setCarrito] = useState([]);
-
-  // Cargar carrito desde localStorage
-  useEffect(() => {
-    const carritoGuardado = localStorage.getItem('carrito');
-    if (carritoGuardado) {
-      setCarrito(JSON.parse(carritoGuardado));
+  const [carrito, setCarrito] = useState(() => {
+    try {
+      const guardado = localStorage.getItem('carrito');
+      if (!guardado) return [];
+      const parsed = JSON.parse(guardado);
+      // Si el parseo falla o no es array, retorna []
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      // Si hay error de parseo, limpia el localStorage y retorna []
+      localStorage.setItem('carrito', JSON.stringify([]));
+      return [];
     }
-  }, []);
+  });
 
   // Guardar carrito en localStorage cuando cambia
   useEffect(() => {
@@ -20,17 +24,17 @@ export const CartProvider = ({ children }) => {
 
   const agregarAlCarrito = (producto, cantidad = 1) => {
     setCarrito(prevCarrito => {
-      const existente = prevCarrito.find(item => item.codigo === producto.codigo);
-      
+      // Si prevCarrito es undefined, usa []
+      const seguro = Array.isArray(prevCarrito) ? prevCarrito : [];
+      const existente = seguro.find(item => item.codigo === producto.codigo);
       if (existente) {
-        return prevCarrito.map(item =>
+        return seguro.map(item =>
           item.codigo === producto.codigo
             ? { ...item, cantidad: item.cantidad + cantidad }
             : item
         );
       }
-      
-      return [...prevCarrito, { ...producto, cantidad }];
+      return [...seguro, { codigo: producto.codigo, cantidad }];
     });
   };
 
@@ -48,14 +52,11 @@ export const CartProvider = ({ children }) => {
 
   const vaciarCarrito = () => {
     setCarrito([]);
+    localStorage.setItem('carrito', JSON.stringify([]));
   };
 
-  const totalItems = carrito.reduce((total, item) => total + item.cantidad, 0);
-  
-  const totalPrecio = carrito.reduce(
-    (total, item) => total + (item.precio * item.cantidad), 
-    0
-  );
+  const totalItems = Array.isArray(carrito) ? carrito.reduce((total, item) => total + item.cantidad, 0) : 0;
+  const totalPrecio = 0; // El cálculo real se hace en Cart.jsx
 
   return (
     <CartContext.Provider value={{

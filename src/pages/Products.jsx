@@ -16,14 +16,28 @@ const Products = () => {
   const cargarProductos = useCallback(async () => {
     try {
       const response = await axios.get(`${API_URL}/productos`);
-      setProductos(response.data);
-      setProductosFiltrados(response.data);
+      // Mapear los productos al formato esperado por el frontend
+      const productosMapeados = response.data
+        .filter(p => !!p.codigoProducto)
+        .map(p => ({
+          codigo: p.codigoProducto,
+          nombre: p.nombreProducto,
+          descripcion: p.descripcion,
+          precio: p.precio,
+          imagen: p.imagen,
+          categoria: p.categoria?.nombre || '',
+          stock: p.stock,
+          estado: p.estadoProducto,
+          id: p.idProducto,
+        }));
+      setProductos(productosMapeados);
+      setProductosFiltrados(productosMapeados);
       setLoading(false);
     } catch (err) {
       console.error('Error cargando productos:', err);
       setLoading(false);
     }
-  }, []);
+  }, []); 
 
   // Cargar categorías desde la API
   const cargarCategorias = useCallback(async () => {

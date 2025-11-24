@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useNotification } from '../hooks/useNotification';
 import { AuthContext } from '../context/AuthContext';
+import fetchWithAuth from '../utils/api';
 
 const Profile = () => {
   const { exito } = useNotification();
@@ -63,7 +64,7 @@ const Profile = () => {
 
   const cargarDatosPerfil = async (idUsuario) => {
     try {
-      const response = await fetch(`/api/v1/usuarios/me/${idUsuario}`);
+      const response = await fetchWithAuth(`/v1/usuarios/me/${idUsuario}`);
       if (!response.ok) {
         throw new Error('No se pudo obtener el perfil');
       }
@@ -93,7 +94,7 @@ const Profile = () => {
 
   const cargarHistorialCompras = async (idUsuario) => {
     try {
-      const response = await fetch(`/api/v1/pedidos/usuario/${idUsuario}`);
+      const response = await fetchWithAuth(`/v1/pedidos/usuario/${idUsuario}`);
       if (!response.ok) {
         throw new Error('No se pudo obtener el historial de compras');
       }
@@ -170,7 +171,7 @@ const Profile = () => {
         fechaNacimiento: perfil.fechaNacimiento
       };
 
-      const response = await fetch(`/api/v1/usuarios/me/${idUsuario}`, {
+      const response = await fetchWithAuth(`/v1/usuarios/me/${idUsuario}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
