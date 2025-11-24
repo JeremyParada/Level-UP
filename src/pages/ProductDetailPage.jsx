@@ -23,16 +23,23 @@ const ProductDetailPage = () => {
 
   const cargarProducto = useCallback(async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/productos/${codigo}`);
-      const producto = await response.json();
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/productos/codigo/${codigo}`);
+      const data = await response.json();
 
-      if (!producto || producto.error) {
+      if (!data || data.error) {
         error('Producto no encontrado');
         setTimeout(() => navigate('/productos'), 2000);
         return;
       }
 
-      setProducto(producto);
+      // Mapear campos del backend al formato esperado por el frontend
+      setProducto({
+        ...data,
+        nombre: data.nombreProducto,
+        codigo: data.codigoProducto,
+        id: data.idProducto,
+        estado: data.estadoProducto,
+      });
       setLoading(false);
     } catch (err) {
       console.error('Error cargando producto:', err);
@@ -175,7 +182,7 @@ const ProductDetailPage = () => {
           <div className="col-lg-7">
             <div className="card card-formulario rounded-4 p-4">
               <span className="badge bg-secondary mb-2 align-self-start">
-                {producto.categoria}
+                {producto.categoria?.nombre}
               </span>
               <h1 className="texto-principal color-acento-azul mb-3">
                 {producto.nombre}

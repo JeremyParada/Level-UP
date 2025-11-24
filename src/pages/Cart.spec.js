@@ -27,6 +27,17 @@ describe('Cart Page', () => {
       ])
     );
     localStorage.setItem('usuario', JSON.stringify({ nombre: 'Usuario Test' }));
+
+    // Mock fetch for products
+    spyOn(window, 'fetch').and.returnValue(
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve([
+          { codigo: 'PROD001', nombre: 'Producto 1', precio: 10000, imagen: 'img1.jpg', stock: 10 },
+          { codigo: 'PROD002', nombre: 'Producto 2', precio: 20000, imagen: 'img2.jpg', stock: 5 }
+        ])
+      })
+    );
   });
 
   afterEach(() => {
@@ -36,7 +47,7 @@ describe('Cart Page', () => {
   it('debe mostrar un mensaje cuando el carrito está vacío', () => {
     localStorage.setItem('carrito', JSON.stringify([])); // Carrito vacío
     renderWithProviders();
-    expect(screen.getByText(/tu carrito está vacío/i)).toBeInTheDocument();
+    expect(screen.getByText(/tu carrito está vacío/i)).toBeTruthy();
   });
 
   it('debe manejar el cambio de cantidad de un producto', () => {
@@ -50,14 +61,14 @@ describe('Cart Page', () => {
     renderWithProviders();
     const btnEliminar = screen.getAllByRole('button', { name: /eliminar/i })[0];
     fireEvent.click(btnEliminar);
-    expect(screen.queryByText(/producto 1/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/producto 1/i)).toBeNull();
   });
 
   it('debe vaciar el carrito', () => {
     renderWithProviders();
     const btnVaciar = screen.getByRole('button', { name: /vaciar carrito/i });
     fireEvent.click(btnVaciar);
-    expect(screen.getByText(/tu carrito está vacío/i)).toBeInTheDocument();
+    expect(screen.getByText(/tu carrito está vacío/i)).toBeTruthy();
   });
 
   it('debe aplicar un descuento válido', () => {
@@ -68,7 +79,7 @@ describe('Cart Page', () => {
     fireEvent.change(inputCodigo, { target: { value: 'DUOC20' } });
     fireEvent.click(btnAplicar);
 
-    expect(screen.getByText(/¡descuento duocuc aplicado!/i)).toBeInTheDocument();
+    expect(screen.getByText(/¡descuento duocuc aplicado!/i)).toBeTruthy();
   });
 
   it('debe manejar el intento de finalizar la compra con un carrito vacío', () => {
@@ -79,17 +90,18 @@ describe('Cart Page', () => {
 
     expect(
       screen.getByText(/tu carrito está vacío. agrega productos antes de finalizar la compra./i)
-    ).toBeInTheDocument();
+    ).toBeTruthy();
   });
 
   it('debe redirigir al registro si el usuario no está autenticado', () => {
     localStorage.removeItem('usuario'); // Usuario no autenticado
     renderWithProviders();
     const btnFinalizar = screen.getByRole('button', { name: /finalizar compra/i });
-    fireEvent.click(btnFinalizar);
 
     // Simular confirmación del usuario
-    window.confirm = jest.fn(() => true);
+    spyOn(window, 'confirm').and.returnValue(true);
+
+    fireEvent.click(btnFinalizar);
 
     expect(window.location.pathname).toBe('/registro');
   });

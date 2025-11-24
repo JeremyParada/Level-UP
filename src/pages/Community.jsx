@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNotification } from '../hooks/useNotification';
+import { AuthContext } from '../context/AuthContext';
+import fetchWithAuth from '../utils/api';
 
 const Community = () => {
-  const { exito, info } = useNotification();
+  const { exito, info, error } = useNotification();
+  const { usuario } = useContext(AuthContext) || {};
+
   const [eventos, setEventos] = useState([]);
   const [articulosBlog, setArticulosBlog] = useState([]);
   const [ranking, setRanking] = useState([]);
@@ -88,9 +92,19 @@ const Community = () => {
     setRanking(rankingData);
   };
 
-  const handleInscribirse = (eventoId) => {
+  const handleInscribirse = async (eventoId) => {
+    if (!usuario) {
+      error('Debes iniciar sesión para inscribirte en un evento.');
+      return;
+    }
     const evento = eventos.find(e => e.id === eventoId);
-    exito(`✅ ¡Inscripción exitosa!<br>Te esperamos en: <strong>${evento.titulo}</strong><br>+${evento.puntos} puntos LevelUp`);
+    try {
+      // Aquí podrías hacer un fetchWithAuth real a tu backend si existiera endpoint
+      // await fetchWithAuth(`/v1/eventos/inscribir/${eventoId}`, { method: 'POST' });
+      exito(`✅ ¡Inscripción exitosa!<br>Te esperamos en: <strong>${evento.titulo}</strong><br>+${evento.puntos} puntos LevelUp`);
+    } catch (e) {
+      error('No se pudo inscribir en el evento. Intenta nuevamente.');
+    }
   };
 
   return (
