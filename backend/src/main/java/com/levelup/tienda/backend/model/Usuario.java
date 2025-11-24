@@ -1,9 +1,24 @@
 package com.levelup.tienda.backend.model;
 
-import jakarta.persistence.*;
-import lombok.Data;
 import java.util.Date;
 import java.util.Set;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import lombok.Data;
 
 @Entity
 @Table(name = "usuarios")
@@ -49,7 +64,7 @@ public class Usuario {
     private String estadoUsuario;
 
     // Relación con roles (muchos a muchos)
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "usuario_roles",
         joinColumns = @JoinColumn(name = "USUARIO_ID", referencedColumnName = "ID_USUARIO"),

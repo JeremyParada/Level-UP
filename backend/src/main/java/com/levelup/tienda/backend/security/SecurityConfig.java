@@ -71,6 +71,7 @@ public class SecurityConfig {
                         .requestMatchers("/assets/img/**").permitAll()
                         .requestMatchers("/public/assets/img/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/api/v1/direcciones/**").authenticated()
                         .anyRequest().authenticated()
                 );
 

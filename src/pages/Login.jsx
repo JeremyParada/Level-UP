@@ -1,13 +1,14 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { NotificationContext } from '../context/NotificationContext'; // Asegúrate de importar esto
 import { Form, Button, Card, Container, Row, Col } from 'react-bootstrap';
 
 const Login = () => {
   const { login } = useContext(AuthContext);
+  const { error } = useContext(NotificationContext); // Usa el contexto de notificaciones
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -16,7 +17,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/usuarios/login`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -25,14 +26,13 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // **CAMBIO IMPORTANTE**: Guardar el token y los datos del usuario
-        login(data); // Asumiendo que 'login' en AuthContext guarda todo el objeto
+        login(data);
         navigate('/perfil');
       } else {
-        setError(data.error || 'Credenciales inválidas');
+        error(data.error || 'Credenciales inválidas');
       }
     } catch (err) {
-      setError('No se pudo conectar con el servidor.');
+      error('No se pudo conectar con el servidor.');
     }
   };
 
@@ -75,9 +75,6 @@ const Login = () => {
                       onChange={handleChange}
                     />
                   </Form.Group>
-
-                  {/* Mensaje de error */}
-                  {error && <p className="text-danger text-center">{error}</p>}
 
                   {/* Botón de login */}
                   <Button variant="primary" type="submit" className="w-100 mt-3">

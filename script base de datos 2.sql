@@ -143,7 +143,8 @@ CREATE TABLE usuarios (
     fecha_registro DATE DEFAULT SYSDATE NOT NULL,
     descuento_duoc NUMBER(1) DEFAULT 0 CHECK (descuento_duoc IN (0,1)),
     puntos_levelup NUMBER(10) DEFAULT 0,
-    estado_usuario VARCHAR2(20) DEFAULT 'ACTIVO' CHECK (estado_usuario IN ('ACTIVO', 'INACTIVO', 'SUSPENDIDO'))
+    estado_usuario VARCHAR2(20) DEFAULT 'ACTIVO' CHECK (estado_usuario IN ('ACTIVO', 'INACTIVO', 'SUSPENDIDO')),
+    tipo_usuario VARCHAR2(20) DEFAULT 'Cliente'
 );
 
 -- =====================================================
@@ -185,6 +186,7 @@ CREATE TABLE productos (
     stock NUMBER(10) DEFAULT 0 CHECK (stock >= 0),
     estado_producto VARCHAR2(20) DEFAULT 'ACTIVO' CHECK (estado_producto IN ('ACTIVO', 'INACTIVO', 'DESCONTINUADO')),
     fecha_creacion DATE DEFAULT SYSDATE,
+    imagen VARCHAR2(1000),
     CONSTRAINT fk_productos_categoria FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria)
 );
 
@@ -506,24 +508,6 @@ BEGIN
 END;
 /
 
--- TRIGGER: Auditoría global de inserción de pedidos (nivel sentencia)
-CREATE OR REPLACE TRIGGER trg_auditoria_pedidos_global
-AFTER INSERT ON pedidos
-BEGIN
-    INSERT INTO auditoria_productos (
-        id_auditoria,
-        id_producto,
-        accion,
-        usuario_bd,
-        fecha_cambio
-    )
-    SELECT seq_auditoria_productos.NEXTVAL, id_producto, 'INSERT_PEDIDO', USER, SYSDATE
-    FROM detalle_pedido
-    WHERE id_pedido IN (SELECT MAX(id_pedido) FROM pedidos);
-END;
-/
-
-
 -- =====================================================
 -- ÍNDICES PARA MEJORAR RENDIMIENTO
 -- =====================================================
@@ -555,13 +539,6 @@ CREATE INDEX idx_transacciones_tipo ON transacciones_puntos(tipo_transaccion);
 -- Índices en direcciones
 CREATE INDEX idx_direcciones_usuario ON direcciones(id_usuario);
 CREATE INDEX idx_direcciones_principal ON direcciones(es_principal);
-
--- =====================================================
--- ÍNDICES PARA TABLAS DE COMPATIBILIDAD JPA
--- =====================================================
-
--- Índice en la tabla de unión para búsquedas por rol
-CREATE INDEX idx_usuario_roles_role_id ON usuario_roles(role_id);
 
 -- =====================================================
 -- INSERCIÓN DE DATOS INICIALES - CATEGORÍAS
@@ -1225,16 +1202,15 @@ CREATE TABLE administradores (
     CONSTRAINT fk_administradores_usuario FOREIGN KEY (id) REFERENCES usuarios(id_usuario)
 );
 
--- Tabla para la herencia de Cliente
-CREATE TABLE clientes (
-    id NUMBER(19,0) NOT NULL,
-    -- Aquí irían campos específicos del cliente si los tuvieras
-    CONSTRAINT pk_clientes PRIMARY KEY (id),
-    CONSTRAINT fk_clientes_usuario FOREIGN KEY (id) REFERENCES usuarios(id_usuario)
-);
-
 -- Insertar Roles por defecto
 INSERT INTO roles (name) VALUES ('ROLE_USER');
 INSERT INTO roles (name) VALUES ('ROLE_ADMIN');
+
+-- =====================================================
+-- ÍNDICES PARA TABLAS DE COMPATIBILIDAD JPA
+-- =====================================================
+
+-- Índice en la tabla de unión para búsquedas por rol
+CREATE INDEX idx_usuario_roles_role_id ON usuario_roles(role_id);
 
 COMMIT;
