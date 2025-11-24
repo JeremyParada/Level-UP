@@ -4,6 +4,7 @@ import { useCart } from '../hooks/useCart';
 import { useNotification } from '../hooks/useNotification';
 import Modal from '../components/Modal';
 import DireccionForm from '../components/DireccionForm'; // Asegúrate de importar el componente
+import fetchWithAuth from '../utils/api';
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -54,7 +55,7 @@ const Checkout = () => {
 
     const usuarioNormalizado = normalizarUsuario(usuario);
 
-    if (!usuarioNormalizado.idusuario) {
+    if (!usuarioNormalizado.id) {
       error('Debes iniciar sesión para continuar.');
       navigate('/login');
       return;
@@ -62,7 +63,7 @@ const Checkout = () => {
 
     const cargarDireccion = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/direcciones/usuario/${usuarioNormalizado.idusuario}`);
+        const response = await fetchWithAuth(`/v1/direcciones/usuario/${usuarioNormalizado.id}`);
         const direcciones = await response.json();
 
         if (!Array.isArray(direcciones)) {
@@ -107,11 +108,10 @@ const Checkout = () => {
       const usuario = JSON.parse(localStorage.getItem('usuario'));
       const usuarioNormalizado = normalizarUsuario(usuario);
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/pedidos`, {
+      const response = await fetchWithAuth(`/v1/pedidos`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          idUsuario: usuarioNormalizado.idusuario,
+          idUsuario: usuarioNormalizado.id,
           productos: carrito,
           metodoPago,
         }),
@@ -152,12 +152,12 @@ const Checkout = () => {
   const handleGuardarDireccion = async () => {
     try {
       const usuario = JSON.parse(localStorage.getItem('usuario'));
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/direcciones`, {
+      const usuarioNormalizado = normalizarUsuario(usuario);
+      const response = await fetchWithAuth(`/v1/direcciones`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...nuevaDireccion,
-          idUsuario: usuario.idusuario,
+          idUsuario: usuarioNormalizado.id,
           tipoDireccion: 'ENVIO',
           esPrincipal: 0
         }),

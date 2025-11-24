@@ -42,11 +42,11 @@ describe('Product Detail Page', () => {
 
   it('debe mostrar un mensaje de carga mientras se obtiene el producto', () => {
     renderWithProviders();
-    expect(screen.getByText(/Cargando.../i)).toBeInTheDocument();
+    expect(screen.getByText(/Cargando.../i)).toBeTruthy();
   });
 
   it('debe mostrar un mensaje si el producto no se encuentra', async () => {
-    global.fetch = jest.fn(() =>
+    spyOn(window, 'fetch').and.returnValue(
       Promise.resolve({
         ok: false,
         json: () => Promise.resolve({ error: 'Producto no encontrado' }),
@@ -56,12 +56,12 @@ describe('Product Detail Page', () => {
     renderWithProviders();
 
     await waitFor(() => {
-      expect(screen.getByText(/Producto no encontrado/i)).toBeInTheDocument();
+      expect(screen.getByText(/Producto no encontrado/i)).toBeTruthy();
     });
   });
 
   it('debe cargar y mostrar el producto correctamente', async () => {
-    global.fetch = jest.fn(() =>
+    spyOn(window, 'fetch').and.returnValue(
       Promise.resolve({
         ok: true,
         json: () =>
@@ -79,8 +79,8 @@ describe('Product Detail Page', () => {
     renderWithProviders();
 
     await waitFor(() => {
-      expect(screen.getByText(/Producto 1/i)).toBeInTheDocument();
-      expect(screen.getByText(/Descripción del producto/i)).toBeInTheDocument();
+      expect(screen.getByText(/Producto 1/i)).toBeTruthy();
+      expect(screen.getByText(/Descripción del producto/i)).toBeTruthy();
     });
   });
 
@@ -91,10 +91,10 @@ describe('Product Detail Page', () => {
     const btnDecrementar = screen.getByRole('button', { name: '-' });
 
     fireEvent.click(btnIncrementar);
-    expect(screen.getByDisplayValue('2')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('2')).toBeTruthy();
 
     fireEvent.click(btnDecrementar);
-    expect(screen.getByDisplayValue('1')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('1')).toBeTruthy();
   });
 
   it('debe agregar el producto al carrito', async () => {
@@ -104,7 +104,7 @@ describe('Product Detail Page', () => {
     fireEvent.click(btnAgregarCarrito);
 
     await waitFor(() => {
-      expect(screen.getByText(/¡Producto agregado al carrito!/i)).toBeInTheDocument();
+      expect(screen.getByText(/¡Producto agregado al carrito!/i)).toBeTruthy();
     });
   });
 
@@ -119,7 +119,7 @@ describe('Product Detail Page', () => {
     fireEvent.click(btnPublicarResena);
 
     await waitFor(() => {
-      expect(screen.getByText(/¡Reseña publicada exitosamente!/i)).toBeInTheDocument();
+      expect(screen.getByText(/¡Reseña publicada exitosamente!/i)).toBeTruthy();
     });
   });
 
@@ -130,17 +130,17 @@ describe('Product Detail Page', () => {
     fireEvent.click(btnPublicarResena);
 
     await waitFor(() => {
-      expect(screen.getByText(/Por favor completa todos los campos de la reseña/i)).toBeInTheDocument();
+      expect(screen.getByText(/Por favor completa todos los campos de la reseña/i)).toBeTruthy();
     });
   });
 
   it('debe manejar errores al cargar el producto', async () => {
-    global.fetch = jest.fn(() => Promise.reject('Error al cargar el producto'));
+    spyOn(window, 'fetch').and.returnValue(Promise.reject('Error al cargar el producto'));
 
     renderWithProviders();
 
     await waitFor(() => {
-      expect(screen.getByText(/Error al cargar el producto/i)).toBeInTheDocument();
+      expect(screen.getByText(/Error al cargar el producto/i)).toBeTruthy();
     });
   });
 
@@ -154,8 +154,8 @@ describe('Product Detail Page', () => {
       fireEvent.click(btnIncrementar);
     }
 
-    expect(screen.getByDisplayValue('10')).toBeInTheDocument();
-    expect(btnIncrementar).toBeDisabled();
+    expect(screen.getByDisplayValue('10')).toBeTruthy();
+    expect(btnIncrementar.disabled).toBe(true);
   });
 
   it('debe deshabilitar el botón de decrementar cantidad al alcanzar el límite mínimo', async () => {
@@ -166,8 +166,8 @@ describe('Product Detail Page', () => {
     // Intentar decrementar por debajo del límite
     fireEvent.click(btnDecrementar);
 
-    expect(screen.getByDisplayValue('1')).toBeInTheDocument();
-    expect(btnDecrementar).toBeDisabled();
+    expect(screen.getByDisplayValue('1')).toBeTruthy();
+    expect(btnDecrementar.disabled).toBe(true);
   });
 
   it('debe mostrar un error si falta la calificación en la reseña', async () => {
@@ -180,7 +180,7 @@ describe('Product Detail Page', () => {
     fireEvent.click(btnPublicarResena);
 
     await waitFor(() => {
-      expect(screen.getByText(/Por favor completa todos los campos de la reseña/i)).toBeInTheDocument();
+      expect(screen.getByText(/Por favor completa todos los campos de la reseña/i)).toBeTruthy();
     });
   });
 
@@ -194,7 +194,7 @@ describe('Product Detail Page', () => {
     fireEvent.click(btnPublicarResena);
 
     await waitFor(() => {
-      expect(screen.getByText(/Por favor completa todos los campos de la reseña/i)).toBeInTheDocument();
+      expect(screen.getByText(/Por favor completa todos los campos de la reseña/i)).toBeTruthy();
     });
   });
 });

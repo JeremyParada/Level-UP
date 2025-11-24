@@ -39,40 +39,40 @@ describe('Reviews Page', () => {
 
   it('debe renderizar el título de la página', () => {
     renderWithProviders();
-    expect(screen.getByText(/Reseñas de Productos/i)).toBeInTheDocument();
+    expect(screen.getByText(/Reseñas de Productos/i)).toBeTruthy();
   });
 
   it('debe cargar y mostrar las reseñas guardadas', () => {
     renderWithProviders();
-    expect(screen.getByText(/Producto 1/i)).toBeInTheDocument();
-    expect(screen.getByText(/Excelente producto/i)).toBeInTheDocument();
+    expect(screen.getByText(/Producto 1/i)).toBeTruthy();
+    expect(screen.getByText(/Excelente producto/i)).toBeTruthy();
   });
 
   it('debe mostrar un mensaje si no hay reseñas', () => {
     localStorage.setItem('resenas', JSON.stringify([])); // Sin reseñas
     renderWithProviders();
-    expect(screen.getByText(/Aún no hay reseñas/i)).toBeInTheDocument();
+    expect(screen.getByText(/Aún no hay reseñas/i)).toBeTruthy();
   });
 
   it('debe filtrar reseñas por producto', () => {
     renderWithProviders();
     const inputFiltroProducto = screen.getByPlaceholderText(/Buscar por producto/i);
     fireEvent.change(inputFiltroProducto, { target: { value: 'Producto 1' } });
-    expect(screen.getByText(/Producto 1/i)).toBeInTheDocument();
+    expect(screen.getByText(/Producto 1/i)).toBeTruthy();
   });
 
   it('debe filtrar reseñas por calificación', () => {
     renderWithProviders();
     const selectFiltroCalificacion = screen.getByDisplayValue(/Todas las calificaciones/i);
     fireEvent.change(selectFiltroCalificacion, { target: { value: '5' } });
-    expect(screen.getByText(/Producto 1/i)).toBeInTheDocument();
+    expect(screen.getByText(/Producto 1/i)).toBeTruthy();
   });
 
   it('debe mostrar un mensaje si no hay reseñas que coincidan con los filtros', () => {
     renderWithProviders();
     const inputFiltroProducto = screen.getByPlaceholderText(/Buscar por producto/i);
     fireEvent.change(inputFiltroProducto, { target: { value: 'Producto Inexistente' } });
-    expect(screen.getByText(/No se encontraron reseñas con esos filtros/i)).toBeInTheDocument();
+    expect(screen.getByText(/No se encontraron reseñas con esos filtros/i)).toBeTruthy();
   });
 
   it('debe manejar el envío de una reseña válida', async () => {
@@ -87,7 +87,7 @@ describe('Reviews Page', () => {
     fireEvent.click(btnPublicarResena);
 
     await waitFor(() => {
-      expect(screen.getByText(/¡Reseña publicada exitosamente!/i)).toBeInTheDocument();
+      expect(screen.getByText(/¡Reseña publicada exitosamente!/i)).toBeTruthy();
     });
   });
 
@@ -98,7 +98,7 @@ describe('Reviews Page', () => {
     fireEvent.click(btnPublicarResena);
 
     await waitFor(() => {
-      expect(screen.getByText(/Por favor completa todos los campos/i)).toBeInTheDocument();
+      expect(screen.getByText(/Por favor completa todos los campos/i)).toBeTruthy();
     });
   });
 });

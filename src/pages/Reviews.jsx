@@ -29,7 +29,13 @@ const Reviews = () => {
     try {
       const response = await fetch(`${API_URL}/productos`);
       const data = await response.json();
-      setProductos(data);
+      // Mapear al formato esperado por el frontend
+      const productosMapeados = data.map(p => ({
+        codigo: p.codigoProducto || p.codigo,
+        nombre: p.nombreProducto || p.nombre,
+        imagen: p.imagen,
+      }));
+      setProductos(productosMapeados);
     } catch (err) {
       console.error('Error cargando productos:', err);
     }

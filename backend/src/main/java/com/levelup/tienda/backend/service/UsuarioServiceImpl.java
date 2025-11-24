@@ -2,6 +2,7 @@ package com.levelup.tienda.backend.service;
 
 import java.text.SimpleDateFormat;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired; // Asegúrate que esta importación exista
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.levelup.tienda.backend.dto.RegistroDTO;
-import com.levelup.tienda.backend.model.Cliente;
+import com.levelup.tienda.backend.model.ERole;
 import com.levelup.tienda.backend.model.Usuario;
 import com.levelup.tienda.backend.repository.DireccionRepository;
 import com.levelup.tienda.backend.repository.RoleRepository;
@@ -37,7 +38,7 @@ public class UsuarioServiceImpl implements UsuarioService {
             throw new RuntimeException("Error: El email ya está en uso!");
         }
 
-        Cliente usuario = new Cliente();
+        Usuario usuario = new Usuario();
         usuario.setEmail(registroDTO.getEmail());
         usuario.setPassword(passwordEncoder.encode(registroDTO.getPassword()));
         usuario.setNombre(registroDTO.getNombre());
@@ -60,7 +61,31 @@ public class UsuarioServiceImpl implements UsuarioService {
             throw new RuntimeException("La fecha de nacimiento es obligatoria");
         }
 
-        return usuarioRepository.save(usuario);
+        // ASIGNAR ROL AUTOMÁTICAMENTE
+        var rolUser = roleRepository.findByName(ERole.ROLE_USER)
+                .orElseThrow(() -> new RuntimeException("Error: Rol USER no existe en la base de datos"));
+        usuario.setRoles(Set.of(rolUser));
+
+        // Guardar usuario primero
+        Usuario usuarioGuardado = usuarioRepository.save(usuario);
+
+        // Crear y guardar dirección si se proporcionaron datos
+        if (registroDTO.getCalle() != null && !registroDTO.getCalle().isEmpty()) {
+            com.levelup.tienda.backend.model.Direccion direccion = new com.levelup.tienda.backend.model.Direccion();
+            direccion.setUsuario(usuarioGuardado);
+            direccion.setCalle(registroDTO.getCalle());
+            direccion.setNumero(registroDTO.getNumero());
+            direccion.setComuna(registroDTO.getComuna());
+            direccion.setCiudad(registroDTO.getCiudad());
+            direccion.setRegion(registroDTO.getRegion());
+            direccion.setCodigoPostal(registroDTO.getCodigoPostal());
+            direccion.setTipoDireccion("ENVIO");
+            direccion.setEsPrincipal(1); // Marcar como dirección principal
+
+            direccionRepository.save(direccion);
+        }
+
+        return usuarioGuardado;
     }
 
     @Override

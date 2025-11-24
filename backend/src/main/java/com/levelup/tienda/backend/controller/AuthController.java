@@ -1,6 +1,7 @@
 package com.levelup.tienda.backend.controller;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,23 +37,31 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginDTO loginRequest) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = tokenProvider.generateToken(authentication);
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.generateToken(authentication);
-        
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        Usuario usuario = usuarioService.findByEmail(userDetails.getUsername()).get();
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            Optional<Usuario> usuarioOpt = usuarioService.findByEmail(userDetails.getUsername());
+            if (usuarioOpt.isEmpty()) {
+                // Usuario no existe, responde 401
+                return ResponseEntity.status(401).body(Map.of("error", "Credenciales inválidas"));
+            }
+            Usuario usuario = usuarioOpt.get();
 
-        // Cambia getId() por getIdUsuario() y getUsername() por getNombre()
-        return ResponseEntity.ok(new JwtResponseDTO(
-            jwt,
-            usuario.getIdUsuario(),
-            usuario.getNombre(),
-            usuario.getEmail()
-        ));
+            return ResponseEntity.ok(new JwtResponseDTO(
+                jwt,
+                usuario.getIdUsuario(),
+                usuario.getNombre(),
+                usuario.getEmail()
+            ));
+        } catch (Exception e) {
+            // Cualquier excepción de autenticación responde 401
+            return ResponseEntity.status(401).body(Map.of("error", "Credenciales inválidas"));
+        }
     }
 
     @PostMapping("/register")

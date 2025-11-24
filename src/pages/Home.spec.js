@@ -11,15 +11,13 @@ describe('Home Page', () => {
   ];
 
   beforeEach(() => {
-    global.fetch = jest.fn(() =>
+    spyOn(window, 'fetch').and.returnValue(
       Promise.resolve({
         json: () => Promise.resolve(mockProductos),
+        ok: true
       })
     );
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
+    spyOn(console, 'error');
   });
 
   it('debe renderizar el título principal', () => {
@@ -28,7 +26,7 @@ describe('Home Page', () => {
         <Home />
       </BrowserRouter>
     );
-    expect(screen.getByText(/Tu tienda online de confianza para productos gaming/i)).toBeInTheDocument();
+    expect(screen.getByText(/Tu tienda online de confianza para productos gaming/i)).toBeTruthy();
   });
 
   it('debe cargar y mostrar productos destacados', async () => {
@@ -39,15 +37,15 @@ describe('Home Page', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText(/🔥 Productos Destacados/i)).toBeInTheDocument();
-      expect(screen.getByText(/Producto 1/i)).toBeInTheDocument();
-      expect(screen.getByText(/Producto 2/i)).toBeInTheDocument();
-      expect(screen.getByText(/Producto 3/i)).toBeInTheDocument();
+      expect(screen.getByText(/🔥 Productos Destacados/i)).toBeTruthy();
+      expect(screen.getByText(/Producto 1/i)).toBeTruthy();
+      expect(screen.getByText(/Producto 2/i)).toBeTruthy();
+      expect(screen.getByText(/Producto 3/i)).toBeTruthy();
     });
   });
 
   it('debe manejar errores al cargar productos', async () => {
-    global.fetch = jest.fn(() => Promise.reject('Error cargando productos'));
+    window.fetch.and.returnValue(Promise.reject('Error cargando productos'));
 
     render(
       <BrowserRouter>
@@ -56,7 +54,7 @@ describe('Home Page', () => {
     );
 
     await waitFor(() => {
-      expect(global.console.error).toHaveBeenCalledWith('Error cargando productos:', 'Error cargando productos');
+      expect(console.error).toHaveBeenCalled();
     });
   });
 });

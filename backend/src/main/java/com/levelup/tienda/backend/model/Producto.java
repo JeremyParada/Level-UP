@@ -38,4 +38,7 @@ public class Producto {
     @Column(name = "FECHA_CREACION")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
+
+    @Column(name = "IMAGEN")
+    private String imagen;
 }
