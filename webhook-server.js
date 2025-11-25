@@ -79,8 +79,8 @@ const server = http.createServer((req, res) => {
                     if (err) return;
 
                     ejecutarComando(
-                      'cd /home/ubuntu/Level-UP && npm cache clean --force && rm -rf node_modules/.cache',
-                      'Limpiar caché de npm',
+                      'cd /home/ubuntu/Level-UP && npm cache clean --force && sudo rm -rf build',
+                      'Limpiar caché y eliminar build anterior',
                       (err) => {
                         if (err) return;
 
