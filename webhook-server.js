@@ -79,12 +79,28 @@ const server = http.createServer((req, res) => {
                     if (err) return;
 
                     ejecutarComando(
-                      'cd /home/ubuntu/Level-UP && rm -rf build && npm install && npm run build',
-                      'Construir el frontend',
+                      'cd /home/ubuntu/Level-UP && npm cache clean --force && rm -rf node_modules/.cache',
+                      'Limpiar caché de npm',
                       (err) => {
                         if (err) return;
 
-                        console.log('🚀 Actualización completada con éxito.');
+                        ejecutarComando(
+                          'cd /home/ubuntu/Level-UP && npm run build',
+                          'Construir el frontend',
+                          (err) => {
+                            if (err) return;
+
+                            ejecutarComando(
+                              'sudo chown -R www-data:www-data /home/ubuntu/Level-UP/build && sudo systemctl restart nginx',
+                              'Actualizar permisos y reiniciar Nginx',
+                              (err) => {
+                                if (err) return;
+
+                                console.log('🚀 Actualización completada con éxito.');
+                              }
+                            );
+                          }
+                        );
                       }
                     );
                   }
