@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const { exec } = require('child_process');
 
 const PORT = 4000;
-const SECRET = 'Level-Up'; // Usa el mismo secreto que configuraste en GitHub
+const SECRET = 'Level-Up';
 
 // Verificar la firma del webhook
 function verifySignature(req, body) {
@@ -67,36 +67,44 @@ const server = http.createServer((req, res) => {
             if (err) return;
 
             ejecutarComando(
-              'cd /home/ubuntu/Level-UP/backend && npm install && pm2 restart "Level-UP Backend"',
-              'Actualizar dependencias y reiniciar el backend',
+              'cd /home/ubuntu/Level-UP/backend && chmod +x mvnw && ./mvnw clean package -DskipTests',
+              'Compilar el backend',
               (err) => {
                 if (err) return;
 
                 ejecutarComando(
-                  'cd /home/ubuntu/Level-UP && sudo chown -R ubuntu:ubuntu build',
-                  'Cambiar permisos del directorio build (ubuntu)',
+                  'pm2 restart "Level-UP Backend" || pm2 start "java -jar /home/ubuntu/Level-UP/backend/target/backend-0.0.1-SNAPSHOT.jar" --name "Level-UP Backend"',
+                  'Reiniciar el backend',
                   (err) => {
                     if (err) return;
 
                     ejecutarComando(
-                      'cd /home/ubuntu/Level-UP && npm install && npm run build',
-                      'Construir el proyecto',
+                      'cd /home/ubuntu/Level-UP && sudo chown -R ubuntu:ubuntu build',
+                      'Cambiar permisos del directorio build (ubuntu)',
                       (err) => {
                         if (err) return;
 
                         ejecutarComando(
-                          'cd /home/ubuntu/Level-UP && sudo chown -R www-data:www-data build',
-                          'Cambiar permisos del directorio build (www-data)',
+                          'cd /home/ubuntu/Level-UP && npm install && npm run build',
+                          'Construir el proyecto',
                           (err) => {
                             if (err) return;
 
                             ejecutarComando(
-                              'sudo systemctl restart nginx',
-                              'Reiniciar Nginx',
+                              'cd /home/ubuntu/Level-UP && sudo chown -R www-data:www-data build',
+                              'Cambiar permisos del directorio build (www-data)',
                               (err) => {
                                 if (err) return;
 
-                                console.log('🚀 Actualización completada con éxito.');
+                                ejecutarComando(
+                                  'sudo systemctl restart nginx',
+                                  'Reiniciar Nginx',
+                                  (err) => {
+                                    if (err) return;
+
+                                    console.log('🚀 Actualización completada con éxito.');
+                                  }
+                                );
                               }
                             );
                           }
