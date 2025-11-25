@@ -31,24 +31,6 @@ const Checkout = () => {
 
   // Función para normalizar las claves del objeto usuario
   const normalizarUsuario = (usuario) => {
-    return Object.keys(usuario).reduce((acc, key) => {
-      acc[key.toLowerCase()] = usuario[key];
-      return acc;
-    }, {});
-  };
-
-  const normalizarClaves = (obj) => {
-    return Object.keys(obj).reduce((acc, key) => {
-      // Convertir camelCase a snake_case
-      const snakeKey = key.replace(/([A-Z])/g, '_$1').toLowerCase();
-      acc[snakeKey] = obj[key];
-      return acc;
-    }, {});
-  };
-
-  // Cargar dirección principal del usuario
-  useEffect(() => {
-    const usuario = JSON.parse(localStorage.getItem('usuario'));
     if (!usuario) {
       error('Debes iniciar sesión para continuar.');
       navigate('/login');
@@ -66,7 +48,7 @@ const Checkout = () => {
     const cargarDireccion = async () => {
       try {
         const response = await fetchWithAuth(`/v1/direcciones/usuario/${usuarioNormalizado.id}`);
-        const direcciones = await response.json();
+        const direcciones = response;
 
         if (!Array.isArray(direcciones)) {
           throw new Error('La respuesta del servidor no es válida.');
