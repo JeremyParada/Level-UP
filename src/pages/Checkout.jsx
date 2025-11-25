@@ -39,7 +39,9 @@ const Checkout = () => {
 
   const normalizarClaves = (obj) => {
     return Object.keys(obj).reduce((acc, key) => {
-      acc[key.toLowerCase()] = obj[key];
+      // Convertir camelCase a snake_case
+      const snakeKey = key.replace(/([A-Z])/g, '_$1').toLowerCase();
+      acc[snakeKey] = obj[key];
       return acc;
     }, {});
   };
@@ -192,9 +194,9 @@ const Checkout = () => {
       <div className="card card-formulario rounded-4 p-4">
         <div className="mb-3">
           <label htmlFor="direccion" className="form-label">Dirección de Envío</label>
-          <select 
-            className="form-select" 
-            id="direccion" 
+          <select
+            className="form-select"
+            id="direccion"
             value={direccionSeleccionada}
             onChange={(e) => {
               const direccionId = e.target.value;
@@ -212,7 +214,7 @@ const Checkout = () => {
               </option>
             ))}
           </select>
-          <button 
+          <button
             className="btn btn-outline-primary mt-3"
             onClick={() => setMostrarFormularioDireccion(true)}
           >
@@ -222,9 +224,9 @@ const Checkout = () => {
 
         <div className="mb-3">
           <label htmlFor="metodoPago" className="form-label">Método de Pago</label>
-          <select 
-            className="form-select" 
-            id="metodoPago" 
+          <select
+            className="form-select"
+            id="metodoPago"
             value={metodoPago}
             onChange={(e) => setMetodoPago(e.target.value)}
           >
@@ -234,8 +236,8 @@ const Checkout = () => {
           </select>
         </div>
 
-        <button 
-          className="btn btn-primary w-100" 
+        <button
+          className="btn btn-primary w-100"
           onClick={handleFinalizarCompra}
           disabled={procesando}
         >
@@ -256,9 +258,9 @@ const Checkout = () => {
         <Modal
           titulo="Añadir Nueva Dirección"
           mensaje={
-            <DireccionForm 
-              formData={nuevaDireccion} 
-              handleChange={handleChangeDireccion} 
+            <DireccionForm
+              formData={nuevaDireccion}
+              handleChange={handleChangeDireccion}
             />
           }
           onConfirmar={handleGuardarDireccion}

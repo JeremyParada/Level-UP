@@ -79,36 +79,12 @@ const server = http.createServer((req, res) => {
                     if (err) return;
 
                     ejecutarComando(
-                      'cd /home/ubuntu/Level-UP && sudo chown -R ubuntu:ubuntu build',
-                      'Cambiar permisos del directorio build (ubuntu)',
+                      'cd /home/ubuntu/Level-UP && rm -rf build && npm install && npm run build',
+                      'Construir el frontend',
                       (err) => {
                         if (err) return;
 
-                        ejecutarComando(
-                          'cd /home/ubuntu/Level-UP && npm install && npm run build',
-                          'Construir el proyecto',
-                          (err) => {
-                            if (err) return;
-
-                            ejecutarComando(
-                              'cd /home/ubuntu/Level-UP && sudo chown -R www-data:www-data build',
-                              'Cambiar permisos del directorio build (www-data)',
-                              (err) => {
-                                if (err) return;
-
-                                ejecutarComando(
-                                  'sudo systemctl restart nginx',
-                                  'Reiniciar Nginx',
-                                  (err) => {
-                                    if (err) return;
-
-                                    console.log('🚀 Actualización completada con éxito.');
-                                  }
-                                );
-                              }
-                            );
-                          }
-                        );
+                        console.log('🚀 Actualización completada con éxito.');
                       }
                     );
                   }
