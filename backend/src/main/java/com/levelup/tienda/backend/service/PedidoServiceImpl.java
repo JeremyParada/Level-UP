@@ -43,7 +43,7 @@ public class PedidoServiceImpl implements PedidoService {
         Usuario usuario = usuarioRepository.findById(request.getIdUsuario())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        Direccion direccion = direccionRepository.findById(request.getIdDireccionEnvio())
+        Direccion direccion = direccionRepository.findById(request.getIdDireccion())
                 .orElseThrow(() -> new RuntimeException("Dirección no encontrada"));
 
         Pedido pedido = new Pedido();
