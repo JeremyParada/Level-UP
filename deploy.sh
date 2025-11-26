@@ -70,6 +70,7 @@ if git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD | grep -q "package
 fi
 
 # Build de producción
+rm -rf $PROJECT_DIR/build
 log "Generando build de producción..."
 npm run build >> $LOG_FILE 2>&1
 if [ $? -ne 0 ]; then
