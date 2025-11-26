@@ -14,9 +14,11 @@ import com.levelup.tienda.backend.model.Pedido;
 import com.levelup.tienda.backend.model.DetallePedido;
 import com.levelup.tienda.backend.model.Producto;
 import com.levelup.tienda.backend.model.Usuario;
+import com.levelup.tienda.backend.model.Direccion;
 import com.levelup.tienda.backend.repository.PedidoRepository;
 import com.levelup.tienda.backend.repository.ProductoRepository;
 import com.levelup.tienda.backend.repository.UsuarioRepository;
+import com.levelup.tienda.backend.repository.DireccionRepository;
 import com.levelup.tienda.backend.dto.PedidoRequest;
 import com.levelup.tienda.backend.dto.ProductoPedidoRequest;
 
@@ -32,14 +34,21 @@ public class PedidoServiceImpl implements PedidoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private DireccionRepository direccionRepository;
+
     @Override
     @Transactional
     public Pedido crearPedido(@NonNull PedidoRequest request) {
         Usuario usuario = usuarioRepository.findById(request.getIdUsuario())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
+        Direccion direccion = direccionRepository.findById(request.getIdDireccionEnvio())
+                .orElseThrow(() -> new RuntimeException("Dirección no encontrada"));
+
         Pedido pedido = new Pedido();
         pedido.setUsuario(usuario);
+        pedido.setDireccionEnvio(direccion);
         pedido.setFechaPedido(new Date());
         pedido.setEstadoPedido("PENDIENTE");
         pedido.setMetodoPago(request.getMetodoPago());
