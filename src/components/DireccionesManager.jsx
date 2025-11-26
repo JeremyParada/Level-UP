@@ -174,7 +174,7 @@ const DireccionesManager = ({ idUsuario }) => {
                 <div className="row">
                     {direcciones.map((direccion) => (
                         <div key={direccion.idDireccion} className="col-md-6 mb-3">
-                            <div className="card h-100 border">
+                            <div className="card card-formulario h-100">
                                 <div className="card-body">
                                     <div className="d-flex justify-content-between align-items-start mb-2">
                                         <h6 className="color-acento-azul mb-0">
@@ -216,8 +216,8 @@ const DireccionesManager = ({ idUsuario }) => {
             )}
 
             {/* Modal para agregar/editar dirección */}
-            <Modal show={showModal} onHide={cerrarModal} centered>
-                <Modal.Header closeButton>
+            <Modal show={showModal} onHide={cerrarModal} centered contentClassName="card-formulario">
+                <Modal.Header closeButton className="border-secondary">
                     <Modal.Title>
                         {modoEdicion ? 'Editar Dirección' : 'Nueva Dirección'}
                     </Modal.Title>
@@ -248,7 +248,7 @@ const DireccionesManager = ({ idUsuario }) => {
                             <Button variant="secondary" onClick={cerrarModal}>
                                 Cancelar
                             </Button>
-                            <Button variant="primary" type="submit">
+                            <Button className="btn-registrarse" type="submit">
                                 {modoEdicion ? 'Actualizar' : 'Guardar'}
                             </Button>
                         </div>
