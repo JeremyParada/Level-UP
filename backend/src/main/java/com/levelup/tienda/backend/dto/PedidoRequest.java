@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class PedidoRequest {
     private Long idUsuario;
-    private Long idDireccion;
+    private Long idDireccion; // Nuevo campo
     private String metodoPago;
     private List<ProductoPedidoRequest> productos;
 }
