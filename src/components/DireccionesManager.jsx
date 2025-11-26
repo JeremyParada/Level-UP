@@ -28,17 +28,12 @@ const DireccionesManager = ({ idUsuario }) => {
         try {
             setCargando(true);
             console.log('🔍 Cargando direcciones para usuario:', idUsuario);
-            const response = await fetchWithAuth(`/v1/direcciones/usuario/${idUsuario}`);
-            console.log('📡 Respuesta del servidor:', response.status, response.ok);
-            if (response.ok) {
-                const data = await response.json();
-                console.log('✅ Direcciones cargadas:', data);
-                setDirecciones(data);
-            } else {
-                console.error('❌ Error en la respuesta:', response.status);
-            }
+            const data = await fetchWithAuth(`/v1/direcciones/usuario/${idUsuario}`);
+            console.log('✅ Direcciones cargadas:', data);
+            setDirecciones(data || []);
         } catch (err) {
             console.error('❌ Error al cargar direcciones:', err);
+            setDirecciones([]);
         } finally {
             setCargando(false);
         }
@@ -109,30 +104,25 @@ const DireccionesManager = ({ idUsuario }) => {
                 usuario: { idUsuario: idUsuario }
             };
 
-            let response;
             if (modoEdicion && direccionActual) {
                 // Actualizar dirección existente
-                response = await fetchWithAuth(`/v1/direcciones/${direccionActual.idDireccion}`, {
+                await fetchWithAuth(`/v1/direcciones/${direccionActual.idDireccion}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData)
                 });
             } else {
                 // Crear nueva dirección
-                response = await fetchWithAuth('/v1/direcciones', {
+                await fetchWithAuth('/v1/direcciones', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
             }
 
-            if (response.ok) {
-                exito(modoEdicion ? '✅ Dirección actualizada' : '✅ Dirección agregada');
-                cerrarModal();
-                cargarDirecciones();
-            } else {
-                notifError('❌ Error al guardar la dirección');
-            }
+            exito(modoEdicion ? '✅ Dirección actualizada' : '✅ Dirección agregada');
+            cerrarModal();
+            cargarDirecciones();
         } catch (err) {
             console.error('Error al guardar dirección:', err);
             notifError('❌ Error al guardar la dirección');
@@ -145,16 +135,11 @@ const DireccionesManager = ({ idUsuario }) => {
         }
 
         try {
-            const response = await fetchWithAuth(`/v1/direcciones/${idDireccion}`, {
+            await fetchWithAuth(`/v1/direcciones/${idDireccion}`, {
                 method: 'DELETE'
             });
-
-            if (response.ok) {
-                exito('✅ Dirección eliminada');
-                cargarDirecciones();
-            } else {
-                notifError('❌ Error al eliminar la dirección');
-            }
+            exito('✅ Dirección eliminada');
+            cargarDirecciones();
         } catch (err) {
             console.error('Error al eliminar dirección:', err);
             notifError('❌ Error al eliminar la dirección');
