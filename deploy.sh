@@ -5,9 +5,9 @@
 # ============================================
 
 # Configuración
-PROJECT_DIR=~/levelup-gamer/Level-UP
-LOG_FILE=~/levelup-gamer/deploy.log
-BACKEND_JAR=backend/target/backend-0.0.1-SNAPSHOT.jar
+PROJECT_DIR=~/Level-UP
+LOG_FILE=~/Level-UP/deploy.log
+BACKEND_JAR=~/Level-UP/backend/target/backend-0.0.1-SNAPSHOT.jar
 
 # Función para logging
 log() {
@@ -97,16 +97,6 @@ fi
 # Guardar configuración PM2
 pm2 save
 
-<<<<<<< HEAD
-echo "===== Deploy completado: $(date) =====" >> $LOG_FILE
-echo "Deployment successful!"
-```
-
-```bash
-# Dar permisos
-chmod +x ~/Level-UP/deploy.sh
-```
-=======
 # Mostrar estado
 log "Estado de los procesos:"
 pm2 status
@@ -121,4 +111,3 @@ echo "📱 Frontend: http://levelup-gamer.duckdns.org"
 echo "🔧 Backend API: http://levelup-gamer.duckdns.org:8080/api/v1"
 echo "📊 Logs: tail -f $LOG_FILE"
 echo ""
->>>>>>> e66794167bb093ee8d72e908f9e05b7dd29304a7
