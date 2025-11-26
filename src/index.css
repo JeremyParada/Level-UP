@@ -180,24 +180,6 @@ code {
 }
 
 .form-control,
-.form-select {
-    background-color: #2a2a2a !important;
-    border: 1px solid #555 !important;
-    color: #ffffff !important;
-}
-
-.form-control:focus,
-.form-select:focus {
-    background-color: #2a2a2a !important;
-    border-color: #1E90FF !important;
-    color: #ffffff !important;
-    box-shadow: 0 0 0 0.2rem rgba(30, 144, 255, 0.25) !important;
-}
-
-/* Badges */
-.badge {
-    color: #ffffff !important;
-}
 
 .badge.bg-secondary {
     background-color: #555 !important;
