@@ -3,19 +3,35 @@
 
 /* Importar tu CSS personalizado desde public */
 body {
-  margin: 0;
-  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #020710;
-  color: #D3D3D3;
+    margin: 0;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #020710;
+    color: #D3D3D3 !important;
+    /* Forzar color base claro */
+}
+
+/* Forzar color de texto en párrafos y headings */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span,
+div,
+label,
+small {
+    color: #D3D3D3;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+        monospace;
 }
 
 /* Copiar estilos críticos de style.css */
@@ -48,14 +64,15 @@ code {
 
 .texto-principal {
     font-family: 'Orbitron', sans-serif;
+    color: #ffffff !important;
 }
 
 .color-acento-azul {
-    color: #1E90FF;
+    color: #1E90FF !important;
 }
 
 .color-acento-verde {
-    color: #39FF14;
+    color: #39FF14 !important;
 }
 
 .fondo-catalogo {
@@ -89,20 +106,20 @@ code {
 }
 
 .card-producto .card-title {
-    color: #1e90ff;
+    color: #1e90ff !important;
 }
 
 .card-producto .card-text {
-    color: #ffffff;
+    color: #ffffff !important;
 }
 
 .card-producto .precio {
-    color: #39FF14;
+    color: #39FF14 !important;
     font-weight: 700;
 }
 
 .card-producto .codigo {
-    color: #ffffff;
+    color: #ffffff !important;
     font-weight: 700;
 }
 
@@ -131,7 +148,17 @@ code {
 .card-formulario {
     background-color: #1a1a1a;
     border: 1px solid #333;
-    color: #D3D3D3; /* Asegurar color de texto base */
+    color: #D3D3D3 !important;
+    /* Asegurar color de texto base */
+}
+
+/* Asegurar que el texto dentro de card-formulario sea visible */
+.card-formulario p,
+.card-formulario span,
+.card-formulario div,
+.card-formulario label,
+.card-formulario small {
+    color: #D3D3D3;
 }
 
 .btn-registrarse {
@@ -152,13 +179,15 @@ code {
     font-weight: 600;
 }
 
-.form-control, .form-select {
+.form-control,
+.form-select {
     background-color: #2a2a2a !important;
     border: 1px solid #555 !important;
     color: #ffffff !important;
 }
 
-.form-control:focus, .form-select:focus {
+.form-control:focus,
+.form-select:focus {
     background-color: #2a2a2a !important;
     border-color: #1E90FF !important;
     color: #ffffff !important;
@@ -174,9 +203,10 @@ code {
     background-color: #555 !important;
 }
 
-/* Override text-muted for dark theme */
+/* Override text-muted for dark theme - CRITICAL FIX */
 .text-muted {
-    color: #a0a0a0 !important; /* Gris más claro para mejor contraste en fondo oscuro */
+    color: #a0a0a0 !important;
+    /* Gris más claro para mejor contraste en fondo oscuro */
 }
 
 /* Notificaciones */
@@ -203,25 +233,25 @@ code {
 
 .notificacion-exito {
     background: linear-gradient(135deg, #39FF14, #28a745);
-    color: #000;
+    color: #000 !important;
     border-left: 4px solid #1e7e34;
 }
 
 .notificacion-error {
     background: linear-gradient(135deg, #dc3545, #c82333);
-    color: #fff;
+    color: #fff !important;
     border-left: 4px solid #721c24;
 }
 
 .notificacion-info {
     background: linear-gradient(135deg, #1E90FF, #0056b3);
-    color: #fff;
+    color: #fff !important;
     border-left: 4px solid #003d82;
 }
 
 .notificacion-advertencia {
     background: linear-gradient(135deg, #ffc107, #e0a800);
-    color: #000;
+    color: #000 !important;
     border-left: 4px solid #b08800;
 }
 
@@ -230,6 +260,7 @@ code {
         transform: translateX(100%);
         opacity: 0;
     }
+
     to {
         transform: translateX(0);
         opacity: 1;
@@ -242,7 +273,7 @@ code {
     top: -8px;
     right: -8px;
     background-color: #39FF14;
-    color: #000;
+    color: #000 !important;
     border-radius: 50%;
     width: 20px;
     height: 20px;
@@ -255,12 +286,21 @@ code {
 }
 
 @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .inputblanco::placeholder {
-  color: white;
-  opacity: 0.3; /* opcional, para que no se vea transparente */
+    color: white;
+    opacity: 0.3;
+    /* opcional, para que no se vea transparente */
 }
