@@ -65,11 +65,7 @@ const Profile = () => {
 
   const cargarDatosPerfil = async (idUsuario) => {
     try {
-      const response = await fetchWithAuth(`/v1/usuarios/me/${idUsuario}`);
-      if (!response.ok) {
-        throw new Error('No se pudo obtener el perfil');
-      }
-      const data = await response.json();
+      const data = await fetchWithAuth(`/v1/usuarios/me/${idUsuario}`);
 
       setPerfil((prev) => ({
         ...prev,
@@ -95,11 +91,7 @@ const Profile = () => {
 
   const cargarHistorialCompras = async (idUsuario) => {
     try {
-      const response = await fetchWithAuth(`/v1/pedidos/usuario/${idUsuario}`);
-      if (!response.ok) {
-        throw new Error('No se pudo obtener el historial de compras');
-      }
-      const data = await response.json();
+      const data = await fetchWithAuth(`/v1/pedidos/usuario/${idUsuario}`);
       setHistorialCompras(data || []);
     } catch (err) {
       console.error('Error al cargar historial de compras:', err);
@@ -172,15 +164,11 @@ const Profile = () => {
         fechaNacimiento: perfil.fechaNacimiento
       };
 
-      const response = await fetchWithAuth(`/v1/usuarios/me/${idUsuario}`, {
+      await fetchWithAuth(`/v1/usuarios/me/${idUsuario}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-
-      if (!response.ok) {
-        throw new Error('No se pudo actualizar el perfil');
-      }
 
       exito('✅ ¡Perfil actualizado exitosamente!');
     } catch (err) {
@@ -398,86 +386,89 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Panel lateral - Estadísticas */}
+          {/* Sidebar: Puntos y Descuentos */}
           <div className="col-lg-4">
-            {/* Sistema de puntos */}
-            <div className="card card-formulario rounded-4 p-4 mb-4">
-              <h4 className="color-acento-azul mb-3">🎮 LevelUp Points</h4>
-              <div className="text-center mb-3">
-                <h2 className="color-acento-verde mb-0">{perfil.puntos}</h2>
-                <small className="text-muted">puntos totales</small>
-              </div>
-
+            {/* Tarjeta de Puntos */}
+            <div className="card card-formulario rounded-4 p-4 mb-4 text-center">
               <div className="mb-3">
-                <div className="d-flex justify-content-between mb-1">
-                  <small>Nivel {calcularNivel()}</small>
-                  <small>Nivel {calcularNivel() + 1}</small>
-                </div>
-                <div className="progress" style={{ height: '20px' }}>
-                  <div
-                    className="progress-bar bg-success"
-                    role="progressbar"
-                    style={{ width: `${porcentajeProgreso()}%` }}
-                    aria-valuenow={porcentajeProgreso()}
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                  >
-                    {Math.round(porcentajeProgreso())}%
-                  </div>
-                </div>
-                <small className="text-muted">
-                  {puntosParaSiguienteNivel()} puntos para nivel {calcularNivel() + 1}
-                </small>
+                <span className="display-4">🏆</span>
+              </div>
+              <h3 className="texto-principal color-acento-verde mb-2">
+                {perfil.puntos || 0} Puntos
+              </h3>
+              <p className="text-muted mb-3">Nivel {calcularNivel()}</p>
+
+              <div className="progress mb-3" style={{ height: '10px', backgroundColor: '#333' }}>
+                <div
+                  className="progress-bar bg-success"
+                  role="progressbar"
+                  style={{ width: `${porcentajeProgreso()}%` }}
+                  aria-valuenow={porcentajeProgreso()}
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
               </div>
 
-              <div className="alert alert-info mb-0">
-                <small>
-                  <strong>¿Cómo ganar puntos?</strong><br />
-                  • Compras: 10 puntos por cada $1.000<br />
-                  • Referidos: 100 puntos<br />
-                  • Reseñas: 25 puntos
-                </small>
+              <small className="text-muted d-block mb-4">
+                Faltan {puntosParaSiguienteNivel()} puntos para el siguiente nivel
+              </small>
+
+              <div className="d-grid">
+                <Link to="/catalogo" className="btn btn-outline-light btn-sm">
+                  Canjear Puntos
+                </Link>
               </div>
             </div>
 
-            {/* Descuentos activos */}
+            {/* Código de Referido */}
             <div className="card card-formulario rounded-4 p-4 mb-4">
-              <h4 className="color-acento-azul mb-3">🎫 Descuentos Activos</h4>
-              <div id="descuentosActivos">
-                {descuentosActivos.length === 0 ? (
-                  <p className="text-muted mb-0">
-                    No tienes descuentos activos
-                  </p>
-                ) : (
-                  descuentosActivos.map((descuento, idx) => (
-                    <div key={idx} className="mb-3 p-2 border rounded">
-                      <h6 className="color-acento-verde mb-1">
-                        {descuento.titulo}
-                      </h6>
-                      <p className="small mb-1">{descuento.descripcion}</p>
-                      <code className="small">{descuento.codigo}</code>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-
-            {/* Código de referido */}
-            <div className="card card-formulario rounded-4 p-4">
-              <h4 className="texto-principal color-acento-azul mb-3">Mi Código de Referido</h4>
-              <div className="text-center">
-                <div className="badge bg-secondary fs-5 mb-2" id="codigoReferido">
-                  {perfil.codigoReferido}
-                </div>
-                <p className="small">Comparte este código y gana 50 puntos por cada nuevo usuario</p>
+              <h5 className="texto-principal color-acento-azul mb-3">
+                Tu Código de Referido
+              </h5>
+              <div className="input-group mb-2">
+                <input
+                  type="text"
+                  className="form-control text-center fw-bold"
+                  value={perfil.codigoReferido || 'Generando...'}
+                  readOnly
+                />
                 <button
-                  className="btn btn-outline-secondary btn-sm"
-                  onClick={copiarCodigoReferido}
+                  className="btn btn-outline-secondary"
                   type="button"
+                  onClick={copiarCodigoReferido}
                 >
-                  📋 Copiar
+                  📋
                 </button>
               </div>
+              <small className="text-muted">
+                Comparte este código y gana 50 puntos por cada amigo que se registre.
+              </small>
+            </div>
+
+            {/* Descuentos Activos */}
+            <div className="card card-formulario rounded-4 p-4">
+              <h5 className="texto-principal color-acento-azul mb-3">
+                Tus Beneficios
+              </h5>
+              {descuentosActivos.length === 0 ? (
+                <p className="text-muted small mb-0">
+                  Sube de nivel para desbloquear beneficios exclusivos.
+                </p>
+              ) : (
+                <div className="d-flex flex-column gap-3">
+                  {descuentosActivos.map((descuento, idx) => (
+                    <div key={idx} className="border border-secondary rounded p-3 bg-dark">
+                      <div className="d-flex justify-content-between align-items-center mb-2">
+                        <h6 className="mb-0 text-white">{descuento.titulo}</h6>
+                        <span className="badge bg-success">{descuento.codigo}</span>
+                      </div>
+                      <p className="small text-muted mb-0">
+                        {descuento.descripcion}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
