@@ -131,6 +131,7 @@ code {
 .card-formulario {
     background-color: #1a1a1a;
     border: 1px solid #333;
+    color: #D3D3D3; /* Asegurar color de texto base */
 }
 
 .btn-registrarse {
@@ -171,6 +172,11 @@ code {
 
 .badge.bg-secondary {
     background-color: #555 !important;
+}
+
+/* Override text-muted for dark theme */
+.text-muted {
+    color: #a0a0a0 !important; /* Gris más claro para mejor contraste en fondo oscuro */
 }
 
 /* Notificaciones */
