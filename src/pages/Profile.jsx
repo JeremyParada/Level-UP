@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useNotification } from '../hooks/useNotification';
 import { AuthContext } from '../context/AuthContext';
 import fetchWithAuth from '../utils/api';
+import DireccionesManager from '../components/DireccionesManager';
 
 const Profile = () => {
   const { exito } = useNotification();
