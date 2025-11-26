@@ -28,4 +28,32 @@ public class DireccionController {
         Direccion nueva = direccionRepository.save(direccion);
         return ResponseEntity.ok(nueva);
     }
+
+    // Actualizar una dirección existente
+    @PutMapping("/{id}")
+    public ResponseEntity<Direccion> updateDireccion(@PathVariable Long id, @RequestBody Direccion direccionDetails) {
+        return direccionRepository.findById(id)
+                .map(direccion -> {
+                    direccion.setCalle(direccionDetails.getCalle());
+                    direccion.setNumero(direccionDetails.getNumero());
+                    direccion.setComuna(direccionDetails.getComuna());
+                    direccion.setCiudad(direccionDetails.getCiudad());
+                    direccion.setRegion(direccionDetails.getRegion());
+                    direccion.setCodigoPostal(direccionDetails.getCodigoPostal());
+                    Direccion updated = direccionRepository.save(direccion);
+                    return ResponseEntity.ok(updated);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // Eliminar una dirección
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDireccion(@PathVariable Long id) {
+        return direccionRepository.findById(id)
+                .map(direccion -> {
+                    direccionRepository.delete(direccion);
+                    return ResponseEntity.ok().<Void>build();
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
