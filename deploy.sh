@@ -82,7 +82,7 @@ fi
 # Build de producción
 rm -rf $PROJECT_DIR/build
 log "Generando build de producción..."
-NODE_OPTIONS="--max_old_space_size=256" npm run build >> $LOG_FILE 2>&1
+NODE_OPTIONS="--max_old_space_size=1024" npm run build >> $LOG_FILE 2>&1
 if [ $? -ne 0 ]; then
     log "ERROR: Build del frontend falló"
     exit 1
