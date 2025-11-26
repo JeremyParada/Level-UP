@@ -1,5 +1,6 @@
 package com.levelup.tienda.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,6 +15,7 @@ public class Direccion {
 
     @ManyToOne
     @JoinColumn(name = "ID_USUARIO")
+    @JsonIgnore
     private Usuario usuario;
 
     @Column(name = "TIPO_DIRECCION")
