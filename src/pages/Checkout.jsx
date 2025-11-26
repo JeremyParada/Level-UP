@@ -29,33 +29,44 @@ const Checkout = () => {
   const [direcciones, setDirecciones] = useState([]); // Lista de direcciones del usuario
   const [direccionSeleccionada, setDireccionSeleccionada] = useState(''); // Dirección seleccionada
 
-  // Función para normalizar las claves del objeto usuario
+  // Normaliza claves del usuario
   const normalizarUsuario = (usuario) => {
-    if (!usuario) {
-      error('Debes iniciar sesión para continuar.');
-      navigate('/login');
-      return;
+    if (!usuario) return null;
+    const nuevo = {};
+    for (const key in usuario) {
+      const k = key.replace(/([A-Z])/g, '_$1').toLowerCase();
+      nuevo[k] = usuario[key];
     }
+    return nuevo;
+  };
 
-    const usuarioNormalizado = normalizarUsuario(usuario);
-
-    if (!usuarioNormalizado.id) {
-      error('Debes iniciar sesión para continuar.');
-      navigate('/login');
-      return;
+  // Normaliza claves de direcciones
+  const normalizarClaves = (obj) => {
+    if (!obj || typeof obj !== 'object') return obj;
+    const nuevo = {};
+    for (const key in obj) {
+      const k = key.replace(/([A-Z])/g, '_$1').toLowerCase();
+      nuevo[k] = typeof obj[key] === 'object' && obj[key] !== null
+        ? normalizarClaves(obj[key])
+        : obj[key];
     }
+    return nuevo;
+  };
 
+  useEffect(() => {
     const cargarDireccion = async () => {
       try {
         const usuario = JSON.parse(localStorage.getItem('usuario'));
         const usuarioNormalizado = normalizarUsuario(usuario);
+        if (!usuarioNormalizado || !usuarioNormalizado.id) {
+          error('Debes iniciar sesión para continuar.');
+          navigate('/login');
+          return;
+        }
         const direcciones = await fetchWithAuth(`/v1/direcciones/usuario/${usuarioNormalizado.id}`);
         if (!Array.isArray(direcciones)) throw new Error('La respuesta del servidor no es válida.');
-
-        // Normaliza las claves
         const direccionesNormalizadas = direcciones.map(normalizarClaves);
         setDirecciones(direccionesNormalizadas);
-
         const direccionPrincipal = direccionesNormalizadas.find(d => d.es_principal === 1);
         if (direccionPrincipal) {
           setDireccionSeleccionada(direccionPrincipal.id_direccion);
@@ -162,19 +173,6 @@ const Checkout = () => {
       console.error('Error al guardar dirección:', err);
       error('Error al guardar la dirección.');
     }
-  };
-
-  const normalizarClaves = (obj) => {
-    if (!obj || typeof obj !== 'object') return obj;
-    const nuevo = {};
-    for (const key in obj) {
-      // Convierte camelCase a snake_case
-      const k = key.replace(/([A-Z])/g, '_$1').toLowerCase();
-      nuevo[k] = typeof obj[key] === 'object' && obj[key] !== null
-        ? normalizarClaves(obj[key])
-        : obj[key];
-    }
-    return nuevo;
   };
 
   return (
