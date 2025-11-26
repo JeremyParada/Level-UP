@@ -6,7 +6,9 @@ import java.util.Optional;
 import com.levelup.tienda.backend.model.Pedido;
 
 public interface PedidoService {
-    Pedido crearPedido(Pedido pedido);
+    Pedido crearPedido(com.levelup.tienda.backend.dto.PedidoRequest request);
+
     Optional<Pedido> getPedidoById(Long id);
+
     List<Pedido> getPedidosByUsuarioId(Long usuarioId);
-};
+}
