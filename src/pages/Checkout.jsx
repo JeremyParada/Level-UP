@@ -47,16 +47,13 @@ const Checkout = () => {
 
     const cargarDireccion = async () => {
       try {
-        const response = await fetchWithAuth(`/v1/direcciones/usuario/${usuarioNormalizado.id}`);
-        const direcciones = response;
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        const usuarioNormalizado = normalizarUsuario(usuario);
+        const direcciones = await fetchWithAuth(`/v1/direcciones/usuario/${usuarioNormalizado.id}`);
+        if (!Array.isArray(direcciones)) throw new Error('La respuesta del servidor no es válida.');
 
-        if (!Array.isArray(direcciones)) {
-          throw new Error('La respuesta del servidor no es válida.');
-        }
-
-        // Normalizar las claves de cada dirección
+        // Normaliza las claves
         const direccionesNormalizadas = direcciones.map(normalizarClaves);
-
         setDirecciones(direccionesNormalizadas);
 
         const direccionPrincipal = direccionesNormalizadas.find(d => d.es_principal === 1);
@@ -71,7 +68,6 @@ const Checkout = () => {
         error('Error al cargar dirección. Intenta nuevamente.');
       }
     };
-
     cargarDireccion();
   }, [navigate, error]);
 
@@ -166,6 +162,19 @@ const Checkout = () => {
       console.error('Error al guardar dirección:', err);
       error('Error al guardar la dirección.');
     }
+  };
+
+  const normalizarClaves = (obj) => {
+    if (!obj || typeof obj !== 'object') return obj;
+    const nuevo = {};
+    for (const key in obj) {
+      // Convierte camelCase a snake_case
+      const k = key.replace(/([A-Z])/g, '_$1').toLowerCase();
+      nuevo[k] = typeof obj[key] === 'object' && obj[key] !== null
+        ? normalizarClaves(obj[key])
+        : obj[key];
+    }
+    return nuevo;
   };
 
   return (
