@@ -24,7 +24,7 @@ const Community = () => {
         fecha: "15 de Enero, 2025",
         ubicacion: "Santiago, Centro de Convenciones",
         descripcion: "El torneo más grande del año con premios de $2.000.000 CLP",
-        imagen: "/assets/img/evento-lol.jpg",
+        imagen: "/assets/img/evento-lol.png",
         puntos: 200,
         estado: "Inscripciones Abiertas"
       },
@@ -34,7 +34,7 @@ const Community = () => {
         fecha: "22 de Enero, 2025",
         ubicacion: "Valparaíso, Mall Marina",
         descripcion: "Exhibición de los últimos productos gaming y demos exclusivos",
-        imagen: "/assets/img/gaming-expo.jpg",
+        imagen: "/assets/img/gaming-expo.png",
         puntos: 150,
         estado: "Próximamente"
       },
@@ -44,7 +44,7 @@ const Community = () => {
         fecha: "5 de Febrero, 2025",
         ubicacion: "Concepción, Universidad del Bío-Bío",
         descripcion: "Competencia universitaria con equipos de todo el sur de Chile",
-        imagen: "/assets/img/evento-cs2.jpg",
+        imagen: "/assets/img/evento-cs2.png",
         puntos: 180,
         estado: "Inscripciones Abiertas"
       }
@@ -131,13 +131,13 @@ const Community = () => {
             {eventos.map(evento => (
               <div key={evento.id} className="col-lg-4 mb-4">
                 <div className="card card-producto h-100">
-                  <img 
-                    src={evento.imagen} 
-                    className="card-img-top" 
+                  <img
+                    src={evento.imagen}
+                    className="card-img-top"
                     alt={evento.titulo}
                     style={{ height: '200px', objectFit: 'cover' }}
                     onError={(e) => {
-                      e.target.src = '/assets/img/default-event.jpg';
+                      e.target.src = '/assets/img/default-event.png';
                     }}
                   />
                   <div className="card-body">
@@ -145,7 +145,7 @@ const Community = () => {
                     <h5 className="card-title color-acento-azul">{evento.titulo}</h5>
                     <p className="card-text">
                       <small className="text-muted">
-                        📅 {evento.fecha}<br/>
+                        📅 {evento.fecha}<br />
                         📍 {evento.ubicacion}
                       </small>
                     </p>
@@ -154,7 +154,7 @@ const Community = () => {
                       <span className="color-acento-verde">
                         +{evento.puntos} puntos
                       </span>
-                      <button 
+                      <button
                         className="btn btn-agregar-producto btn-sm"
                         onClick={() => handleInscribirse(evento.id)}
                       >
@@ -177,8 +177,8 @@ const Community = () => {
             <div className="row">
               <div className="col-lg-8">
                 <div className="ratio ratio-16x9">
-                  <iframe 
-                    src="https://www.google.com/maps/d/embed?mid=1example&hl=es"
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3329.292916891264!2d-70.65045068480095!3d-33.44373668077587!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662c5410425af2f%3A0x8f0e1d5262744d9a!2sSantiago%2C%20Regi%C3%B3n%20Metropolitana!5e0!3m2!1ses!2scl!4v1646165789123!5m2!1ses!2scl"
                     style={{ border: 0, borderRadius: '8px' }}
                     allowFullScreen
                     loading="lazy"
@@ -191,7 +191,7 @@ const Community = () => {
                 {eventos.slice(0, 3).map(evento => (
                   <div key={evento.id} className="border-bottom pb-2 mb-3">
                     <h6 className="color-acento-azul mb-1">{evento.titulo}</h6>
-                    <small className="text-muted">{evento.fecha}</small><br/>
+                    <small className="text-muted">{evento.fecha}</small><br />
                     <small className="color-acento-verde">+{evento.puntos} puntos LevelUp</small>
                   </div>
                 ))}
@@ -215,11 +215,11 @@ const Community = () => {
                     <p className="card-text">{articulo.resumen}</p>
                     <p className="card-text">
                       <small className="text-muted">
-                        Por: {articulo.autor}<br/>
+                        Por: {articulo.autor}<br />
                         {articulo.fecha}
                       </small>
                     </p>
-                    <button 
+                    <button
                       className="btn btn-outline-secondary btn-sm"
                       onClick={() => info('📖 Artículo próximamente disponible')}
                     >
@@ -242,14 +242,14 @@ const Community = () => {
               <div className="col-md-8">
                 <h5 className="color-acento-verde mb-2">¿Necesitas ayuda técnica?</h5>
                 <p className="mb-0">
-                  Nuestro equipo de soporte está listo para ayudarte con cualquier problema técnico, 
+                  Nuestro equipo de soporte está listo para ayudarte con cualquier problema técnico,
                   instalación de hardware o configuración de software.
                 </p>
               </div>
               <div className="col-md-4 text-center">
-                <a 
-                  href="https://wa.me/56912345678?text=Hola, necesito soporte técnico desde Level-UP Gamer" 
-                  target="_blank" 
+                <a
+                  href="https://wa.me/56912345678?text=Hola, necesito soporte técnico desde Level-UP Gamer"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-success btn-lg"
                 >
@@ -291,7 +291,7 @@ const Community = () => {
                           </td>
                           <td>
                             <strong className="color-acento-azul">{gamer.nombre}</strong>
-                            <br/>
+                            <br />
                             <small className="text-muted">{gamer.juego}</small>
                           </td>
                           <td>{gamer.nivel}</td>
