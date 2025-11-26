@@ -58,55 +58,12 @@ const server = http.createServer((req, res) => {
       const payload = JSON.parse(body);
       if (payload.ref === 'refs/heads/main') {
         console.log('🔄 Recibiendo cambios del repositorio...');
-
-        // Ejecutar los comandos uno por uno
         ejecutarComando(
-          'cd /home/ubuntu/Level-UP && git reset --hard && git pull origin main',
-          'Actualizar el repositorio',
+          '/home/ubuntu/Level-UP/deploy.sh',
+          'Despliegue automático',
           (err) => {
             if (err) return;
-
-            ejecutarComando(
-              'cd /home/ubuntu/Level-UP/backend && chmod +x mvnw && ./mvnw clean package -DskipTests',
-              'Compilar el backend',
-              (err) => {
-                if (err) return;
-
-                ejecutarComando(
-                  'pm2 restart "Level-UP Backend" || pm2 start "java -jar /home/ubuntu/Level-UP/backend/target/backend-0.0.1-SNAPSHOT.jar" --name "Level-UP Backend"',
-                  'Reiniciar el backend',
-                  (err) => {
-                    if (err) return;
-
-                    ejecutarComando(
-                      'cd /home/ubuntu/Level-UP && npm cache clean --force && sudo rm -rf build',
-                      'Limpiar caché y eliminar build anterior',
-                      (err) => {
-                        if (err) return;
-
-                        ejecutarComando(
-                          'cd /home/ubuntu/Level-UP && npm run build',
-                          'Construir el frontend',
-                          (err) => {
-                            if (err) return;
-
-                            ejecutarComando(
-                              'sudo chown -R www-data:www-data /home/ubuntu/Level-UP/build && sudo systemctl restart nginx',
-                              'Actualizar permisos y reiniciar Nginx',
-                              (err) => {
-                                if (err) return;
-
-                                console.log('🚀 Actualización completada con éxito.');
-                              }
-                            );
-                          }
-                        );
-                      }
-                    );
-                  }
-                );
-              }
-            );
+            console.log('🚀 Despliegue completado con éxito.');
           }
         );
       }
