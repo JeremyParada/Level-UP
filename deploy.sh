@@ -69,6 +69,13 @@ if git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD | grep -q "package
     npm install >> $LOG_FILE 2>&1
 fi
 
+# Verificar y corregir permisos de la carpeta build si existe
+if [ -d "$PROJECT_DIR/build" ]; then
+    log "Corrigiendo permisos de la carpeta build..."
+    sudo chown -R ubuntu:ubuntu $PROJECT_DIR/build
+    sudo chmod -R 755 $PROJECT_DIR/build
+fi
+
 # Build de producción
 rm -rf $PROJECT_DIR/build
 log "Generando build de producción..."
