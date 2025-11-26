@@ -53,6 +53,9 @@ if [ $? -eq 0 ]; then
     log "Backend reiniciado"
 else
     # No existe, crear
+    # Eliminar cualquier proceso duplicado antes de crear el backend
+    pm2 delete levelup-backend > /dev/null 2>&1
+    pm2 delete "Level-UP Backend" > /dev/null 2>&1
     pm2 start "java -jar $BACKEND_JAR" --name levelup-backend
     log "Backend iniciado por primera vez"
 fi
