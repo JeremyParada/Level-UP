@@ -237,7 +237,7 @@ const Checkout = () => {
       {mostrarModal && (
         <Modal
           titulo="Confirmar Compra"
-          mensaje={`¿Confirmas tu compra por un total de ${carrito.reduce((sum, p) => sum + p.precio * p.cantidad, 0)}?`}
+          mensaje={`¿Confirmas tu compra por un total de $${carrito.reduce((sum, p) => sum + (Number(p.precio) || 0) * (Number(p.cantidad) || 1), 0).toLocaleString()}?`}
           onConfirmar={confirmarCompra}
           onCancelar={cancelarCompra}
         />

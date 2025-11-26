@@ -30,4 +30,21 @@ public class PedidoController {
         List<Pedido> pedidos = pedidoService.getPedidosByUsuarioId(id);
         return ResponseEntity.ok(pedidos);
     }
+
+    @PostMapping
+    public ResponseEntity<?> crearPedido(@RequestBody com.levelup.tienda.backend.dto.PedidoRequest request) {
+        try {
+            Pedido nuevoPedido = pedidoService.crearPedido(request);
+
+            // Puntos ya calculados en el servicio
+            int puntosGanados = (int) (nuevoPedido.getTotalNeto() / 1000);
+
+            return ResponseEntity.ok(java.util.Map.of(
+                    "mensaje", "Pedido creado exitosamente",
+                    "idPedido", nuevoPedido.getIdPedido(),
+                    "puntos", puntosGanados));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(java.util.Map.of("error", e.getMessage()));
+        }
+    }
 }

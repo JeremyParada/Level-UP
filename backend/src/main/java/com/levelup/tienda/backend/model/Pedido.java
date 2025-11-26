@@ -39,4 +39,7 @@ public class Pedido {
 
     @Column(name = "METODO_PAGO")
     private String metodoPago;
+
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private java.util.List<DetallePedido> detalles;
 }
