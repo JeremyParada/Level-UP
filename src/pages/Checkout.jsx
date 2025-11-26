@@ -96,20 +96,6 @@ const Checkout = () => {
     setProcesando(true);
 
     try {
-      const usuario = JSON.parse(localStorage.getItem('usuario'));
-      const usuarioNormalizado = normalizarUsuario(usuario);
-
-      const response = await fetchWithAuth(`/v1/pedidos`, {
-        method: 'POST',
-        body: JSON.stringify({
-          idUsuario: usuarioNormalizado.id,
-          productos: carrito,
-          metodoPago,
-        }),
-      });
-
-      const data = await response.json();
-
       if (response.ok) {
         // Actualizar los puntos en localStorage
         usuarioNormalizado.puntos += data.puntos;
