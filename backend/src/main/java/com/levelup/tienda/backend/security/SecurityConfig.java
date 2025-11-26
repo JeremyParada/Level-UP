@@ -63,6 +63,8 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        // Permitir acceso a Swagger UI y API Docs PRIMERO
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         // Permitir acceso público a productos y registro/login
                         .requestMatchers("/api/v1/productos").permitAll()
                         .requestMatchers("/api/v1/productos/**").permitAll()
@@ -72,10 +74,8 @@ public class SecurityConfig {
                         .requestMatchers("/assets/img/**").permitAll()
                         .requestMatchers("/public/assets/img/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        // Endpoints que requieren autenticación
                         .requestMatchers("/api/v1/direcciones/**").authenticated()
-                        // Permitir acceso a Swagger UI y API Docs
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html")
-                        .permitAll()
                         .anyRequest().authenticated());
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
