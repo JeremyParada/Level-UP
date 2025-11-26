@@ -249,9 +249,9 @@ const Profile = () => {
                 <div className="row">
                   <div className="col-md-6 mb-3">
                     <label htmlFor="nombre" className="form-label">Nombre</label>
-                    <input 
-                      type="text" 
-                      className="form-control" 
+                    <input
+                      type="text"
+                      className="form-control"
                       id="nombre"
                       placeholder="Tu nombre"
                       value={perfil.nombre}
@@ -261,9 +261,9 @@ const Profile = () => {
                   </div>
                   <div className="col-md-6 mb-3">
                     <label htmlFor="apellido" className="form-label">Apellido</label>
-                    <input 
-                      type="text" 
-                      className="form-control" 
+                    <input
+                      type="text"
+                      className="form-control"
                       id="apellido"
                       placeholder="Tu apellido"
                       value={perfil.apellido}
@@ -276,9 +276,9 @@ const Profile = () => {
                 <div className="row">
                   <div className="col-md-6 mb-3">
                     <label htmlFor="email" className="form-label">Email</label>
-                    <input 
-                      type="email" 
-                      className="form-control" 
+                    <input
+                      type="email"
+                      className="form-control"
                       id="email"
                       placeholder="correo@ejemplo.com"
                       value={perfil.email}
@@ -288,9 +288,9 @@ const Profile = () => {
                   </div>
                   <div className="col-md-6 mb-3">
                     <label htmlFor="gamerTag" className="form-label">Gamer Tag</label>
-                    <input 
-                      type="text" 
-                      className="form-control" 
+                    <input
+                      type="text"
+                      className="form-control"
                       id="gamerTag"
                       placeholder="Tu nombre gamer"
                       value={perfil.gamerTag}
@@ -304,9 +304,9 @@ const Profile = () => {
                     <label htmlFor="fechaNacimiento" className="form-label">
                       Fecha de Nacimiento
                     </label>
-                    <input 
-                      type="date" 
-                      className="form-control" 
+                    <input
+                      type="date"
+                      className="form-control"
                       id="fechaNacimiento"
                       value={perfil.fechaNacimiento}
                       onChange={handleChange}
@@ -314,9 +314,9 @@ const Profile = () => {
                   </div>
                   <div className="col-md-6 mb-3">
                     <label htmlFor="telefono" className="form-label">Teléfono</label>
-                    <input 
-                      type="tel" 
-                      className="form-control" 
+                    <input
+                      type="tel"
+                      className="form-control"
                       id="telefono"
                       placeholder="+56 9 1234 5678"
                       value={perfil.telefono}
@@ -329,9 +329,9 @@ const Profile = () => {
                   <label htmlFor="juegoFavorito" className="form-label">
                     Juego Favorito
                   </label>
-                  <input 
-                    type="text" 
-                    className="form-control" 
+                  <input
+                    type="text"
+                    className="form-control"
                     id="juegoFavorito"
                     placeholder="¿Cuál es tu juego favorito?"
                     value={perfil.juegoFavorito}
@@ -344,6 +344,9 @@ const Profile = () => {
                 </button>
               </form>
             </div>
+
+            {/* Gestión de Direcciones */}
+            <DireccionesManager idUsuario={getUserId()} />
 
             {/* Historial de compras */}
             <div className="card card-formulario rounded-4 p-4">
@@ -410,12 +413,12 @@ const Profile = () => {
                   <small>Nivel {calcularNivel() + 1}</small>
                 </div>
                 <div className="progress" style={{ height: '20px' }}>
-                  <div 
-                    className="progress-bar bg-success" 
+                  <div
+                    className="progress-bar bg-success"
                     role="progressbar"
                     style={{ width: `${porcentajeProgreso()}%` }}
                     aria-valuenow={porcentajeProgreso()}
-                    aria-valuemin="0" 
+                    aria-valuemin="0"
                     aria-valuemax="100"
                   >
                     {Math.round(porcentajeProgreso())}%
@@ -428,9 +431,9 @@ const Profile = () => {
 
               <div className="alert alert-info mb-0">
                 <small>
-                  <strong>¿Cómo ganar puntos?</strong><br/>
-                  • Compras: 10 puntos por cada $1.000<br/>
-                  • Referidos: 100 puntos<br/>
+                  <strong>¿Cómo ganar puntos?</strong><br />
+                  • Compras: 10 puntos por cada $1.000<br />
+                  • Referidos: 100 puntos<br />
                   • Reseñas: 25 puntos
                 </small>
               </div>
@@ -466,8 +469,8 @@ const Profile = () => {
                   {perfil.codigoReferido}
                 </div>
                 <p className="small">Comparte este código y gana 50 puntos por cada nuevo usuario</p>
-                <button 
-                  className="btn btn-outline-secondary btn-sm" 
+                <button
+                  className="btn btn-outline-secondary btn-sm"
                   onClick={copiarCodigoReferido}
                   type="button"
                 >

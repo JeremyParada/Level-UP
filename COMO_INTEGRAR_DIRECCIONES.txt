@@ -1,0 +1,32 @@
+// ============================================
+// PASO 1: Agregar import en la línea 5
+// ============================================
+// Después de esta línea:
+import fetchWithAuth from '../utils/api';
+
+// Agregar esta línea:
+import DireccionesManager from '../components/DireccionesManager';
+
+
+// ============================================
+// PASO 2: Agregar componente en la línea 348
+// ============================================
+// Busca esta sección (alrededor de la línea 346-348):
+
+            </div>
+
+            {/* Historial de compras */}
+
+// Y reemplázala con:
+
+            </div>
+
+            {/* Gestión de Direcciones */}
+            <DireccionesManager idUsuario={getUserId()} />
+
+            {/* Historial de compras */}
+
+
+// ============================================
+// ¡LISTO! Eso es todo lo que necesitas cambiar
+// ============================================
