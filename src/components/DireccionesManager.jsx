@@ -27,13 +27,18 @@ const DireccionesManager = ({ idUsuario }) => {
     const cargarDirecciones = async () => {
         try {
             setCargando(true);
+            console.log('🔍 Cargando direcciones para usuario:', idUsuario);
             const response = await fetchWithAuth(`/v1/direcciones/usuario/${idUsuario}`);
+            console.log('📡 Respuesta del servidor:', response.status, response.ok);
             if (response.ok) {
                 const data = await response.json();
+                console.log('✅ Direcciones cargadas:', data);
                 setDirecciones(data);
+            } else {
+                console.error('❌ Error en la respuesta:', response.status);
             }
         } catch (err) {
-            console.error('Error al cargar direcciones:', err);
+            console.error('❌ Error al cargar direcciones:', err);
         } finally {
             setCargando(false);
         }
@@ -41,8 +46,11 @@ const DireccionesManager = ({ idUsuario }) => {
 
     // Cargar direcciones al montar el componente
     React.useEffect(() => {
+        console.log('🚀 DireccionesManager montado con idUsuario:', idUsuario);
         if (idUsuario) {
             cargarDirecciones();
+        } else {
+            console.warn('⚠️ No hay idUsuario disponible');
         }
     }, [idUsuario]);
 
