@@ -31,25 +31,34 @@ public class PedidoServiceImpl implements PedidoService {
     @Autowired
     private ProductoRepository productoRepository;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
-    UsuarioRepository usuarioRepository;
-            
+    @Autowired
+    private DireccionRepository direccionRepository;
 
-    DireccionRepository direccionRepository;etionaledido crearPedido(@NonNull PedidoRequest request
+    @Override
+    @Transactional
+    public Pedido crearPedido(@NonNull PedidoRequest request) {
+        Usuario usuario = usuarioRepository.findById(request.getIdUsuario())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        .orElseThrow(() ->    D
+        Direccion direccion = direccionRepository.findById(request.getIdDireccion())
+                .orElseThrow(() -> new RuntimeException("Dirección no encontrada"));
 
-    Pedido pedido = new Pedido()pedido.setUsuario(usuario);
-                                                                                         // 
-    pedido.setDireccionEnvio(direccio
+        Pedido pedido = new Pedido();
+        pedido.setUsuario(usuario);
+        pedido.setDireccionEnvio(direccion);
+        pedido.setFechaPedido(new Date());
+        pedido.setEstadoPedido("PENDIENTE");
+        pedido.setMetodoPago(request.getMetodoPago());
 
-    pedido.setEstadoPedido("PENDIENT
-    pedido.setMetodoPago(request.getMetodoPag
-    
-        <DetallePedido> detalles = n
-    dfor (ProductoPedidoRequest item 
+        List<DetallePedido> detalles = new ArrayList<>();
+        double total = 0;
 
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + item.getCodigo()));
+        for (ProductoPedidoRequest item : request.getProductos()) {
+            Producto producto = productoRepository.findByCodigoProducto(item.getCodigo())
+                    .orElseThrow(() -> new RuntimeException("Producto no encontrado: " + item.getCodigo()));
 
             DetallePedido detalle = new DetallePedido();
             detalle.setPedido(pedido);
