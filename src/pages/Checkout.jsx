@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import { useNotification } from '../hooks/useNotification';
 import Modal from '../components/Modal';
-import DireccionForm from '../components/DireccionForm'; // Asegúrate de importar el componente
+import DireccionForm from '../components/DireccionForm';
 import fetchWithAuth from '../utils/api';
 
 const Checkout = () => {
@@ -26,10 +26,9 @@ const Checkout = () => {
     codigoPostal: ''
   });
 
-  const [direcciones, setDirecciones] = useState([]); // Lista de direcciones del usuario
-  const [direccionSeleccionada, setDireccionSeleccionada] = useState(''); // Dirección seleccionada
+  const [direcciones, setDirecciones] = useState([]);
+  const [direccionSeleccionada, setDireccionSeleccionada] = useState('');
 
-  // Normaliza claves del usuario
   const normalizarUsuario = (usuario) => {
     if (!usuario) return null;
     const nuevo = {};
@@ -40,7 +39,6 @@ const Checkout = () => {
     return nuevo;
   };
 
-  // Normaliza claves de direcciones
   const normalizarClaves = (obj) => {
     if (!obj || typeof obj !== 'object') return obj;
     const nuevo = {};
@@ -96,8 +94,22 @@ const Checkout = () => {
     setProcesando(true);
 
     try {
+      const usuario = JSON.parse(localStorage.getItem('usuario'));
+      const usuarioNormalizado = normalizarUsuario(usuario);
+
+      const response = await fetchWithAuth(`/v1/pedidos`, {
+        method: 'POST',
+        body: JSON.stringify({
+          idUsuario: usuarioNormalizado.id,
+          idDireccion: parseInt(direccionSeleccionada),
+          productos: carrito,
+          metodoPago,
+        }),
+      });
+
+      const data = await response.json();
+
       if (response.ok) {
-        // Actualizar los puntos en localStorage
         usuarioNormalizado.puntos += data.puntos;
         localStorage.setItem('usuario', JSON.stringify(usuarioNormalizado));
 
