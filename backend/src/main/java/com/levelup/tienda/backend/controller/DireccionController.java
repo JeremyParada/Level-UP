@@ -34,12 +34,14 @@ public class DireccionController {
     public ResponseEntity<Direccion> updateDireccion(@PathVariable Long id, @RequestBody Direccion direccionDetails) {
         return direccionRepository.findById(id)
                 .map(direccion -> {
+                    direccion.setTipoDireccion(direccionDetails.getTipoDireccion());
                     direccion.setCalle(direccionDetails.getCalle());
                     direccion.setNumero(direccionDetails.getNumero());
                     direccion.setComuna(direccionDetails.getComuna());
                     direccion.setCiudad(direccionDetails.getCiudad());
                     direccion.setRegion(direccionDetails.getRegion());
                     direccion.setCodigoPostal(direccionDetails.getCodigoPostal());
+                    direccion.setEsPrincipal(direccionDetails.getEsPrincipal());
                     Direccion updated = direccionRepository.save(direccion);
                     return ResponseEntity.ok(updated);
                 })
