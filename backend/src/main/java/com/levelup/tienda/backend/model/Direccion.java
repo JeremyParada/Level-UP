@@ -13,6 +13,9 @@ public class Direccion {
     @Column(name = "ID_DIRECCION")
     private Long idDireccion;
 
+    @Transient
+    private Long idUsuario;
+
     @ManyToOne
     @JoinColumn(name = "ID_USUARIO")
     @JsonIgnore

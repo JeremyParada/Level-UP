@@ -15,6 +15,9 @@ public class DireccionController {
     @Autowired
     private DireccionRepository direccionRepository;
 
+    @Autowired
+    private com.levelup.tienda.backend.repository.UsuarioRepository usuarioRepository;
+
     // Obtener todas las direcciones de un usuario
     @GetMapping("/usuario/{idUsuario}")
     public ResponseEntity<List<Direccion>> getDireccionesByUsuario(@PathVariable Long idUsuario) {
@@ -25,6 +28,12 @@ public class DireccionController {
     // Crear una nueva dirección
     @PostMapping
     public ResponseEntity<Direccion> createDireccion(@RequestBody Direccion direccion) {
+        if (direccion.getIdUsuario() != null) {
+            com.levelup.tienda.backend.model.Usuario usuario = usuarioRepository.findById(direccion.getIdUsuario()).orElse(null);
+            if (usuario != null) {
+                direccion.setUsuario(usuario);
+            }
+        }
         Direccion nueva = direccionRepository.save(direccion);
         return ResponseEntity.ok(nueva);
     }
