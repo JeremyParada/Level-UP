@@ -81,19 +81,25 @@ const Register = () => {
 
   const registrarUsuario = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/usuarios/registro`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        data = await response.text();
+      }
 
       if (response.ok) {
         exito('¡Registro exitoso! 🎉');
-        navigate('/perfil');
+        navigate('/login'); // Cambia '/perfil' por '/login'
       } else {
-        error(data.error || 'Error al registrar usuario.');
+        // Si data es string, mostrarlo, si es objeto, mostrar .error
+        error(typeof data === 'string' ? data : data.error || 'Error al registrar usuario.');
       }
     } catch (err) {
       console.error('Error al registrar usuario:', err);

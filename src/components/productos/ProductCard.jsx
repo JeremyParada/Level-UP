@@ -21,7 +21,7 @@ const ProductCard = ({ producto }) => {
         <h5 className="card-title">{producto.nombre}</h5>
         <p className="card-text">{producto.descripcion}</p>
         <h6 className="color-acento-verde">{formatearPrecio(producto.precio)}</h6>
-        <Link to={`/producto-detalle/${producto.codigo}`} className="btn btn-primary mt-auto">
+        <Link to={`/producto-detalle/${producto.codigo || ''}`} className="btn btn-primary mt-auto">
           Ver Detalles
         </Link>
       </div>
