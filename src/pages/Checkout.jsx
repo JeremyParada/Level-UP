@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import { useNotification } from '../hooks/useNotification';
 import Modal from '../components/Modal';
-import DireccionForm from '../components/DireccionForm'; // Asegúrate de importar el componente
+import DireccionForm from '../components/DireccionForm';
+import fetchWithAuth from '../utils/api';
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -25,55 +26,45 @@ const Checkout = () => {
     codigoPostal: ''
   });
 
-  const [direcciones, setDirecciones] = useState([]); // Lista de direcciones del usuario
-  const [direccionSeleccionada, setDireccionSeleccionada] = useState(''); // Dirección seleccionada
+  const [direcciones, setDirecciones] = useState([]);
+  const [direccionSeleccionada, setDireccionSeleccionada] = useState('');
 
-  // Función para normalizar las claves del objeto usuario
   const normalizarUsuario = (usuario) => {
-    return Object.keys(usuario).reduce((acc, key) => {
-      acc[key.toLowerCase()] = usuario[key];
-      return acc;
-    }, {});
+    if (!usuario) return null;
+    const nuevo = {};
+    for (const key in usuario) {
+      const k = key.replace(/([A-Z])/g, '_$1').toLowerCase();
+      nuevo[k] = usuario[key];
+    }
+    return nuevo;
   };
 
   const normalizarClaves = (obj) => {
-    return Object.keys(obj).reduce((acc, key) => {
-      acc[key.toLowerCase()] = obj[key];
-      return acc;
-    }, {});
+    if (!obj || typeof obj !== 'object') return obj;
+    const nuevo = {};
+    for (const key in obj) {
+      const k = key.replace(/([A-Z])/g, '_$1').toLowerCase();
+      nuevo[k] = typeof obj[key] === 'object' && obj[key] !== null
+        ? normalizarClaves(obj[key])
+        : obj[key];
+    }
+    return nuevo;
   };
 
-  // Cargar dirección principal del usuario
   useEffect(() => {
-    const usuario = JSON.parse(localStorage.getItem('usuario'));
-    if (!usuario) {
-      error('Debes iniciar sesión para continuar.');
-      navigate('/login');
-      return;
-    }
-
-    const usuarioNormalizado = normalizarUsuario(usuario);
-
-    if (!usuarioNormalizado.idusuario) {
-      error('Debes iniciar sesión para continuar.');
-      navigate('/login');
-      return;
-    }
-
     const cargarDireccion = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/direcciones/usuario/${usuarioNormalizado.idusuario}`);
-        const direcciones = await response.json();
-
-        if (!Array.isArray(direcciones)) {
-          throw new Error('La respuesta del servidor no es válida.');
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        const usuarioNormalizado = normalizarUsuario(usuario);
+        if (!usuarioNormalizado || !usuarioNormalizado.id) {
+          error('Debes iniciar sesión para continuar.');
+          navigate('/login');
+          return;
         }
-
-        // Normalizar las claves de cada dirección
+        const direcciones = await fetchWithAuth(`/v1/direcciones/usuario/${usuarioNormalizado.id}`);
+        if (!Array.isArray(direcciones)) throw new Error('La respuesta del servidor no es válida.');
         const direccionesNormalizadas = direcciones.map(normalizarClaves);
-
         setDirecciones(direccionesNormalizadas);
-
         const direccionPrincipal = direccionesNormalizadas.find(d => d.es_principal === 1);
         if (direccionPrincipal) {
           setDireccionSeleccionada(direccionPrincipal.id_direccion);
@@ -86,7 +77,6 @@ const Checkout = () => {
         error('Error al cargar dirección. Intenta nuevamente.');
       }
     };
-
     cargarDireccion();
   }, [navigate, error]);
 
@@ -107,11 +97,11 @@ const Checkout = () => {
       const usuario = JSON.parse(localStorage.getItem('usuario'));
       const usuarioNormalizado = normalizarUsuario(usuario);
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/pedidos`, {
+      const response = await fetchWithAuth(`/v1/pedidos`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          idUsuario: usuarioNormalizado.idusuario,
+          idUsuario: usuarioNormalizado.id,
+          idDireccion: parseInt(direccionSeleccionada),
           productos: carrito,
           metodoPago,
         }),
@@ -120,7 +110,6 @@ const Checkout = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Actualizar los puntos en localStorage
         usuarioNormalizado.puntos += data.puntos;
         localStorage.setItem('usuario', JSON.stringify(usuarioNormalizado));
 
@@ -152,12 +141,12 @@ const Checkout = () => {
   const handleGuardarDireccion = async () => {
     try {
       const usuario = JSON.parse(localStorage.getItem('usuario'));
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/direcciones`, {
+      const usuarioNormalizado = normalizarUsuario(usuario);
+      const response = await fetchWithAuth(`/v1/direcciones`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...nuevaDireccion,
-          idUsuario: usuario.idusuario,
+          idUsuario: usuarioNormalizado.id,
           tipoDireccion: 'ENVIO',
           esPrincipal: 0
         }),
@@ -192,9 +181,9 @@ const Checkout = () => {
       <div className="card card-formulario rounded-4 p-4">
         <div className="mb-3">
           <label htmlFor="direccion" className="form-label">Dirección de Envío</label>
-          <select 
-            className="form-select" 
-            id="direccion" 
+          <select
+            className="form-select"
+            id="direccion"
             value={direccionSeleccionada}
             onChange={(e) => {
               const direccionId = e.target.value;
@@ -212,7 +201,7 @@ const Checkout = () => {
               </option>
             ))}
           </select>
-          <button 
+          <button
             className="btn btn-outline-primary mt-3"
             onClick={() => setMostrarFormularioDireccion(true)}
           >
@@ -222,9 +211,9 @@ const Checkout = () => {
 
         <div className="mb-3">
           <label htmlFor="metodoPago" className="form-label">Método de Pago</label>
-          <select 
-            className="form-select" 
-            id="metodoPago" 
+          <select
+            className="form-select"
+            id="metodoPago"
             value={metodoPago}
             onChange={(e) => setMetodoPago(e.target.value)}
           >
@@ -234,8 +223,8 @@ const Checkout = () => {
           </select>
         </div>
 
-        <button 
-          className="btn btn-primary w-100" 
+        <button
+          className="btn btn-primary w-100"
           onClick={handleFinalizarCompra}
           disabled={procesando}
         >
@@ -246,7 +235,7 @@ const Checkout = () => {
       {mostrarModal && (
         <Modal
           titulo="Confirmar Compra"
-          mensaje={`¿Confirmas tu compra por un total de ${carrito.reduce((sum, p) => sum + p.precio * p.cantidad, 0)}?`}
+          mensaje={`¿Confirmas tu compra por un total de $${carrito.reduce((sum, p) => sum + (Number(p.precio) || 0) * (Number(p.cantidad) || 1), 0).toLocaleString()}?`}
           onConfirmar={confirmarCompra}
           onCancelar={cancelarCompra}
         />
@@ -256,9 +245,9 @@ const Checkout = () => {
         <Modal
           titulo="Añadir Nueva Dirección"
           mensaje={
-            <DireccionForm 
-              formData={nuevaDireccion} 
-              handleChange={handleChangeDireccion} 
+            <DireccionForm
+              formData={nuevaDireccion}
+              handleChange={handleChangeDireccion}
             />
           }
           onConfirmar={handleGuardarDireccion}

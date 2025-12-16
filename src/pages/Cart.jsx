@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import { useNotification } from '../hooks/useNotification';
 import Modal from '../components/Modal';
+import fetchWithAuth from '../utils/api';
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -28,13 +29,21 @@ const Cart = () => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/v1/productos`);
       const todosLosProductos = await response.json();
 
+      // Mapea los productos para que tengan 'codigo' y 'nombre'
+      const productosMapeados = todosLosProductos.map(p => ({
+        ...p,
+        codigo: p.codigoProducto || p.codigo,
+        nombre: p.nombreProducto || p.nombre,
+      }));
+
       const productosCarrito = carrito.map(item => {
-        const producto = todosLosProductos.find(p => p.codigo === item.codigo);
+        const producto = productosMapeados.find(p => p.codigo === item.codigo);
+        if (!producto) return null;
         return {
           ...producto,
           cantidad: item.cantidad
         };
-      }).filter(p => p.codigo);
+      }).filter(Boolean);
 
       setProductos(productosCarrito);
       setLoading(false);

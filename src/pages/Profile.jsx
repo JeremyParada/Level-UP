@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useNotification } from '../hooks/useNotification';
 import { AuthContext } from '../context/AuthContext';
+import fetchWithAuth from '../utils/api';
+import DireccionesManager from '../components/DireccionesManager';
 
 const Profile = () => {
   const { exito } = useNotification();
@@ -63,11 +65,7 @@ const Profile = () => {
 
   const cargarDatosPerfil = async (idUsuario) => {
     try {
-      const response = await fetch(`/api/v1/usuarios/me/${idUsuario}`);
-      if (!response.ok) {
-        throw new Error('No se pudo obtener el perfil');
-      }
-      const data = await response.json();
+      const data = await fetchWithAuth(`/v1/usuarios/me/${idUsuario}`);
 
       setPerfil((prev) => ({
         ...prev,
@@ -93,11 +91,7 @@ const Profile = () => {
 
   const cargarHistorialCompras = async (idUsuario) => {
     try {
-      const response = await fetch(`/api/v1/pedidos/usuario/${idUsuario}`);
-      if (!response.ok) {
-        throw new Error('No se pudo obtener el historial de compras');
-      }
-      const data = await response.json();
+      const data = await fetchWithAuth(`/v1/pedidos/usuario/${idUsuario}`);
       setHistorialCompras(data || []);
     } catch (err) {
       console.error('Error al cargar historial de compras:', err);
@@ -170,15 +164,11 @@ const Profile = () => {
         fechaNacimiento: perfil.fechaNacimiento
       };
 
-      const response = await fetch(`/api/v1/usuarios/me/${idUsuario}`, {
+      await fetchWithAuth(`/v1/usuarios/me/${idUsuario}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-
-      if (!response.ok) {
-        throw new Error('No se pudo actualizar el perfil');
-      }
 
       exito('✅ ¡Perfil actualizado exitosamente!');
     } catch (err) {
@@ -248,9 +238,9 @@ const Profile = () => {
                 <div className="row">
                   <div className="col-md-6 mb-3">
                     <label htmlFor="nombre" className="form-label">Nombre</label>
-                    <input 
-                      type="text" 
-                      className="form-control" 
+                    <input
+                      type="text"
+                      className="form-control"
                       id="nombre"
                       placeholder="Tu nombre"
                       value={perfil.nombre}
@@ -260,9 +250,9 @@ const Profile = () => {
                   </div>
                   <div className="col-md-6 mb-3">
                     <label htmlFor="apellido" className="form-label">Apellido</label>
-                    <input 
-                      type="text" 
-                      className="form-control" 
+                    <input
+                      type="text"
+                      className="form-control"
                       id="apellido"
                       placeholder="Tu apellido"
                       value={perfil.apellido}
@@ -275,9 +265,9 @@ const Profile = () => {
                 <div className="row">
                   <div className="col-md-6 mb-3">
                     <label htmlFor="email" className="form-label">Email</label>
-                    <input 
-                      type="email" 
-                      className="form-control" 
+                    <input
+                      type="email"
+                      className="form-control"
                       id="email"
                       placeholder="correo@ejemplo.com"
                       value={perfil.email}
@@ -287,9 +277,9 @@ const Profile = () => {
                   </div>
                   <div className="col-md-6 mb-3">
                     <label htmlFor="gamerTag" className="form-label">Gamer Tag</label>
-                    <input 
-                      type="text" 
-                      className="form-control" 
+                    <input
+                      type="text"
+                      className="form-control"
                       id="gamerTag"
                       placeholder="Tu nombre gamer"
                       value={perfil.gamerTag}
@@ -303,9 +293,9 @@ const Profile = () => {
                     <label htmlFor="fechaNacimiento" className="form-label">
                       Fecha de Nacimiento
                     </label>
-                    <input 
-                      type="date" 
-                      className="form-control" 
+                    <input
+                      type="date"
+                      className="form-control"
                       id="fechaNacimiento"
                       value={perfil.fechaNacimiento}
                       onChange={handleChange}
@@ -313,9 +303,9 @@ const Profile = () => {
                   </div>
                   <div className="col-md-6 mb-3">
                     <label htmlFor="telefono" className="form-label">Teléfono</label>
-                    <input 
-                      type="tel" 
-                      className="form-control" 
+                    <input
+                      type="tel"
+                      className="form-control"
                       id="telefono"
                       placeholder="+56 9 1234 5678"
                       value={perfil.telefono}
@@ -328,9 +318,9 @@ const Profile = () => {
                   <label htmlFor="juegoFavorito" className="form-label">
                     Juego Favorito
                   </label>
-                  <input 
-                    type="text" 
-                    className="form-control" 
+                  <input
+                    type="text"
+                    className="form-control"
                     id="juegoFavorito"
                     placeholder="¿Cuál es tu juego favorito?"
                     value={perfil.juegoFavorito}
@@ -343,6 +333,9 @@ const Profile = () => {
                 </button>
               </form>
             </div>
+
+            {/* Gestión de Direcciones */}
+            <DireccionesManager idUsuario={getUserId()} />
 
             {/* Historial de compras */}
             <div className="card card-formulario rounded-4 p-4">
@@ -393,86 +386,89 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Panel lateral - Estadísticas */}
+          {/* Sidebar: Puntos y Descuentos */}
           <div className="col-lg-4">
-            {/* Sistema de puntos */}
-            <div className="card card-formulario rounded-4 p-4 mb-4">
-              <h4 className="color-acento-azul mb-3">🎮 LevelUp Points</h4>
-              <div className="text-center mb-3">
-                <h2 className="color-acento-verde mb-0">{perfil.puntos}</h2>
-                <small className="text-muted">puntos totales</small>
-              </div>
-
+            {/* Tarjeta de Puntos */}
+            <div className="card card-formulario rounded-4 p-4 mb-4 text-center">
               <div className="mb-3">
-                <div className="d-flex justify-content-between mb-1">
-                  <small>Nivel {calcularNivel()}</small>
-                  <small>Nivel {calcularNivel() + 1}</small>
-                </div>
-                <div className="progress" style={{ height: '20px' }}>
-                  <div 
-                    className="progress-bar bg-success" 
-                    role="progressbar"
-                    style={{ width: `${porcentajeProgreso()}%` }}
-                    aria-valuenow={porcentajeProgreso()}
-                    aria-valuemin="0" 
-                    aria-valuemax="100"
-                  >
-                    {Math.round(porcentajeProgreso())}%
-                  </div>
-                </div>
-                <small className="text-muted">
-                  {puntosParaSiguienteNivel()} puntos para nivel {calcularNivel() + 1}
-                </small>
+                <span className="display-4">🏆</span>
+              </div>
+              <h3 className="texto-principal color-acento-verde mb-2">
+                {perfil.puntos || 0} Puntos
+              </h3>
+              <p className="text-muted mb-3">Nivel {calcularNivel()}</p>
+
+              <div className="progress mb-3" style={{ height: '10px', backgroundColor: '#333' }}>
+                <div
+                  className="progress-bar bg-success"
+                  role="progressbar"
+                  style={{ width: `${porcentajeProgreso()}%` }}
+                  aria-valuenow={porcentajeProgreso()}
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
               </div>
 
-              <div className="alert alert-info mb-0">
-                <small>
-                  <strong>¿Cómo ganar puntos?</strong><br/>
-                  • Compras: 10 puntos por cada $1.000<br/>
-                  • Referidos: 100 puntos<br/>
-                  • Reseñas: 25 puntos
-                </small>
+              <small className="text-muted d-block mb-4">
+                Faltan {puntosParaSiguienteNivel()} puntos para el siguiente nivel
+              </small>
+
+              <div className="d-grid">
+                <Link to="/catalogo" className="btn btn-outline-light btn-sm">
+                  Canjear Puntos
+                </Link>
               </div>
             </div>
 
-            {/* Descuentos activos */}
+            {/* Código de Referido */}
             <div className="card card-formulario rounded-4 p-4 mb-4">
-              <h4 className="color-acento-azul mb-3">🎫 Descuentos Activos</h4>
-              <div id="descuentosActivos">
-                {descuentosActivos.length === 0 ? (
-                  <p className="text-muted mb-0">
-                    No tienes descuentos activos
-                  </p>
-                ) : (
-                  descuentosActivos.map((descuento, idx) => (
-                    <div key={idx} className="mb-3 p-2 border rounded">
-                      <h6 className="color-acento-verde mb-1">
-                        {descuento.titulo}
-                      </h6>
-                      <p className="small mb-1">{descuento.descripcion}</p>
-                      <code className="small">{descuento.codigo}</code>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-
-            {/* Código de referido */}
-            <div className="card card-formulario rounded-4 p-4">
-              <h4 className="texto-principal color-acento-azul mb-3">Mi Código de Referido</h4>
-              <div className="text-center">
-                <div className="badge bg-secondary fs-5 mb-2" id="codigoReferido">
-                  {perfil.codigoReferido}
-                </div>
-                <p className="small">Comparte este código y gana 50 puntos por cada nuevo usuario</p>
-                <button 
-                  className="btn btn-outline-secondary btn-sm" 
-                  onClick={copiarCodigoReferido}
+              <h5 className="texto-principal color-acento-azul mb-3">
+                Tu Código de Referido
+              </h5>
+              <div className="input-group mb-2">
+                <input
+                  type="text"
+                  className="form-control text-center fw-bold"
+                  value={perfil.codigoReferido || 'Generando...'}
+                  readOnly
+                />
+                <button
+                  className="btn btn-outline-secondary"
                   type="button"
+                  onClick={copiarCodigoReferido}
                 >
-                  📋 Copiar
+                  📋
                 </button>
               </div>
+              <small className="text-muted">
+                Comparte este código y gana 50 puntos por cada amigo que se registre.
+              </small>
+            </div>
+
+            {/* Descuentos Activos */}
+            <div className="card card-formulario rounded-4 p-4">
+              <h5 className="texto-principal color-acento-azul mb-3">
+                Tus Beneficios
+              </h5>
+              {descuentosActivos.length === 0 ? (
+                <p className="text-muted small mb-0">
+                  Sube de nivel para desbloquear beneficios exclusivos.
+                </p>
+              ) : (
+                <div className="d-flex flex-column gap-3">
+                  {descuentosActivos.map((descuento, idx) => (
+                    <div key={idx} className="border border-secondary rounded p-3 bg-dark">
+                      <div className="d-flex justify-content-between align-items-center mb-2">
+                        <h6 className="mb-0 text-white">{descuento.titulo}</h6>
+                        <span className="badge bg-success">{descuento.codigo}</span>
+                      </div>
+                      <p className="small text-muted mb-0">
+                        {descuento.descripcion}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>

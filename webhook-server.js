@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const { exec } = require('child_process');
 
 const PORT = 4000;
-const SECRET = 'Level-Up'; // Usa el mismo secreto que configuraste en GitHub
+const SECRET = 'Level-Up';
 
 // Verificar la firma del webhook
 function verifySignature(req, body) {
@@ -58,55 +58,12 @@ const server = http.createServer((req, res) => {
       const payload = JSON.parse(body);
       if (payload.ref === 'refs/heads/main') {
         console.log('🔄 Recibiendo cambios del repositorio...');
-
-        // Ejecutar los comandos uno por uno
         ejecutarComando(
-          'cd /home/ubuntu/Level-UP && git reset --hard && git pull origin main',
-          'Actualizar el repositorio',
+          '/home/ubuntu/Level-UP/deploy.sh',
+          'Despliegue automático',
           (err) => {
             if (err) return;
-
-            ejecutarComando(
-              'cd /home/ubuntu/Level-UP/backend && npm install && pm2 restart "Level-UP Backend"',
-              'Actualizar dependencias y reiniciar el backend',
-              (err) => {
-                if (err) return;
-
-                ejecutarComando(
-                  'cd /home/ubuntu/Level-UP && sudo chown -R ubuntu:ubuntu build',
-                  'Cambiar permisos del directorio build (ubuntu)',
-                  (err) => {
-                    if (err) return;
-
-                    ejecutarComando(
-                      'cd /home/ubuntu/Level-UP && npm install && npm run build',
-                      'Construir el proyecto',
-                      (err) => {
-                        if (err) return;
-
-                        ejecutarComando(
-                          'cd /home/ubuntu/Level-UP && sudo chown -R www-data:www-data build',
-                          'Cambiar permisos del directorio build (www-data)',
-                          (err) => {
-                            if (err) return;
-
-                            ejecutarComando(
-                              'sudo systemctl restart nginx',
-                              'Reiniciar Nginx',
-                              (err) => {
-                                if (err) return;
-
-                                console.log('🚀 Actualización completada con éxito.');
-                              }
-                            );
-                          }
-                        );
-                      }
-                    );
-                  }
-                );
-              }
-            );
+            console.log('🚀 Despliegue completado con éxito.');
           }
         );
       }
