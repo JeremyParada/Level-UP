@@ -2,8 +2,13 @@ const http = require('http');
 const crypto = require('crypto');
 const { exec } = require('child_process');
 
-const PORT = 4000;
-const SECRET = 'Level-Up';
+const PORT = process.env.WEBHOOK_PORT || 4000;
+const SECRET = process.env.WEBHOOK_SECRET;
+
+if (!SECRET) {
+  console.error('Falta la variable de entorno WEBHOOK_SECRET');
+  process.exit(1);
+}
 
 // Verificar la firma del webhook
 function verifySignature(req, body) {
