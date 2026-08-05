@@ -43,3 +43,10 @@ dist/
 # Ignorar instantclient
 instantclient_linux/
 instantclient_windows/
+
+# Credenciales Oracle Cloud (NUNCA commitear)
+wallet/
+*.sso
+*.p12
+*.jks
+*.pem
